@@ -1,13 +1,18 @@
 <?php
+namespace User;
 
 class User
 {
 
-  function __construct()
+  static function getId()
+  {
+	return 0;
+  }
+
+  static function logIn()
   {
   
   }
-
 
 }
 

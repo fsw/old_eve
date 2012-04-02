@@ -1,9 +1,9 @@
 <?php
 
-if (!User::getId())
+/*if (!User\User::getId())
 {
-  Response::redirect('user/login');
-}
+  Cado\Response::redirect('user/login');
+}*/
 
-Controller::process(new Request());
+echo Cado\Controller::process(new Cado\Request());
 

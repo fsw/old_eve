@@ -1,15 +1,17 @@
 <?php
 
 require_once('../lib/Autoloader.php');
-ErrorHandler::init();
+Cado\ErrorHandler::init();
 
 if(file_exists('../project/'))
 {
-  require_once('../project/bootstrap.php');
+  $projectRoot = '../project/';
 }
 else
 {
-  $projectName = current(explode('.', $_SERVER['HTTP_HOST']));
-  require_once('../projects/' . $projectName . '/bootstrap.php');
+  $projectRoot = '../projects/' . current(explode('.', $_SERVER['HTTP_HOST'])) . '/';
 }
+
+require_once($projectRoot . 'config.php');
+require_once($projectRoot . 'bootstrap.php');
 

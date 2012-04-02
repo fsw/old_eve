@@ -1,5 +1,11 @@
 <?php
+namespace Cado;
 
-	echo 'TEST';
+class Action\Admin extends Action\Cms
+{
 
+	static function act(){
+	
+	}
 
+}

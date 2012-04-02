@@ -1,16 +1,18 @@
 <?php
+namespace Cado;
 
 class Request 
 {
-  static $path;
+  private $path;
   function __construct()
   {
-	static::$path = array();
+	$this->path = explode('/', $_SERVER['REQUEST_URI']);
+	//var_dump($_SERVER);
   }
 
-  function getActionPath()
+  function getActionClassName()
   {
-	return array('admin');
+	return ''; 
   }
 }
  

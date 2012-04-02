@@ -1,4 +1,5 @@
 <?php
+namespace Cado;
 
 class ErrorHandler
 {
