@@ -1,18 +1,11 @@
 <?php
 
-require_once('../core/Autoloader.php');
-require_once('../core/ErrorHandler.php');
-require_once('../core/Debug.php');
-
-Core\ErrorHandler::init();
-
-if(file_exists('../project/'))
+foreach (array('Autoloader', 'ErrorHandler') as $coreClass)
 {
-  $projectRoot = '../project/';
-}
-else
-{
-  $projectRoot = '../projects/' . current(explode('.', $_SERVER['HTTP_HOST'])) . '/';
+  require_once('../core/' . $coreClass . '.php');
+  {'Core\\'.$coreClass}::init();
 }
 
-require_once($projectRoot . 'bootstrap.php');
+Core\Autoloader::setProjectRoot('projects/' . current(explode('.', $_SERVER['HTTP_HOST'])) . '/');
+Controller::controll();
+
