@@ -10,6 +10,12 @@ class Request
 	//var_dump($_SERVER);
   }
 
+  function fromUrl($url, $post = array())
+  {
+	//TODO
+
+  }
+
   function getActionClassName()
   {
 	return ''; 
