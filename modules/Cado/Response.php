@@ -1,4 +1,9 @@
 <?php
+/**
+ * 
+ * @author fsw
+ *
+ */
 namespace Cado;
 
 class Response 

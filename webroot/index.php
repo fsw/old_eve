@@ -1,11 +1,14 @@
 <?php
-
-foreach (array('Autoloader', 'ErrorHandler') as $coreClass)
-{
-  require_once('../core/' . $coreClass . '.php');
-  {'Core\\'.$coreClass}::init();
-}
-
-Core\Autoloader::setProjectRoot('projects/' . current(explode('.', $_SERVER['HTTP_HOST'])) . '/');
-Controller::controll();
-
+/**
+ *
+ * @author fsw
+ *
+ */
+chdir('..');
+require_once('modules/Autoloader.php');
+Autoloader::init();
+ErrorHandler::init();
+//TODO
+Autoloader::setProject(ucfirst(current(explode('.', $_SERVER['HTTP_HOST']))));
+$controllerClass = Autoloader::getProject() . '\\Controller'; 
+$controllerClass::controll();
