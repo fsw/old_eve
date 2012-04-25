@@ -5,10 +5,11 @@
  *
  */
 chdir('..');
-require_once('modules/Autoloader.php');
+require_once('core/Autoloader.php');
 Autoloader::init();
 ErrorHandler::init();
 //TODO
-Autoloader::setProject(ucfirst(current(explode('.', $_SERVER['HTTP_HOST']))));
-$controllerClass = Autoloader::getProject() . '\\Controller'; 
-$controllerClass::controll();
+//Autoloader::setProject(ucfirst(current(explode('.', $_SERVER['HTTP_HOST']))));
+//$controllerClass = Autoloader::getProject() . '\\Controller';
+ 
+Project\Controller::controll();

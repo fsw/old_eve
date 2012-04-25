@@ -1,7 +1,6 @@
 <?php
-namespace Project;
 
-class Controller extends Cado\Controller
+class Controller implements iController
 {
   function controll(Cado\Request $request)
   {
