@@ -26,13 +26,14 @@ class ErrorHandler
 
 	public function handleError($type, $message, $file, $line)
 	{
+		var_dump($type, $message, $file, $line);
 		$widget = new Widget('error');
 		$widget->number = 404;
 		$widget->type = $type;
-		$widget->type = $type;
-		$widget->type = $type;
-		$widget->type = $type;
-		$widget->stack = debug_backtrace();		
+		$widget->message = $message;
+		$widget->file = $file;
+		$widget->line = $line;
+		$widget->stack = debug_backtrace();
 		$widget->render();
 	}
 

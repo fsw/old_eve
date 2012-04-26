@@ -4,7 +4,6 @@
  * @author fsw
  *
  */
-namespace Cado;
 
 class Request
 {

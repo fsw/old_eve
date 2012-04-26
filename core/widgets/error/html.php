@@ -10,11 +10,22 @@
 <body>
 
   <header>
-	<h1><?=$errorNumber?> Error</h1> 
+	<h1><?=$this->number?> Error</h1> 
 	<h2>sorry. no bonus.</h2>
   </header>
   <div role="main">
 	<img src="logo.png">
+	<b>file:</b> <?=$this->file?>
+	<br/>
+	<b>message:</b>	<?=$this->message?>
+	<br/>
+	<b>type:</b>	<?=$this->type?>
+	<br/>
+	<b>line:</b>	<?=$this->line?>
+	<br/>
+	<?foreach($this->stack as $call):?>
+	<?var_dump($call)?>
+	<?endforeach;?>
   </div>
   <footer>
 

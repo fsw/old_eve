@@ -10,18 +10,21 @@ class Widget
 
 	public function __construct($path)
 	{
-		$path = explode(':', $path);
-		$this->$path = $path;
+	  //if (strpos(':', $path))
+	  //{
+	//	ltrim($path)
+	 // }
+	  $this->path = Autoloader::getFileName('widgets\\' . str_replace(':', '', $path) . '\\html');
 	}
 
 	public function __set($var, $value)
 	{
-		
+	  	$this->$var = $value;	
 	}
 
 	public function __get($var)
 	{
-		
+		return $this->$var;
 	}
 	
 	public function appendWidget($layout, $widget)
@@ -40,7 +43,7 @@ class Widget
 	
 	public function render()
 	{
-		return include($path);
+		return include($this->path);
 	}
 	
 }
