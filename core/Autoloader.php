@@ -11,18 +11,18 @@ class Autoloader
 	{
 		spl_autoload_register(array('Autoloader', 'autoload'));
 		//TODO file + arraycache
-		static::$coreClasses = array('Cache');
-		static::$modules = Cache::get(array('autoloader', 'modules'));
+		static::$coreClasses = array('Cache', 'Autoloader', 'ErrorHandler');
+		static::$modules = array('User');
 	}
 
 	public static function getFileName($className)
 	{
+		$path = explode('\\', $className);
 		if (in_array($className, static::$coreClasses))
 		{
-			return 'core' . DIRECTORY_SEPARATOR . $className . '.php';
+			array_unshift($path, 'core');
 		}
-		$path = explode('\\', $className);
-		if (count($path) > 1 && in_array(reset($path), static::$modules))
+		elseif (count($path) > 1 && in_array(reset($path), static::$modules))
 		{
 			array_unshift($path, 'modules');
 		}
@@ -41,7 +41,6 @@ class Autoloader
 	
 	public static function autoload($className)
 	{
-		//echo static::getFileName($className);
 		require_once(static::getFileName($className));
 	}
 }

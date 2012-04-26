@@ -3,12 +3,19 @@
 class Db
 {
 	static $connection = null;
+	static $write = false;
 
-	private static function getConnection()
+	private static function getConnection($write = false)
 	{
-		if (static::$connection == null)
+		if ($write && !static::$write)
 		{
-			$config = Config::getDatabaseConnection();
+			static::$write = true;
+			$config = Config::getDatabaseMasterConnection();
+			static::$connection = new PDO($config['dsn'], $config['user'], $config['pass']);
+		}
+		elseif (static::$connection == null)
+		{
+			$config = Config::getDatabaseSlaveConnection();
 			static::$connection = new PDO($config['dsn'], $config['user'], $config['pass']);
 		}
 		return static::$connection;

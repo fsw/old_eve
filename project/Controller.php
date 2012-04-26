@@ -2,20 +2,19 @@
 
 class Controller implements iController
 {
-  function controll(Cado\Request $request)
+  function controll(Request $request)
   {
-	$action = $request->shiftPath();
-	switch ($action)
+	switch ($request->shiftPath())
 	{
+	  case 'admin':
+		return new controller_Admin()->controll(&$request);
 	  case 'index':
-		return new Controller_Index($request);
+		return new controller_Index()->controll(&$request);
 	  case 'ticket':
-		return new Controller_Ticket($request); 
+		return new controller_Ticket()->controll(&$request);
 	}
-	$request->unshiftPath($action);
-	
-	return new Cado\Response_404();
+	$request->unshiftPath();
+	return new response_404();
   }
-
 }
 

@@ -1,17 +1,17 @@
 <?php
 namespace User;
 
-class User
+class User extends Entity
 {
 
-  static function getId()
+  public static function getFields()
   {
-	return 0;
-  }
-
-  static function logIn()
-  {
-  
+ 	return array(
+	  'email' => new field_Email(),
+	  'password' => new field_Password(),
+	  'name' => new field_Text(),
+	  'bio' => new field_LongText(),
+	);
   }
 
 }
