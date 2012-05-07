@@ -9,57 +9,22 @@ abstract class Entity
 	{
 		return array();
 	}
-	
+
 	private static function implode(&$data)
 	{
-	
-	}
-	
-	private static function explode(&$data)
-	{
-	
-	}
-	
-	static function getAll()
-	{
-	
-	}
-	
-	public static function recreateStructure()
-	{
-		Db::query('DROP TABLE IF EXISTS ' . static::getTableName());
-		Db::query(static::showCreate());
-	}
-		
-	public static function validateStructure()
-	{
-		$current = Db::fetchAll('describe ' . static::getTableName());
-		$current[] = static::showCreate();
-		/*if (count($current))
-		{
-		
-		}*/
-		return $current;
-	}
-	
-	private static function showCreate()
-	{
-		$sql[] = '`id` INT';
-		foreach (static::getFields() as $key => $field)
-		{
-			$sql[] = '`' . $key . '` ' .  $field::getDefinition();
-		}
-		return 'CREATE TABLE ' . static::getTableName() . ' (' . implode(',', $sql) . ')';
+
 	}
 
-	private static function xxx()
+	private static function explode(&$data)
 	{
-	
+
 	}
-	
+
+
+
 	private static function postSave()
 	{
-	
+
 	}
 
 	private static function getTableName()
@@ -81,14 +46,14 @@ abstract class Entity
 
 	private function addField(Field $field)
 	{
-	  
+
 	}
 
 	public function constructFromId($id)
 	{
 
 	}
-	
+
 	public function constructFromData($data)
 	{
 
@@ -96,12 +61,12 @@ abstract class Entity
 
 	public function __set($key, $value)
 	{
-	
+
 	}
-	
+
 	public function __get($key)
 	{
-	
+
 	}
 
 	public function save()
@@ -115,7 +80,7 @@ abstract class Entity
 		  Db::update(static::getTableName(), $this->id, $this->data);
 		}
 	}
-	
+
 	public function delete()
 	{
 		if (!empty($this->id))

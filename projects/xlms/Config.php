@@ -1,6 +1,6 @@
 <?php
 
-class Config {
+class Config implements iConfig {
 
 	public static function getProjectCode()
 	{
@@ -11,12 +11,12 @@ class Config {
 	{
 		return static::getDatabaseConnection();
 	}
-	 
+
 	public static function getSlaveDatabaseConnection()
 	{
 		return static::getDatabaseConnection();
 	}
-	 
+
 	public static function getDatabaseConnection()
 	{
 		return array(

@@ -2,7 +2,7 @@
 
 interface iConfig
 {
-    public function getDatabaseConnection();
-    public function getFileCachePath();
-    public function getModules();
+    public static function getDatabaseConnection();
+    public static function getFileCachePath();
+    public static function getModules();
 }
