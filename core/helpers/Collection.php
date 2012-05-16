@@ -1,13 +1,99 @@
 <?php
 
+
+trait userSchema
+{
+	function getFields()
+	{
+	}
+
+}
+
+class Users extends Collextion
+{
+	use userSchema;
+
+}
+
+class User extends Entity
+{
+	use userSchema;
+
+}
+
+
+class UserSchema extends Schema
+{
+	__construct()
+	{
+		$this->name = new NameField();
+
+	}
+}
+
+class Users extends Collextion
+{
+	f getS()
+	{
+		return new UserSchema();
+	}
+}
+
+class User extends Entity
+{
+	use userSchema;
+
+}
+
+
 abstract class Collection
 {
-	static $entity;
 
-	static function getAll()
+	public static function getEntitiyClass()
 	{
-		return Db::fetchAll('SELECT * FROM ' . static::getTableName());
+		return new Entity();
 	}
+
+
+	getEntitiyClass()::getFields();
+
+
+	public static function createEntity($data)
+	{
+		return new Entity($data);
+	}
+
+	protected static function doGetFields() { throw new Exception('is abstact'); }
+	public static function getFields()
+	{
+		return static::doGetFields();
+	}
+
+	protected static function doGetFields()
+	{
+		return call_user_function(static::getEntitiyClass(), 'getFields');
+	}
+
+	public static function getAll()
+	{
+		call_user_func( array(), 6, 2 );
+		$data = Db::fetchAll('SELECT * FROM ' . static::getTableName());
+		foreach ($data as &$row)
+		{
+			$row = static::getEntity($row);
+		}
+	}
+
+	public static function getById($id)
+	{
+		$data = Db::fetchRow('SELECT * FROM ' . static::getTableName());
+		foreach ($data as &$row)
+		{
+			$row = static::getEntity($row);
+		}
+	}
+
+
 
 	public static function recreateStructure()
 	{
@@ -36,5 +122,10 @@ abstract class Collection
 			$sql[] = '`' . $key . '` ' .  $field::getDefinition();
 		}*/
 		return 'CREATE TABLE ' . static::getTableName() . ' (' . implode(',', $sql) . ')';
+	}
+
+	private static function getTableName()
+	{
+		return Config::getProjectCode() . '_' . get_called_class();
 	}
 }

@@ -12,4 +12,8 @@ class list_Widget extends Widget
 		
 		parent::__construct($request);
 	}
+
+	public function prepare($data)
+	{
+	}	
 }

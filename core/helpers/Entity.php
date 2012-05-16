@@ -2,61 +2,23 @@
 
 abstract class Entity
 {
+	protected static function getFields() { throw new }
 
 	private $id = null;
 
-	public function getFields()
+	public static function getFields()
 	{
 		return array();
 	}
 
-	private static function implode(&$data)
+	public static function implode(&$data)
 	{
-
+		return $data;
 	}
 
-	private static function explode(&$data)
+	public static function explode(&$data)
 	{
-
-	}
-
-
-
-	private static function postSave()
-	{
-
-	}
-
-	private static function getTableName()
-	{
-		return Config::getProjectCode() . '_' . get_called_class();
-	}
-
-	public function __construct($mixed)
-	{
-	  if (is_numeric($mixed))
-	  {
-		$this->constructFromId($mixed);
-	  }
-	  elseif (is_array($mixed))
-	  {
-	  	$this->constructFromData($mixed);
-	  }
-	}
-
-	private function addField(Field $field)
-	{
-
-	}
-
-	public function constructFromId($id)
-	{
-
-	}
-
-	public function constructFromData($data)
-	{
-
+		return $data;
 	}
 
 	public function __set($key, $value)
