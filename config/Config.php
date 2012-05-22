@@ -2,11 +2,6 @@
 
 class Config implements iConfig {
 
-	public static function getProjectCode()
-	{
-		return 'xlms';
-	}
-
 	public static function getMasterDatabaseConnection()
 	{
 		return static::getDatabaseConnection();
@@ -26,10 +21,4 @@ class Config implements iConfig {
 	  );
 	}
 
-	public static function getModules()
-	{
-		return array('cado', 'users');
-	}
-
 }
-

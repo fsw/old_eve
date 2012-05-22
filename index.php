@@ -19,4 +19,4 @@ else
 	Autoloader::setProjectRoot('projects' . DIRECTORY_SEPARATOR . 'dev');
 }
 
-Application::run($request);
+Project::run($request);

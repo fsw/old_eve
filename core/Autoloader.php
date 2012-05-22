@@ -7,15 +7,15 @@
 
 class Autoloader
 {
-	private static $folders = array('helpers', 'actions', 'widgets', 'entities');
+	private static $folders = array('helpers', 'actions', 'widgets', 'entities', 'lib', '');
 	private static $modules = array();
 	private static $projectRoot = '';
-	
+
 	public static function init()
 	{
 		spl_autoload_register(array('Autoloader', 'autoload'));
 	}
-	
+
 	public static function setProjectRoot($root)
 	{
 		static::$projectRoot = $root;
@@ -27,7 +27,7 @@ class Autoloader
 		$path = explode('\\', $className);
 		$subpath = explode('_', array_pop($path));
 		$subpath = implode(DIRECTORY_SEPARATOR, $subpath);
-		
+
 		if (count($path))
 		{
 			$paths[] = 'modules' . DIRECTORY_SEPARATOR . $path[0];
@@ -36,7 +36,7 @@ class Autoloader
 		{
 			$paths = array('core', static::$projectRoot);
 		}
-		
+
 		foreach ($paths as $path)
 		{
 			foreach (static::$folders as $folder)
@@ -54,7 +54,7 @@ class Autoloader
 		}
 		throw new Exception('class ' . $className . ' not found');
 	}
-		
+
 	public static function autoload($className)
 	{
 		require_once(static::getFileName($className));

@@ -1,7 +1,7 @@
 <?php
 
-require_once('core/helpers/Autoloader.php');
+require_once('core/Autoloader.php');
 Autoloader::init();
 ErrorHandler::init();
 
-//TODO on shutdown
+//TODO on shutdown?
