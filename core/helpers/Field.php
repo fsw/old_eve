@@ -11,7 +11,7 @@ abstract class Field
 	{
 		return '';
 	}
-	
+
 	public static function validate($data)
 	{
 		return true;

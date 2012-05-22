@@ -2,52 +2,46 @@
 
 abstract class Entity
 {
-	protected static function getFields() { throw new }
+	static $structure = null;
+	static $fields = array();
 
-	private $id = null;
-
-	public static function getFields()
+	protected static function structure()
 	{
-		return array();
+		throw new Exception( __CLASS__ . 'structure() should be implemented' );
 	}
 
-	public static function implode(&$data)
+	private static function getStructure()
+	{
+		if (empty(static::$structure))
+		{
+			static::$structure = static::structure();
+		}
+		return static::$structure;
+	}
+
+	public static function validate()
+	{
+
+	}
+
+	protected static function implode(&$data)
 	{
 		return $data;
 	}
 
-	public static function explode(&$data)
+	protected static function explode(&$data)
 	{
 		return $data;
 	}
 
 	public function __set($key, $value)
 	{
-
+		$this->fields[$key] = $value;
 	}
 
 	public function __get($key)
 	{
-
+		return $this->fields[$key];
 	}
 
-	public function save()
-	{
-		if (empty($this->id))
-		{
-		  $this->id = Db::insert(static::getTableName(), $this->id, $this->data);
-		}
-		else
-		{
-		  Db::update(static::getTableName(), $this->id, $this->data);
-		}
-	}
-
-	public function delete()
-	{
-		if (!empty($this->id))
-		{
-		  Db::delete(static::getTableName(), $this->id);
-		}
-	}
 }

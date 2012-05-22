@@ -1,62 +1,7 @@
 <?php
 
-
-trait userSchema
-{
-	function getFields()
-	{
-	}
-
-}
-
-class Users extends Collextion
-{
-	use userSchema;
-
-}
-
-class User extends Entity
-{
-	use userSchema;
-
-}
-
-
-class UserSchema extends Schema
-{
-	__construct()
-	{
-		$this->name = new NameField();
-
-	}
-}
-
-class Users extends Collextion
-{
-	f getS()
-	{
-		return new UserSchema();
-	}
-}
-
-class User extends Entity
-{
-	use userSchema;
-
-}
-
-
 abstract class Collection
 {
-
-	public static function getEntitiyClass()
-	{
-		return new Entity();
-	}
-
-
-	getEntitiyClass()::getFields();
-
 
 	public static function createEntity($data)
 	{
@@ -127,5 +72,26 @@ abstract class Collection
 	private static function getTableName()
 	{
 		return Config::getProjectCode() . '_' . get_called_class();
+	}
+
+
+	public function save()
+	{
+		if (empty($this->id))
+		{
+		  $this->id = Db::insert(static::getTableName(), $this->id, $this->data);
+		}
+		else
+		{
+		  Db::update(static::getTableName(), $this->id, $this->data);
+		}
+	}
+
+	public function delete()
+	{
+		if (!empty($this->id))
+		{
+		  Db::delete(static::getTableName(), $this->id);
+		}
 	}
 }

@@ -9,7 +9,7 @@ class Request
 {
 	private $path = array();
 	private $usedPath = array();
-	
+
 	function __construct($mixed = null)
 	{
 		if (is_null($mixed))
@@ -41,9 +41,9 @@ class Request
 
 	public function fromCli()
 	{
+		global $argv;
 		array_shift($argv);
 		$this->path = $argv;
-		//TODO
 	}
 
 	function shiftPath()
@@ -56,12 +56,12 @@ class Request
 	{
 		array_unshift($this->path, array_shift($this->usedPath));
 	}
-	
+
 	function glancePath()
 	{
 		return reset($this->path);
 	}
-	
+
 	function getPath()
 	{
 		return '';
