@@ -29,7 +29,12 @@ abstract class Entity
 		return $data;
 	}
 
-	protected static function explode(&$data)
+	protected static function explode1(&$data)
+	{
+		return $data;
+	}
+	
+	protected static function explode2(&$data)
 	{
 		return $data;
 	}
