@@ -1,18 +1,17 @@
 <?php
 
-class Tickets extends Collection
+class Tickets extends TreeCollection
 {
-	protected static function structure()
+	protected static function fields()
 	{
-		return array(
-			'title' => new field_Input(),
-			'description' => new field_LongText(),
-			'deadline' => new field_Date()
+		return array_merge(
+			parent::fields(),
+			array(
+				'title' => new field_Text(),
+				'description' => new field_Text(),
+				'deadline' => new field_Date(),
+				'owner' => User\Users::relationManyToOne(),
+			)
 		);
-	}
-
-	private static function indexes()
-	{
-
 	}
 }

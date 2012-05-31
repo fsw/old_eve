@@ -2,26 +2,44 @@
 
 abstract class Collection
 {
-
-	public static function createEntity($data)
+	protected static function fields()
 	{
-		return new Entity($data);
+		return array(
+			'id' => new field_Int()
+		);
 	}
 
-	protected static function doGetFields() { throw new Exception('is abstact'); }
-	public static function getFields()
+	public static function validateStructure()
 	{
-		return static::doGetFields();
+		$current = Db::fetchAll('describe ' . static::getTableName());
+		if (empty($current))
+		{
+			echo static::getCreate();
+		}
+		$valid = static::getCreate();
+		var_dump($current, $valid);
+		/*if (count($current))
+		{
+
+		}*/
+		return $current;
 	}
 
-	protected static function doGetFields()
+	private static function getCreate()
 	{
-		return call_user_function(static::getEntitiyClass(), 'getFields');
+		foreach (static::fields() as $key => $field)
+		{
+			$sql[] = '`' . $key . '` ' .  $field::getDbDefinition();
+		}
+		return 'CREATE TABLE ' . static::getTableName() . ' (' . PHP_EOL . implode(',' . PHP_EOL, $sql) . PHP_EOL . ')';
+	}
+
+	public static function relationManyToOne(){
+		return new field_Int();
 	}
 
 	public static function getAll()
 	{
-		call_user_func( array(), 6, 2 );
 		$data = Db::fetchAll('SELECT * FROM ' . static::getTableName());
 		foreach ($data as &$row)
 		{
@@ -46,32 +64,12 @@ abstract class Collection
 		Db::query(static::showCreate());
 	}
 
-	public static function validateStructure()
-	{
-		$current = Db::fetchAll('describe ' . static::getTableName());
-		$current[] = static::showCreate();
-		/*if (count($current))
-		{
 
-		}*/
-		return $current;
-	}
 
-	private static function showCreate()
-	{
-		$sql[] = '`id` INT';
-		/*
-		initStructure
-		foreach (static::getFields() as $key => $field)
-		{
-			$sql[] = '`' . $key . '` ' .  $field::getDefinition();
-		}*/
-		return 'CREATE TABLE ' . static::getTableName() . ' (' . implode(',', $sql) . ')';
-	}
 
 	private static function getTableName()
 	{
-		return Config::getProjectCode() . '_' . get_called_class();
+		return 'test' . '_' . get_called_class();
 	}
 
 

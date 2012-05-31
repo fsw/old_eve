@@ -7,12 +7,12 @@ class field_Date extends Field
 		return 'TIMESTAMP';
 	}
 
-	private static function validate($data)
+	public static function validate($data)
 	{
 
 	}
 
-	private static function getJavaScriptValidator()
+	public static function getJavaScriptValidator()
 	{
 	}
 

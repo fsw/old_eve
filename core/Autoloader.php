@@ -7,7 +7,7 @@
 
 class Autoloader
 {
-	private static $folders = array('helpers', 'actions', 'widgets', 'entities', 'lib', '');
+	private static $folders = array('model', 'helpers', 'actions', 'widgets', 'entities', 'lib');
 	private static $modules = array();
 	private static $projectRoot = '';
 
@@ -19,7 +19,12 @@ class Autoloader
 	public static function setProjectRoot($root)
 	{
 		static::$projectRoot = $root;
-		static::$modules = Config::getModules();
+		static::$modules = Project::getModules();
+	}
+
+	public static function getAllClassLeafs($className)
+	{
+
 	}
 
 	public static function getFileName($className)
@@ -30,13 +35,12 @@ class Autoloader
 
 		if (count($path))
 		{
-			$paths[] = 'modules' . DIRECTORY_SEPARATOR . $path[0];
+			$paths[] = 'modules' . DIRECTORY_SEPARATOR . strtolower($path[0]);
 		}
 		else
 		{
 			$paths = array('core', static::$projectRoot);
 		}
-
 		foreach ($paths as $path)
 		{
 			foreach (static::$folders as $folder)

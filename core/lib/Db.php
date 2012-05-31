@@ -10,12 +10,13 @@ class Db
 		if ($write && !static::$write)
 		{
 			static::$write = true;
-			$config = Config::getMasterDatabaseConnection();
+			//TODO
+			$config = array('dsn' => 'mysql:host=localhost;dbname=cado', 'user' => 'cado', 'pass' => 'cado');
 			static::$connection = new PDO($config['dsn'], $config['user'], $config['pass']);
 		}
 		elseif (static::$connection == null)
 		{
-			$config = Config::getSlaveDatabaseConnection();
+			$config = array('dsn' => 'mysql:host=localhost;dbname=cado', 'user' => 'cado', 'pass' => 'cado');
 			static::$connection = new PDO($config['dsn'], $config['user'], $config['pass']);
 		}
 		return static::$connection;

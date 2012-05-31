@@ -1,7 +1,7 @@
 <?php
 namespace User;
 
-class User extends Entity
+class Users extends \Collection
 {
 
   public static function getFields()
@@ -15,7 +15,3 @@ class User extends Entity
   }
 
 }
-
-
-
-

@@ -1,10 +1,10 @@
 <?php
 
-class field_Text extends Field
+class field_Int extends Field
 {
 	public static function getDbDefinition()
 	{
-		return 'TEXT';
+		return 'INT';
 	}
 
 }
