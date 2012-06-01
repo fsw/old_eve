@@ -10,7 +10,7 @@ class Tickets extends TreeCollection
 				'title' => new field_Text(),
 				'description' => new field_Text(),
 				'deadline' => new field_Date(),
-				'owner' => User\Users::relationManyToOne(),
+				'owner' => Users\Users::relationManyToOne(),
 			)
 		);
 	}

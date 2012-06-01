@@ -1,5 +1,5 @@
 <?php
-namespace Cado;
+namespace Users;
 
 class Module implements \iModule
 {

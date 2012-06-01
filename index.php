@@ -23,7 +23,7 @@ if (PHP_SAPI === 'cli')
 }
 
 
-//Project::run($request);
+Project::run($request);
 
-Tickets::validateStructure();
+//Tickets::validateStructure();
 

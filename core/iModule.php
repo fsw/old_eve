@@ -2,6 +2,6 @@
 
 interface iModule
 {
-	public static function getModules();
-	public static function ();
+	public static function init();
+
 }

@@ -1,5 +1,5 @@
 <?php
-namespace User;
+namespace Users;
 
 class Users extends \Collection
 {

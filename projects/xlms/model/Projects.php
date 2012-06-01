@@ -1,13 +1,16 @@
 <?php
-/**
- * @Entity @Table(name="projects")
- **/
-class Project extends Entity
+
+class Projects extends TreeCollection
 {
-    /** @Id @Column(type="integer") @GeneratedValue **/
-    protected $id;
-    /** @Column(type="string") **/
-    protected $name;
-
+	protected static function fields()
+	{
+		return array_merge(
+			parent::fields(),
+			array(
+				'name' => new field_Text(),
+				'description' => new field_Text(),
+				'owner' => Users\Users::relationManyToOne(),
+			)
+		);
+	}
 }
-
