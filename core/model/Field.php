@@ -2,20 +2,13 @@
 
 abstract class Field
 {
-	public static function getDbDefinition()
-	{
-		return 'INT';
-	}
+	public static function getDbDefinition();
 
-	public static function getJSValidator()
-	{
-		return '';
-	}
+	public static function validate($data);
 
-	public static function validate($data)
-	{
-		return true;
-	}
+	public static function getHtml();
+
+	public static function getJsRegexp();
 
 	public static function serialize($data)
 	{
@@ -26,6 +19,5 @@ abstract class Field
 	{
 		return $data;
 	}
-
 
 }

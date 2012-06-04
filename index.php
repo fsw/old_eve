@@ -17,13 +17,20 @@ else
 	$request->unshiftPath($code);
 	Autoloader::setProjectRoot('projects' . DIRECTORY_SEPARATOR . 'dev');
 }
+
 if (PHP_SAPI === 'cli')
 {
   $request->unshiftPath('api');
 }
 
-
-Project::run($request);
-
+if ($request->glancePath() == 'api')
+{
+	$request->shiftPath();
+	Api::run($request);
+}
+else
+{
+	Project::run($request);
+}
 //Tickets::validateStructure();
 

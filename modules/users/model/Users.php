@@ -10,7 +10,9 @@ class Users extends \Collection
 	  'email' => new field_Email(),
 	  'password' => new field_Password(),
 	  'name' => new field_Text(),
+	  'avatar' => new field_Image(),
 	  'bio' => new field_LongText(),
+	  'groups' => Groups::relationManyToMany('users'),
 	);
   }
 

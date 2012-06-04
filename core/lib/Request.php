@@ -52,9 +52,10 @@ class Request
 		return end($this->usedPath);
 	}
 
-	function unshiftPath()
+	function unshiftPath($val)
 	{
-		array_unshift($this->path, array_shift($this->usedPath));
+		array_unshift($this->path, $val);
+		//array_shift($this->usedPath));
 	}
 
 	function glancePath()

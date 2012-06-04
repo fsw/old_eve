@@ -1,6 +1,6 @@
 <?php
 
-class field_Date extends Field
+class field_Image extends Field
 {
 	public static function getDefinition()
 	{

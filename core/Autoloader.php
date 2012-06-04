@@ -22,7 +22,7 @@ class Autoloader
 		static::$modules = Project::getModules();
 	}
 
-	public static function getAllClassLeafs($className)
+	public static function getClassTree($root = null)
 	{
 
 	}
