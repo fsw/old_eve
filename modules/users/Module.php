@@ -1,10 +1,10 @@
 <?php
 namespace Users;
 
-class Module implements \iModule
+class Module extends \BaseModule
 {
-	static function getModules()
+	public static function getModel()
 	{
-		return array();
+		return array('Users', 'Groups', 'Privilages');
 	}
 }

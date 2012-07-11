@@ -1,10 +1,10 @@
 <?php
 
-class field_Line extends field_Text
+class field_Longtext extends field_Text
 {
-	public static function getDbDefinition()
+	public function getDbDefinition()
 	{
-		return 'VARCHAR';
+		return 'text';
 	}
 
 }

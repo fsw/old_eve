@@ -2,23 +2,23 @@
 
 class field_Text extends Field
 {
-	public static function __construct($minLength, $maxLength)
+	public function __construct()
 	{
-		$this->minLength = $minLength;
-		$this->maxLength = $maxLength;
+		//$this->minLength = $minLength;
+		//$this->maxLength = $maxLength;
 	}
 
-	public static function getDbDefinition()
+	public function getDbDefinition()
 	{
-		return 'TEXT';
+		return 'varchar(255) DEFAULT NULL';
 	}
 
-	public static function validate($data)
+	public function validate($data)
 	{
 		return true;
 	}
 
-	public static function getJsRegexp()
+	public function getJsRegexp()
 	{
 		return '';
 	}

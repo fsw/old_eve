@@ -2,15 +2,15 @@
 
 class Tickets extends TreeCollection
 {
-	protected static function fields()
+	protected static function getFields()
 	{
 		return array_merge(
-			parent::fields(),
+ 			parent::getFields(),
 			array(
 				'title' => new field_Text(),
 				'description' => new field_Text(),
 				'deadline' => new field_Date(),
-				'owner' => Users\Users::relationManyToOne(),
+				'owner' => new relation_ManyToOne(),
 			)
 		);
 	}

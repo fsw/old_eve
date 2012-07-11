@@ -41,6 +41,6 @@ class ErrorHandler
 
 	public function handleException(Exception $e)
 	{
-		return $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+		return $this->handleError($e->getCode(), $e->getMessage() . PHP_EOL . $e->getTraceAsString() , $e->getFile(), $e->getLine());
 	}
 }

@@ -4,14 +4,13 @@
  * @author fsw
  *
  */
-class Widget extends Response
+class Widget
 {
 	private $path = '';
-	private $children = array();
 
-	public function __construct(Request &$request)
+	public function __construct($path)
 	{
-	  	$this->path = Autoloader::getFileName(get_called_class());
+	  	$this->path = $path;
 	}
 
 	public function __set($var, $value)
@@ -23,21 +22,31 @@ class Widget extends Response
 	{
 		return $this->$var;
 	}
-	
-	public function addChild($key, $value)
+		
+	public function subWidget($path)
 	{
-		$this->children[$key][] = $value;
+		echo new Widget($path);
 	}
-	
-	private function echoChildren($name)
-	{
-		echo empty($this->children[$name]) ? '' : implode('', $this->children[$name]);
-	}
-	
+		
 	public function __toString()
 	{
 		ob_start();
-		include substr($this->path , 0, strlen($this->path) - 10) . 'html.php';
+		//TODO if build!	
+		foreach (Autoloader::getSerachPaths() as $path)
+		{
+			$file = $path . DIRECTORY_SEPARATOR . 'widgets' . DIRECTORY_SEPARATOR . $this->path;
+		 	if (File::exists($file . '.html.php'))
+		 	{
+		 		require($file . '.html.php');
+		 		break;
+		 	}
+		 	elseif (File::exists($file . DIRECTORY_SEPARATOR . 'html.php'))
+		 	{
+		 		require($file . DIRECTORY_SEPARATOR . 'html.php');
+		 		break;
+		 	}
+		}
+		//TODO error
 		return ob_get_clean();
 	}
 	

@@ -21,12 +21,33 @@ class Autoloader
 		static::$projectRoot = $root;
 		static::$modules = Project::getModules();
 	}
-
+	
+	public static function getProjectRoot()
+	{
+		return static::$projectRoot;
+	}
+	
 	public static function getClassTree($root = null)
 	{
 
 	}
+	
+	public static function getNonAbstractChildClasses($parent)
+	{
+		
+	}
 
+	public static function getSerachPaths()
+	{
+		$paths = array('core');
+		foreach (Project::getModules() as $module)
+		{
+			$paths[] = 'modules' . DIRECTORY_SEPARATOR . $module;
+		}
+		$paths[] = static::$projectRoot;
+		return $paths;
+	}
+	
 	public static function getFileName($className)
 	{
 		$path = explode('\\', $className);
@@ -62,5 +83,10 @@ class Autoloader
 	public static function autoload($className)
 	{
 		require_once(static::getFileName($className));
+	}
+	
+	public static function load($fileName)
+	{
+		require_once($fileName);
 	}
 }

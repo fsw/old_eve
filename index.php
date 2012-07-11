@@ -5,10 +5,13 @@
  *
  */
 require_once('core/init.php');
+//TODO determine project
+Autoloader::setProjectRoot('projects/xlms');
+$controller = Routing::getController();
+$controller::run();
 
-$request = new Request();
-
-if (($code = $request->shiftPath()) && ($root = 'projects' . DIRECTORY_SEPARATOR . $code) && (Dir::exists($root)))
+/*
+if (($code = Routing::get('projectCode')) && ($root = 'projects' . DIRECTORY_SEPARATOR . $code) && (Dir::exists($root)))
 {
 	Autoloader::setProjectRoot($root);
 }
@@ -32,5 +35,7 @@ else
 {
 	Project::run($request);
 }
+*/
+
 //Tickets::validateStructure();
 

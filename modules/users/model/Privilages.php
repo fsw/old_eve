@@ -4,12 +4,16 @@ namespace Users;
 class Privilages extends \Collection
 {
 
-  public static function getFields()
-  {
- 	return array(
-	  'code' => new field_Token(),
-	  'description' => new field_(),
-	);
-  }
+	public static function getFields()
+	{
+		return array_merge(
+			parent::getFields(),
+			array(
+	 			'code' => new \field_Text(),
+	 			'description' => new \field_Longtext(),
+	 			'groups' => new \relation_ManyToMany('Groups'),
+			)
+		);
+	}
 
 }

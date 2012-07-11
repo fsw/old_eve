@@ -2,12 +2,12 @@
 
 abstract class TreeCollection extends Collection
 {
-	protected static function fields()
+	protected static function getFields()
 	{
 		return array_merge(
-			parent::fields(),
+			parent::getFields(),
 			array(
-				'parent' => static::relationManyToOne(),
+				'parent' => new relation_ManyToOne(static::getBaseName()),
 			)
 		);
 	}

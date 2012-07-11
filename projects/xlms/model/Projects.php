@@ -2,14 +2,14 @@
 
 class Projects extends TreeCollection
 {
-	protected static function fields()
+	protected static function getFields()
 	{
 		return array_merge(
-			parent::fields(),
+ 			parent::getFields(), 
 			array(
 				'name' => new field_Text(),
 				'description' => new field_Text(),
-				'owner' => Users\Users::relationManyToOne(),
+				'owner' => new relation_ManyToOne(),
 			)
 		);
 	}

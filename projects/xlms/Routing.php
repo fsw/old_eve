@@ -1,15 +1,6 @@
 <?php
 
-class Routing
+class Routing extends BaseRouting
 {
-	public static function getTicket(Request &$request)
-	{
-
-	}
-
-	public static function setTicket(Request &$request)
-	{
-
-	}
-
+	
 }

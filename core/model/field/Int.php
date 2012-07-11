@@ -2,9 +2,14 @@
 
 class field_Int extends Field
 {
-	public static function getDbDefinition()
+	public function __construct()
 	{
-		return 'INT';
+		
+	}
+	
+	public function getDbDefinition()
+	{
+		return 'int(11) NOT NULL';
 	}
 
 }
