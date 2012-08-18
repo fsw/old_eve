@@ -2,15 +2,17 @@
 
 class field_Text extends Field
 {
-	public function __construct()
+	public function __construct($params = array())
 	{
-		//$this->minLength = $minLength;
-		//$this->maxLength = $maxLength;
+		$this->required = !empty($params['required']);
+		$this->minLength = empty($params['minLength']) ? 0 : $params['minLength'];
+		$this->maxLength = empty($params['maxLength']) ? 255 : $params['maxLength'];
+		$this->placeholder = empty($params['placeholder']) ? '' : $params['placeholder'];
 	}
 
 	public function getDbDefinition()
 	{
-		return 'varchar(255) DEFAULT NULL';
+		return 'varchar(' . $this->maxLength . ') ' . ($this->required ? 'NUT NULL' : 'DEFAULT NULL');
 	}
 
 	public function validate($data)
@@ -21,6 +23,11 @@ class field_Text extends Field
 	public function getJsRegexp()
 	{
 		return '';
+	}
+	
+	public function getFormInput($key, $value)
+	{
+		return '<input type="text" name="' . $key . '" value="' . $value . '" placeholder="' . $this->placeholder . '" />';
 	}
 
 }

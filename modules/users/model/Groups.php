@@ -11,8 +11,8 @@ class Groups extends \Collection
  		array(
  			'name' => new \field_Email(),
  			'description' => new \field_Password(),
- 			'users' => new \relation_ManyToMany('Users'),
- 			'privilages' => new \relation_ManyToMany('Privilages'),
+ 			'members' => new \relation_Many('Users\\Users', 'groups'),
+ 			'privilages' => new \relation_Many('Users\\Privilages'),
  		)
 	);
   }

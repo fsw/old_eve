@@ -1,11 +1,9 @@
 <?php
 
-abstract class Field
+abstract class Field extends Cell
 {
-	public function __construct()
-	{
-	
-	}
+	const UNSIGNED = 1;
+	const OPTIONAL = 2;
 	
 	public function getDbDefinition()
 	{
@@ -15,16 +13,6 @@ abstract class Field
 	public function getLoremIpsum()
 	{
 		return 'Lorem Ipsum';
-	}
-	
-	public function validate($data)
-	{
-		return true;
-	}
-
-	public function getFormField($data)
-	{
-		return '';
 	}
 	
 	public function getHtml($data)
@@ -45,6 +33,11 @@ abstract class Field
 	public function unserialize($data)
 	{
 		return $data;
+	}
+	
+	public function getFormInput($key, $value)
+	{
+		return '<input type="text" name="' . $key . '" value="' . $value . '">';
 	}
 
 }

@@ -4,7 +4,7 @@ class Project implements iProject
 {
 	public static function getModules()
 	{
-		return array('cado', 'users');
+		return array('api', 'cms', 'users');
 	}
 
 	static function run(Request $request)

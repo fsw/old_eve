@@ -9,7 +9,7 @@ class Projects extends TreeCollection
 			array(
 				'name' => new field_Text(),
 				'description' => new field_Text(),
-				'owner' => new relation_ManyToOne(),
+				'owners' => new relation_One('Users\\Groups'),
 			)
 		);
 	}

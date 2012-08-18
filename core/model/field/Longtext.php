@@ -6,5 +6,9 @@ class field_Longtext extends field_Text
 	{
 		return 'text';
 	}
-
+	
+	public function getFormInput($key, $value)
+	{
+		return '<textarea name="' . $key . '">' . $value . '</textarea>';
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-abstract class KeysCollection extends Collection
+abstract class KeysCollection extends Model
 {
 	protected static function getFields()
 	{

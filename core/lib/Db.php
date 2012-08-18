@@ -29,56 +29,64 @@ class Db
 		return 'cado';
 	}
 	
-	public static function fetchAll($sql)
+	public static function fetchAll($sql, $bind = array())
 	{
 		$sth = static::getConnection()->prepare($sql);
-		$sth->execute();
+		$sth->execute($bind);
 		return $sth->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public static function fetchOne($sql)
+	public static function fetchOne($sql, $bind = array())
 	{
 		$sth = static::getConnection()->prepare($sql);
-		$sth->execute();
+		$sth->execute($bind);
 		return $sth->fetchColumn();
 	}
 
-	public static function fetchRow($sql)
+	public static function fetchRow($sql, $bind = array())
 	{
 		$sth = static::getConnection()->prepare($sql);
-		$sth->execute();
+		$sth->execute($bind);
 		return $sth->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public static function fetchCol($sql)
+	public static function fetchCol($sql, $bind = array())
 	{
 		$sth = static::getConnection()->prepare($sql);
-		$sth->execute();
+		$sth->execute($bind);
 		return $sth->fetchAll(PDO::FETCH_COLUMN);
 	}
 
 	public static function query($sql, $bind = array())
 	{
-		var_dump($sql);
+		//var_dump($sql);
 		$q = static::getConnection(true)->prepare($sql);
 		$q->execute($bind);
 	}
 
-	public static function insert($table, $data)
+	public static function toSet($data)
 	{
-		$q = 'INSERT INTO `' . $table . '` SET ';
 		$keys = array_keys($data);
 		foreach($keys as &$key)
 		{
 			$key = $key .'=?';
 		}
-		$q .= implode(',', $keys);
+		return implode(',', $keys);
+	}
+	
+	public static function insert($table, $data)
+	{
+		$q = 'INSERT INTO `' . $table . '` SET ';
+		$q .= self::toSet($data);
 		static::query($q, array_values($data));
 	}
 	
 	public static function update($table, $id, $data)
 	{
-		static::query('UPDATE `' . $table . '` WHERE id = ' . $id);
+		$q = 'UPDATE `' . $table . '` SET ';
+		$q .= self::toSet($data);
+		$q .= ' WHERE id = ' . $id;
+		static::query($q, array_values($data));
 	}
 
 	public static function delete($table, $id)

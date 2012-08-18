@@ -7,7 +7,7 @@
 
 class Autoloader
 {
-	private static $folders = array('model', 'helpers', 'actions', 'widgets', 'entities', 'lib');
+	private static $folders = array('model', 'lib');
 	private static $modules = array();
 	private static $projectRoot = '';
 
@@ -27,9 +27,15 @@ class Autoloader
 		return static::$projectRoot;
 	}
 	
-	public static function getClassTree($root = null)
+	public static function getClassPath($class)
 	{
-
+		$ret = array();
+		$reflection = new ReflectionClass($class);
+		do {
+            $ret[] = $reflection->getName();
+            $reflection = $reflection->getParentClass();
+        } while( false !== $reflection );
+		return $ret;
 	}
 	
 	public static function getNonAbstractChildClasses($parent)
@@ -37,23 +43,48 @@ class Autoloader
 		
 	}
 
-	public static function getSerachPaths()
+	public static function getSearchPaths()
 	{
-		$paths = array('core');
-		foreach (Project::getModules() as $module)
+		if (CADO_DEV)
 		{
-			$paths[] = 'modules' . DIRECTORY_SEPARATOR . $module;
+			$paths = array(static::$projectRoot);
+			foreach (Project::getModules() as $module)
+			{
+				$paths[] = 'modules' . DIRECTORY_SEPARATOR . $module;
+			}
+			$paths[] = 'core';
 		}
-		$paths[] = static::$projectRoot;
+		else
+		{
+			$paths[] = '';
+		}
 		return $paths;
+	}
+	
+	public static function findFile($path)
+	{
+		foreach (self::getSearchPaths() as $search)
+		{
+			$file = $search . DIRECTORY_SEPARATOR . $path;
+			if (Fs::isFile($file))
+			{
+				return $file;
+			}
+		}
+		return false;
 	}
 	
 	public static function getFileName($className)
 	{
 		$path = explode('\\', $className);
 		$subpath = explode('_', array_pop($path));
-		$subpath = implode(DIRECTORY_SEPARATOR, $subpath);
-
+		//example_Test -> example/Test.php
+		$subpath1 = implode(DIRECTORY_SEPARATOR, $subpath);
+		//example_Test -> example/test/Test.php
+		$base = array_pop($subpath);
+		$subpath[] = lcfirst($base);
+		$subpath[] = $base;
+		$subpath2 = implode(DIRECTORY_SEPARATOR, $subpath);
 		if (count($path))
 		{
 			$paths[] = 'modules' . DIRECTORY_SEPARATOR . strtolower($path[0]);
@@ -66,9 +97,11 @@ class Autoloader
 		{
 			foreach (static::$folders as $folder)
 			{
-				$allPaths[] = array($path, $folder, $subpath);
+				$allPaths[] = array($path, $folder, $subpath1);
+				$allPaths[] = array($path, $folder, $subpath2);
 			}
-			$allPaths[] = array($path, $subpath);
+			$allPaths[] = array($path, $subpath1);
+			$allPaths[] = array($path, $subpath2);
 		}
 		foreach ($allPaths as $path)
 		{
@@ -87,6 +120,11 @@ class Autoloader
 	
 	public static function load($fileName)
 	{
-		require_once($fileName);
+		require_once(CADO_SRC . $fileName);
+	}
+	
+	public static function requireVendor($path)
+	{
+		require_once('core' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $path);
 	}
 }

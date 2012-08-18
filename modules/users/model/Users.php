@@ -13,7 +13,7 @@ class Users extends \Collection
  			'name' => new \field_Text(),
  			'avatar' => new \field_Image(),
  			'bio' => new \field_Longtext(),
- 			'groups' => new \relation_ManyToMany('Groups'),
+ 			'groups' => new \relation_Many('Users\\Groups', 'members'),
 		)
 		);
 	}
@@ -28,10 +28,46 @@ class Users extends \Collection
 		);
 	}
 	
+	public static function getByEmail($email)
+	{
+		return static::searchOne('email = ?', array($email));
+	}
+	
 	protected static function explode(&$row)
 	{
+		parent::explode($row);
 		$row['title'] = $row['name'] . '(' . $row['email'] . ')';
 		return $row;
 	}
 
+	public static function register($email)
+	{
+	
+	}
+	
+	public static function login($email, $password)
+	{
+		$user = static::getByEmail($email);
+		if (!empty($user))
+		{
+			$_SESSION['user'] = $user;
+		}
+		return $user;
+	}
+	
+	public static function logout()
+	{
+		unset($_SESSION['user']);
+	}
+	
+	public static function isLoggedIn()
+	{
+		return !empty($_SESSION['user']);
+	}
+	
+	public static function getLoggedIn()
+	{
+		return empty($_SESSION['user']) ? null : $_SESSION['user'];
+	}
+	
 }

@@ -11,7 +11,6 @@ class Privilages extends \Collection
 			array(
 	 			'code' => new \field_Text(),
 	 			'description' => new \field_Longtext(),
-	 			'groups' => new \relation_ManyToMany('Groups'),
 			)
 		);
 	}

@@ -1,9 +1,0 @@
-
-<IfModule mod_headers.c>
-	Header set X-UA-Compatible "IE=edge"
-</IfModule>
-
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteRule ^(.*)$ index.php [QSA,L]
-</IfModule>

@@ -1,9 +1,8 @@
 <?php
 
-abstract class Collection
+abstract class Collection extends Model
 {
-	private static $CollectionsFields = array();
-	
+			
 	protected static function getFields()
 	{
 		return array(
@@ -17,91 +16,64 @@ abstract class Collection
 			'primary' => array('id')
 		);
   	}
-
-	public static function fields()
+	
+	public static function save($row)
 	{
-		if (!array_key_exists(get_called_class(), self::$CollectionsFields))
+		if (empty($row['id']))
 		{
-			self::$CollectionsFields[get_called_class()] = static::getFields();
+			return self::add($row);
 		}
-		return self::$CollectionsFields[get_called_class()]; 
+		else
+		{
+			return self::update($row['id'], $row);
+		}
 	}
 	
-	public static function getStructure()
+	public static function update($id, $row)
 	{
-		$ret = array();
-		$ret[static::getTableName()] = array();
+		$errors = static::validate($row);
 		foreach (static::fields() as $key => $field)
 		{
-			if ($field instanceof Field)
+			if ($field instanceof relation_Many)
 			{
-				$ret[static::getTableName()][$key] = $field->getDbDefinition();
+				unset($row[$key]);
 			}
-			elseif ($field instanceof relation_ManyToOne)
+			elseif ($field instanceof relation_One && isset($row[$key]))
 			{
-				$ret[static::getTableName()][$key . '_id'] = 'int(11) DEFAULT NULL';
-			}
-			elseif ($field instanceof relation_ManyToMany)
-			{
-				$f = new field_Int();
-				$ret[static::getTableName() . '_xref_' . $key] = array(
-					static::getBaseName() . '_id' => $f->getDbDefinition(),
-					$key . '_id' => $f->getDbDefinition()
-				);
+				$row[$key . '_id'] = (int)$row[$key];
+				unset($row[$key]);
 			}
 		}
-		foreach (static::getIndexes() as $key => $field)
-		{
-			$unique = ($key == 'primary') || array_shift($field); 
-			$ret[static::getTableName()]['index_' . $key] = 
-				($key == 'primary' ? 'PRIMARY KEY' : (($unique ? 'UNIQUE ' : '') . 'KEY ' . '`index_' . $key . '`'))
-				. ' (`' . implode($field , '`,`') . '`)';
-		}
-		return $ret;
-	}
-	
-	public static function add($fields)
-	{
-		Db::insert(self::getTableName(), $fields);
-	}
-	
-	public static function update($id, $fields)
-	{
-	
+		Db::update(self::getTableName(), $id, $row);
 	}
 
-	public static function searchIds($args)
+	public static function searchIds($where, $bind = array())
 	{
-		return array();
+		$ids = \Db::fetchCol('SELECT id FROM ' . self::getTableName() . ' WHERE ' . $where, $bind);
+		return $ids;
 	}
 	
-	public static function search($args)
+	public static function search($where, $bind = array())
 	{
-		$rows = \Db::fetchAll('SELECT * FROM ' . self::getTableName());
+		//replacing Model search to cahce results
+		$ids = self::searchIds($where, $bind);
+		if (empty($ids))
+		{
+			return $ids;
+		}
+		
+		$rows = \Db::fetchAll('SELECT * FROM ' . self::getTableName() . ' WHERE id IN (' . implode(',', $ids) . ')');
 		foreach ($rows as &$row)
 		{
-			static::explode($row);
+			$ids[array_search($row['id'], $ids)] = static::explode($row);
 		}
-		return $rows;
+		return $ids;
 	}
 	
 	public static function getById($id)
 	{
-		return static::search(array('id' => $id));
+		$row = \Db::fetchRow('SELECT * FROM ' . self::getTableName() . ' WHERE id=' . $id);
+		return static::explode($row);;
 	}
 
-	protected static function getBaseName()
-	{
-		return strtolower(str_replace('\\', '_', get_called_class()));
-	}
-	
-	private static function getTableName()
-	{
-		return Db::getPrefix() . '_' . Project::getCode() . '_' . self::getBaseName();
-	}
-	
-	protected static function explode(&$row)
-	{
-		return $row;
-	}
 }

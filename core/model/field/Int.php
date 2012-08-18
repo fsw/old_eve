@@ -11,5 +11,4 @@ class field_Int extends Field
 	{
 		return 'int(11) NOT NULL';
 	}
-
 }

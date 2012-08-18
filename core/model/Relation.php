@@ -1,10 +1,6 @@
 <?php
 
-abstract class Relation
+abstract class Relation extends Cell
 {
-	public function __construct()
-	{
 	
-	}
-
 }
