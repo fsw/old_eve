@@ -86,7 +86,7 @@ class BaseRouting
 	{
 	}
 	
-	protected static function getWidget($action)
+	protected static function action($action)
 	{
 		static::preAction($action);
 		$functionName = 'action' . ucfirst($action);

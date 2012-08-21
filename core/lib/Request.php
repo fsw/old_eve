@@ -2,14 +2,16 @@
 
 class Request
 {
-	private static $params = null;
-	private static $path = null;
-	private static $subdomain = null;
-	private static $post = null;
+	private static $getParams = null;
+	private static $docParams = null;
+	private static $sdmParams = null;
+
+	private static $postParams = null;
+
 	private static $project = null;
 	private static $href = null;
 	
-	public static function href($subdomain = array(), $path = array(), $params = array())
+	public static function href($domain = array(), $path = array(), $get = array())
 	{
 		if (CADO_DEV && !empty(self::$project))
 		{

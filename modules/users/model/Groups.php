@@ -1,7 +1,6 @@
 <?php
-namespace Users;
 
-class Groups extends \Collection
+class users_Groups extends Collection
 {
 
   public static function getFields()
@@ -9,10 +8,10 @@ class Groups extends \Collection
  	return array_merge(
  		parent::getFields(), 
  		array(
- 			'name' => new \field_Email(),
- 			'description' => new \field_Password(),
- 			'members' => new \relation_Many('Users\\Users', 'groups'),
- 			'privilages' => new \relation_Many('Users\\Privilages'),
+ 			'name' => new field_Email(),
+ 			'description' => new field_Password(),
+ 			'members' => new relation_Many('users_Users', 'groups'),
+ 			'privilages' => new relation_Many('users_Privilages'),
  		)
 	);
   }

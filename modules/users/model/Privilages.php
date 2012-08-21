@@ -1,7 +1,6 @@
 <?php
-namespace Users;
 
-class Privilages extends \Collection
+class users_Privilages extends Collection
 {
 
 	public static function getFields()
@@ -9,8 +8,8 @@ class Privilages extends \Collection
 		return array_merge(
 			parent::getFields(),
 			array(
-	 			'code' => new \field_Text(),
-	 			'description' => new \field_Longtext(),
+	 			'code' => new field_Text(),
+	 			'description' => new field_Longtext(),
 			)
 		);
 	}

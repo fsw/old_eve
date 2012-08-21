@@ -1,7 +1,6 @@
 <?php
-namespace Users;
 
-class Module extends \BaseModule
+class users_Module extends BaseModule
 {
 	public static function getModel()
 	{

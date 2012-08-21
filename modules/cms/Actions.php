@@ -1,7 +1,6 @@
 <?php
-namespace Cms;
 
-class Routing extends \BaseRouting
+class cms_Actions extends BaseActions
 {
 	static function actionIndex()
 	{

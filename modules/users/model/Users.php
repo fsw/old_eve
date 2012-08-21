@@ -1,19 +1,18 @@
 <?php
-namespace Users;
 
-class Users extends \Collection
+class users_Users extends Collection
 {
 	public static function getFields()
 	{
 		return array_merge(
 		parent::getFields(),
 		array(
- 			'email' => new \field_Email(),
- 			'password' => new \field_Password(),
- 			'name' => new \field_Text(),
- 			'avatar' => new \field_Image(),
- 			'bio' => new \field_Longtext(),
- 			'groups' => new \relation_Many('Users\\Groups', 'members'),
+ 			'email' => new field_Email(),
+ 			'password' => new field_Password(),
+ 			'name' => new field_Text(),
+ 			'avatar' => new field_Image(),
+ 			'bio' => new field_Longtext(),
+ 			'groups' => new relation_Many('users_Groups', 'members'),
 		)
 		);
 	}

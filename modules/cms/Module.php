@@ -1,7 +1,6 @@
 <?php
-namespace Cms;
 
-class Module extends \BaseModule
+class cms_Module extends BaseModule
 {
 
 }

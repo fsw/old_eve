@@ -4,9 +4,8 @@
  * @author fsw
  *
  */
-namespace Users;
 
-class form_Login extends \Form
+class users_form_Login extends Form
 {
 	protected function getFields()
 	{

@@ -11,7 +11,7 @@ class field_Password extends field_Text
 	{
 		if (strlen($data) < 8)
 		{
-			return new FieldError('Password needs to be at least 8 chars long');
+			return 'Password needs to be at least 8 chars long';
 		}
 		return true;
 	}

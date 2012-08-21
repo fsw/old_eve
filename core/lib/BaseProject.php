@@ -17,7 +17,7 @@ abstract class BaseProject
 	
 	public static function getModules()
 	{
-		return array('api');
+		return array();
 	}
 	
 	public static function isModuleOn($code)
