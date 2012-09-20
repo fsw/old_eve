@@ -1,0 +1,98 @@
+body {
+	background-color: #b8e5fa;
+}
+
+ul#mainMenu {
+    border-radius: 0 0 5px 5px;    
+    margin: 0 auto;
+    width: 1000px;
+    height: 40px;
+    background-image: url('/static/cadoIcon.png');
+    background-position: 4px 4px;
+    background-repeat: no-repeat;
+    background-color: #231f20;
+    padding-left: 40px;
+    overflow: visible;
+}
+
+ul#mainMenu li {
+	float:left;
+	border-right: 1px solid #544;
+	position:relative;
+}
+
+ul#mainMenu li:first-child {
+	border-left: 1px solid #544;
+}
+
+ul#mainMenu li.logout {
+	float: right;
+	margin-right: 40px;
+	border-left: 1px solid #544;
+}
+
+ul#mainMenu a {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    white-space: nowrap;
+	min-width: 100px;
+	text-align: center;
+    color: white;
+    font-family: 'Futura Today Bold',Helvetica,Arial,sans-serif;
+    font-size: 11px;
+    text-shadow: 0 1px 0 #000000;
+    text-transform: uppercase;
+}
+
+ul#mainMenu a:hover {
+    background-color: #00adef;
+    color: #231f20;
+}
+
+ul#mainMenu a:active {
+	background-color: red;
+}
+
+ul#mainMenu ul {
+	display: none;
+	position: absolute;
+	top: 40px;
+	background-color: #231f20;
+    z-index: 100;
+	height: auto;
+}
+
+ul#mainMenu ul li {
+	float: none;
+	border: none;
+	border-top: 1px solid #544;
+}
+
+ul#mainMenu li:hover > ul {
+    display: block;
+}
+
+
+
+
+div#body {
+	background-color: #eff;
+	margin: 15px auto;
+	padding: 5px;
+	border-radius: 5px;
+    width: 1000px;
+    min-height: 500px;
+}
+
+div.sql {
+	padding: 10px;
+	background: white;
+	border: 1px dashed #cce;
+}
+
+div.sql a {
+	float: right;
+	color: red;
+}

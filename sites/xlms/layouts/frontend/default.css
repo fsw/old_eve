@@ -1,0 +1,118 @@
+body {
+	background: url('bg.jpg') repeat scroll 0 0 transparent;
+    color: #222222;
+    font-family: 'Arvo',serif;
+    font-size: 14px;
+    width: 960px;
+    margin: 10px auto;
+}
+
+input {
+	background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #CACACA;
+    box-shadow: 0 2px 4px 0 #828282;
+    font-weight: normal;
+    margin: 0;
+    outline: medium none;
+    padding: 5px;
+    vertical-align: middle;
+    width: 180px;
+}
+
+.button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	box-shadow:inset 0px 1px 0px 0px #97c4fe;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #3d94f6), color-stop(1, #1e62d0) );
+	background:-moz-linear-gradient( center top, #3d94f6 5%, #1e62d0 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#3d94f6', endColorstr='#1e62d0');
+	background-color:#3d94f6;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #337fed;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:2px 9px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #1570cd;
+	cursor: pointer;
+	width: auto;
+}
+
+.button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #1e62d0), color-stop(1, #3d94f6) );
+	background:-moz-linear-gradient( center top, #1e62d0 5%, #3d94f6 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#1e62d0', endColorstr='#3d94f6');
+	background-color:#1e62d0;
+}
+
+.button:active {
+	position:relative;
+	top:1px;
+}
+
+#addButton {
+	float: right;
+}
+
+div.navigation {
+	width: 220px;
+	float:left;
+	
+	padding: 5px;
+	border-right: 3px dashed #ccc;
+	background-color: white;
+}
+
+div.body {
+	margin-left: 255px;
+	border-left: 3px dashed #ccc;
+	background-color: white;
+	min-height: 300px;
+}
+
+
+ul#tabnav { 
+	margin-left: 255px;
+	border-bottom: 2px dashed #668;
+	height: 22px;
+}
+
+ul#tabnav li {
+	float: left;
+	margin-right: 15px;
+}
+
+ul#tabnav li a {
+	display: block;
+	padding: 3px 4px;
+	line-height: 14px;
+	border: 1px solid #66c;
+	background-color: #ddf;
+	color: #666;
+	margin-right: 0px;
+	text-decoration: none;
+	border-bottom: none;
+}
+
+ul#tabnav li.current {
+	border-bottom: 2px solid #fff;
+}
+
+ul#tabnav li.current a {
+	background-color: #fff;
+	color: #000;
+	position: relative;
+	top: 1px;
+	padding-top: 4px;
+}
+
+ul#tabnav a:hover {
+	background: #fff;
+}
+
+
