@@ -1,3 +1,0 @@
-<?php
-
-Routing::processRequest();

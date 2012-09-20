@@ -1,7 +1,0 @@
-<?php 
-
-Projects::add(array(
-	
-));
-
-
