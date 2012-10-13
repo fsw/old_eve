@@ -28,11 +28,31 @@ abstract class BaseSite
 	{
 		if (empty($this->db))
 		{
-			$this->db = new Db(array(
-					'dsn' => CADO_DB_DSN,
-					'user' => CADO_DB_USER,
-					'pass' => CADO_DB_PASS,
-			));
+			if (defined('CADO_SLAVE_DSN'))
+			{
+				$this->db = new Db(array(
+						array(
+							'dsn' => CADO_DB_DSN,
+							'user' => CADO_DB_USER,
+							'pass' => CADO_DB_PASS,
+							'write' => true,
+						),
+						array(
+							'dsn' => CADO_SLAVE_DSN,
+							'user' => CADO_SLAVE_USER,
+							'pass' => CADO_SLAVE_PASS,
+							'write' => false,
+						),
+				));
+			}
+			else
+			{
+				$this->db = new Db(array(
+						'dsn' => CADO_DB_DSN,
+						'user' => CADO_DB_USER,
+						'pass' => CADO_DB_PASS,
+				));
+			}
 			//TODO
 			//$this->cache = new Cache('path');
 		}
@@ -100,6 +120,7 @@ abstract class BaseSite
 			$path[] = $code; 
 		}
 		$path[] = lcfirst(substr($method, 6));
+		$defsCount = 0;
 		$params = array();
 		$extension = 'html';
 		if (method_exists($class, $method))
@@ -122,18 +143,50 @@ abstract class BaseSite
 				}
 				else
 				{
+					if ($param->isDefaultValueAvailable() && ($param->getDefaultValue() == $value))
+					{
+						$defsCount ++;
+					}
+					else
+					{
+						$defsCount = 0;
+					}
 					$path[] = $value;
 				}
+			}
+			for ($i =0; $i<$defsCount; $i++)
+			{
+				array_pop($path);
 			}
 		}
 		//TODO error on wrong number
 		//TODO
-		return 'http://' . CADO_DOMAIN . '/' . implode('/', $path) . '.' . $extension .
+		$last = array_pop($path) . '.' . $extension;
+		if ($last != 'index.html')
+		{
+			$path[] = $last;
+		} 
+		return 'http://' . CADO_DOMAIN . '/' . implode('/', $path) .
 		(empty($params) ? '' : '?' . http_build_query($params));;
 	}
 	
 	public function route(Request $request)
 	{
+		if ($request->getType() == 'cli')
+		{
+			$file = Cado::findResource('tasks/' . $request->glancePath() . '.php');
+			if ($file === null)
+			{
+				throw new Exception('unknown task');
+			}
+			else
+			{
+				var_dump($request->getPath());
+				include($file);
+				var_dump($request->getPath());
+			}
+			return null;
+		}
 		$className = BaseActions::getActionsClass($request->glancePath());
 		if ($className === null)
 		{

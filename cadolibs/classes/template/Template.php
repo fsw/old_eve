@@ -45,7 +45,7 @@ class Template
 	
 	public function __get($key)
 	{
-		return self::quote($this->____data[$key]);
+		return !isset($this->____data[$key]) ? null : self::quote($this->____data[$key]);
 	}
 	
 	public function __toString()

@@ -25,12 +25,8 @@ class Request
 		{
 			global $argv,$argc;
 			array_shift($argv);
-			foreach ($argv as $arg)
-			{
-					
-			}
-			parse_str(implode('&', $argv), $args);
-			$this->params = array_merge($this->params, $args);
+			//parse_str(implode('&', $argv), $args);
+			$this->pathList = $argv;
 		}
 		else
 		{
@@ -89,10 +85,17 @@ class Request
 		}
 	}
 	
+	public function getType()
+	{
+		return PHP_SAPI;
+		// === 'cli')
+	}
+	
+	/*
 	public static function serialize()
 	{
 		return array('s' => $this->subdomainStack, 'p' => $this->pathStack, 'g' => $this->getParams);
-	}
+	} */
 	
 	public function domain()
 	{
@@ -129,13 +132,13 @@ class Request
 	public function postParam()
 	{
 		$args = func_get_args();
-		$ret &= $this->postParams;
+		$ret =& $this->postParams;
 		for ($i = 0; $i < count($args); $i++)
 			if (isset($ret[$args[$i]]))
-			$ret &= $ret[$args[$i]];
+				$ret =& $ret[$args[$i]];
 			else
 				return null;
-				return $ret;
+		return $ret;
 	}
 	
 	public function getPath()

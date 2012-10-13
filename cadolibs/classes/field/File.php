@@ -21,9 +21,30 @@ class field_File extends Field
 	
 	public function fromDb($cell)
 	{
-		$cell['url'] = '/uploads/' . $cell['name'] . '.mp4';
-		$cell['thumb'] = '/uploads/' . $cell['name'] . '_t.jpg';
+		$cell['url'] = 'http://' . CADO_DOMAIN . '/uploads/' . $cell['name'] . '.mp4';
+		$cell['url2'] = 'http://' . CADO_DOMAIN . '/uploads/' . $cell['name'] . '.webm';
+		$cell['url3'] = 'http://' . CADO_DOMAIN . '/uploads/' . $cell['name'] . '.ogg';
+		$cell['thumb'] = 'http://' . CADO_DOMAIN . '/uploads/' . $cell['name'] . '_t.jpg';
 		return $cell;
+	}
+	
+	public static function fromFile($path, $name = null)
+	{
+		$video = array('name' => $name, 'ring' => 0);
+		if (empty($name))
+		{
+			$video['name'] = uniqid('f_');
+		}
+		Fs::copyr($path, CADO_FILE_UPLOADS . $video['name'] . '.mp4');
+		$cmd = 'ffmpeg -ss 10 -i ' . CADO_FILE_UPLOADS . $video['name'] . '.mp4 -vframes 1 -s 479x290 ' . CADO_FILE_UPLOADS . $video['name'] . '_t.jpg';
+		exec($cmd);
+		
+		$cmd = 'ffmpeg -i ' . CADO_FILE_UPLOADS . $video['name'] . '.mp4 ' . CADO_FILE_UPLOADS . $video['name'] . '.webm';
+		exec($cmd);
+		
+		$cmd = 'ffmpeg -i ' . CADO_FILE_UPLOADS . $video['name'] . '.mp4 ' . CADO_FILE_UPLOADS . $video['name'] . '.ogg';
+		exec($cmd);
+		return $video;
 	}
 	
 	public function fromPost($post)
@@ -31,11 +52,7 @@ class field_File extends Field
 		$video = array('name' => '', 'ring' => 0);
 		if (empty($post['error']))
 		{
-			//["type"]
-			$video['name'] = uniqid('f_');
-			Fs::copyr($post['tmp_name'], CADO_FILE_UPLOADS . $video['name'] . '.mp4');
-			$cmd = 'ffmpeg -ss 10 -i ' . CADO_FILE_UPLOADS . $video['name'] . '.mp4 -vframes 1 -s 320x240 ' . CADO_FILE_UPLOADS . $video['name'] . '_t.jpg';
-			exec($cmd);
+			$video = self::fromFile($post['tmp_name']);
 		}
 		else
 		{

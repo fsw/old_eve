@@ -66,7 +66,7 @@ abstract class model_Collection extends Model
 		return $ret;
 	}
 
-	protected function getTableName()
+	public function getTableName()
 	{
 		return $this->prefix . '_' . $this->getBaseName();
 	}
@@ -162,7 +162,7 @@ abstract class model_Collection extends Model
 			{
 				$ret[$key . '_id'] = (int)$row[$key];
 			}
-			else
+			elseif (isset($row[$key]))
 			{
 				$cell = $field->toDb($row[$key]);
 				if (is_array($cell))
@@ -224,7 +224,7 @@ abstract class model_Collection extends Model
 
 	public function update($id, $row)
 	{
-		$errors = $this->validate($row);
+		//$errors = $this->validate($row);
 		$row = $this->toDb($row);
 		$this->db->update($this->getTableName(), $id, $row);
 	}
@@ -263,12 +263,23 @@ abstract class model_Collection extends Model
 		else
 		{
 			$rows = $this->db->fetchAll('SELECT * FROM ' . $this->getTableName() . ' WHERE id IN (' . implode(',', $ids) . ')');
+			foreach($ids as &$id)
+			{
+				foreach($rows as $row)
+				{
+					if ($row['id'] === $id)
+					{
+						$id = $row;
+						break;
+					}
+				}
+			}
 		}
-		foreach ($rows as &$row)
+		foreach ($ids as &$row)
 		{
 			$this->explode($row);
 		}
-		return $rows;
+		return $ids;
 	}
 	
 	public function searchOne($where = null, $bind = array())
@@ -298,5 +309,12 @@ abstract class model_Collection extends Model
 		$this->db->query('DELETE FROM ' . $this->getTableName() . ' WHERE id=' . $id);
 		return true;
 	}
+	
+	public function deleteByField($key, $value)
+	{
+		$this->db->query('DELETE FROM ' . $this->getTableName() . ' WHERE `' . $key . '`= ?', array($value));
+		return true;
+	}
+	
 
 }

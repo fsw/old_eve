@@ -43,7 +43,20 @@ class Db
 		{
 			//TODO
 			$config = $this->config;
-			$this->reader = new PDO($config['dsn'], $config['user'], $config['pass']);
+			if (!empty($config[0]) && is_array($config[0]))
+			{
+				foreach ($config as $c)
+				{
+					if (!$c['write'])
+					{
+						$config = $c;
+						break;
+					}
+				}
+			}
+			$this->reader = new PDO($config['dsn'], $config['user'], $config['pass'], array(
+			    PDO::ATTR_PERSISTENT => true
+			));
 			$this->reader->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		return $this->reader;
@@ -55,7 +68,20 @@ class Db
 		{
 			//TODO
 			$config = $this->config;
-			$this->writer = new PDO($config['dsn'], $config['user'], $config['pass']);
+			if (!empty($config[0]) && is_array($config[0]))
+			{
+				foreach ($config as $c)
+				{
+					if ($c['write'])
+					{
+						$config = $c;
+						break;
+					}
+				}
+			}
+			$this->writer = new PDO($config['dsn'], $config['user'], $config['pass'], array(
+			    PDO::ATTR_PERSISTENT => true
+			));
 			$this->writer->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		return $this->writer;
@@ -63,36 +89,55 @@ class Db
 	
 	public function fetchAll($sql, $bind = array())
 	{
+		Dev::startTimer('db');
+		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
-		return $sth->fetchAll(PDO::FETCH_ASSOC);
+		$ret = $sth->fetchAll(PDO::FETCH_ASSOC);
+		Dev::stopTimer();
+		return $ret;
 	}
 
 	public function fetchOne($sql, $bind = array())
 	{
+		Dev::startTimer('db');
+		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
-		return $sth->fetchColumn();
+		$ret = $sth->fetchColumn();
+		Dev::stopTimer();
+		return $ret;
 	}
 
 	public function fetchRow($sql, $bind = array())
 	{
+		Dev::startTimer('db');
+		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
-		return $sth->fetch(PDO::FETCH_ASSOC);
+		$ret = $sth->fetch(PDO::FETCH_ASSOC);
+		Dev::stopTimer();
+		return $ret;
 	}
 
 	public function fetchCol($sql, $bind = array())
 	{
+		Dev::startTimer('db');
+		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
-		return $sth->fetchAll(PDO::FETCH_COLUMN);
+		$ret = $sth->fetchAll(PDO::FETCH_COLUMN);
+		Dev::stopTimer('db');
+		return $ret;
 	}
 
 	public function query($sql, $bind = array())
 	{
+		Dev::startTimer('db');
+		Dev::logEvent('db', $sql);
 		$q = $this->getWriter()->prepare($sql);
 		$q->execute($bind);
+		Dev::stopTimer();
 	}
 
 	public static function toSet($data)
@@ -103,6 +148,24 @@ class Db
 			$key = '`' . $key . '`=?';
 		}
 		return implode(',', $keys);
+	}
+	
+	public static function notIn($field, $list)
+	{
+		if (empty($list))
+		{
+			return '1';
+		}
+		return $field . ' NOT IN (' . implode(',', array_fill(0, count($list), '?')) . ')';
+	}
+	
+	public static function in($field, $list)
+	{
+		if (empty($list))
+		{
+			return '0';
+		}
+		return $field . ' IN (' . implode(',', array_fill(0, count($list), '?')) . ')';
 	}
 	
 	public function insert($table, $data)
@@ -124,6 +187,7 @@ class Db
 	{
 		$this->query('DELETE FROM `' . $table . '` WHERE id = ' . $id);
 	}
+
 	
 	public function getStructure()
 	{

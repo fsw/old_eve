@@ -9,6 +9,7 @@ abstract class actions_Layout extends BaseActions
 		$this->layout = new Layout('layouts/' . $this->layoutName);
 		$this->layout->addCss(actions_Static::hrefActions(BaseActions::getActionsCode($this), 'css'));
 		$this->layout->addJs('/static/jquery.js');
+		//$this->layout->addJs('/static/modernizr.js');
 		$this->layout->addJs(actions_Static::hrefActions(BaseActions::getActionsCode($this), 'js'));
 	}
 

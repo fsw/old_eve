@@ -9,7 +9,8 @@ class actions_Static extends BaseActions
 		if ($filePath !== null)
 		{
 			//TODO cache will do!
-			//Fs::copyr($filePath, 'web' . $fileName);
+			//var_dump($filePath, Cado::$outputCache . 'static/' . $path);
+			Fs::copyr($filePath, Cado::$outputCache . 'static/' . $path);
 			if ($this->request->extension() == 'css')
 			{
 				header('Content-Type: text/css');

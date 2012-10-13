@@ -29,31 +29,47 @@ switch(array_shift($argv))
 	switch ($config['PROTO'])
 	{
 	  case 'ssh':
-		//echo 'building temp webroots' . NL;
-		//system('mkdir _remotes/' . $remote . '_webroots');
-		
 		$toCopy = 'cadolibs framework modules'; //webroots
 		$apacheCfg = '';
-		foreach ($config['SITES'] as $key=>$domains)
+		foreach ($config['SITES'] as $key=>$siteData)
 		{
 		  $toCopy .= ' sites/' . $key;
-		  //system('mkdir _remotes/' . $remote . '_webroots/' . $key);
-		  //system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $key);
-		  //system('mkdir _remotes/' . $remote . '_webroots/' . $key . '/uploads');
-		  //system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $key . '/uploads');
+		  system('mkdir _remotes/' . $remote . '_webroots');
+		  system('mkdir _remotes/' . $remote . '_webroots/' . $key);
+		  system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $key);
+		  system('mkdir _remotes/' . $remote . '_webroots/' . $key . '/uploads');
+		  system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $key . '/uploads');
 		  $templateData = array(
 			'code' => $key,
-			'domains' => $domains,
-			'root' => $config['ROOT'],
+			'domains' => $siteData['domains'],
+			'webroot' => $siteData['webroot'],
+		  	'host' => $remote,
+			'root' => $config['SRC'],
 		  	'dev' => $config['DEV'],
 			'db_dsn' => $config['DB_DSN'],
 			'db_user' => $config['DB_USER'],
 			'db_pass' => $config['DB_PASS'],
-			'file_cache' => $config['FILE_CACHE'],
+		  	'file_cache' => $config['FILE_CACHE'],
 		  );
+		  if (!empty($config['SLAVE_DSN']))
+		  {
+		  	$templateData['slave_dsn'] = $config['SLAVE_DSN'];
+		  	$templateData['slave_user'] = $config['SLAVE_USER'];
+		  	$templateData['slave_pass'] = $config['SLAVE_PASS'];
+		  }
+		  Fs::write('_remotes/' . $remote . '_webroots/' . $key . '/index.php', new Template('templates/index.php', $templateData));
+		  Fs::write('_remotes/' . $remote . '_webroots/' . $key . '/.htaccess', new Template('templates/htaccess', $templateData));
 		  $apacheCfg .= new Template('templates/apache.cfg', $templateData);
-		  //file_put_contents('_remotes/' . $remote . '_webroots/' . $key . '/index.php', new Template('templates/index.php', $templateData));
-		  //file_put_contents('_remotes/' . $remote . '_webroots/' . $key . '/.htaccess', new Template('templates/htaccess', $templateData));
+		  
+		  $current = getcwd();
+		  
+		  chdir('_remotes/' . $remote . '_webroots/' . $key);
+		  $cmd = 'rsync -avzR --progress -e ssh * ' . $config['HOST'] . ':' . $siteData['webroot'] . '/';
+		  
+		  echo $cmd . NL;
+		  system($cmd);
+		  
+		  chdir($current);
 		}
 		//file_put_contents('_remotes/' . $remote . '_webroots/apache.cfg', $apacheCfg);
 		
@@ -61,13 +77,10 @@ switch(array_shift($argv))
 		//system('mv webroots webroots_local');
 		//system('mv _remotes/' . $remote . '_webroots webroots');
 		
-		$cmd = 'rsync -avzR --progress -e ssh ' . $toCopy . ' ' . $config['HOST'] . ':' . $config['ROOT'] . '/';
+		$cmd = 'rsync -avzR --progress -e ssh ' . $toCopy . ' ' . $config['HOST'] . ':' . $config['SRC'] . '/';
 		echo $cmd . NL;
 		system($cmd);
 		
-		//echo 'removing temp webroots' . NL;
-		//system('rm -r webroots');
-		//system('mv webroots_local webroots');
 		break;
 	  default:
 		die('unknown proto' . NL);

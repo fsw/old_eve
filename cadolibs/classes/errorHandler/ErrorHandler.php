@@ -58,11 +58,17 @@ class ErrorHandler
 	
 	private function handler($code, $message, $file, $line, $trace = array())
 	{
-		ob_end_clean();
+		if (PHP_SAPI === 'cli')
+		{
+			echo 'ERROR!';
+			var_dump($code, $message, $file, $line, $trace);
+			exit;
+		}
 		if (!empty($_SERVER['SERVER_PROTOCOL']))
 		{
 			header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 		}
+		ob_end_clean();
 		$file = str_replace(Cado::$root, '', $file);
 		$printDebug = CADO_DEV;
 		foreach($trace as &$t)

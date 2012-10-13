@@ -11,13 +11,19 @@ define('NL', PHP_EOL);
 final class Cado
 {
 	public static $root = null;
+	public static $outputCache = null;
+	
 	private static $errorHandler = null;
 	private static $roots = array('cadolibs', 'framework');
 	
 	public static function init()
 	{
-		session_start();
+		if (PHP_SAPI !== 'cli')
+		{
+			session_start();
+		}
 		self::$root = dirname(dirname(__FILE__)) . DS;
+		self::$outputCache = getcwd() . DS;
 		chdir(self::$root);
 		spl_autoload_register(array('Cado', 'autoload'));
 		self::$errorHandler = new ErrorHandler();
@@ -94,7 +100,7 @@ final class Cado
 			$files = Fs::listFiles($root . '/classes', true, true);
 			foreach ($files as $file)
 			{
-				if (empty($included[substr($file, strlen($root))]))
+				if ((strpos($file, '.svn') === false) && empty($included[substr($file, strlen($root))]))
 				{	
 					$included[substr($file, strlen($root))] = true;
 					$classFiles[] = $file;
