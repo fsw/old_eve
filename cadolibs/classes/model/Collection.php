@@ -188,7 +188,7 @@ abstract class model_Collection extends Model
 		{
 			$row = $this->toDb($row);
 			$this->db->insert(self::getTableName(), $row);
-			return true;
+			return $this->db->lastInsertId();
 		}
 		else
 		{
@@ -224,6 +224,7 @@ abstract class model_Collection extends Model
 
 	public function update($id, $row)
 	{
+		cache_Apc::del($this->getTableName() . '_' . $id);
 		//$errors = $this->validate($row);
 		$row = $this->toDb($row);
 		$this->db->update($this->getTableName(), $id, $row);
@@ -240,12 +241,21 @@ abstract class model_Collection extends Model
 		{
 			$q .= ' LIMIT ' . ($limit * ($page - 1)) . ',' . $limit;
 		}
-		$ids = $this->db->fetchCol($q, $bind);
+		$cacheKey = md5($q . serialize($bind));
+		$cached = cache_Apc::get($cacheKey);
+		$cached = null;
+		if ($cached == null)
+		{
+			$cached = array();
+			$cached['ids'] = $this->db->fetchCol($q, $bind);
+			$cached['found'] = $this->db->fetchOne('SELECT FOUND_ROWS()');
+			cache_Apc::set($cacheKey, $cached, 60);
+		}
 		if ($foundRows !== false)
 		{
-			$foundRows = $this->db->fetchOne('SELECT FOUND_ROWS()');
+			$foundRows = $cached['found'];
 		}
-		return $ids;
+		return $cached['ids'];
 	}
 	
 	public function getAll($limit = null, $page = 1, &$foundRows = false)
@@ -256,28 +266,60 @@ abstract class model_Collection extends Model
 	public function search($where = null, $bind = array(), $limit = null, $page = 1, &$foundRows = false)
 	{
 		$ids = $this->searchIds($where, $bind, $limit, $page, $foundRows);
-		if (empty($ids))
+		
+		if (!empty($ids))
 		{
-			$rows = array();
-		}
-		else
-		{
-			$rows = $this->db->fetchAll('SELECT * FROM ' . $this->getTableName() . ' WHERE id IN (' . implode(',', $ids) . ')');
-			foreach($ids as &$id)
+			$keyBase = $this->getTableName() . '_';
+			$cacheKeys = array();
+			foreach ($ids as $id)
 			{
+				$cacheKeys[] = $keyBase . $id; 
+			}
+			//var_dump($cacheKeys);
+			$cache = cache_Apc::get($cacheKeys);
+			//var_dump($cache);
+			$dbIds = array();
+			foreach($ids as &$id)
+			{	
+				$found = false;
+				if (!empty($cache))
+				{
+					foreach($cache as $row)
+					{
+						if ($row['id'] === $id)
+						{
+							$id = $row;
+							$found = true;
+							break;
+						}
+					}
+				}
+				if (!$found)
+				{
+					$dbIds[] = $id;
+				}
+			}
+			//var_dump($ids);
+			//var_dump($dbIds);
+			//die();
+			if (!empty($dbIds))
+			{
+				$rows = $this->db->fetchAll('SELECT * FROM ' . $this->getTableName() . ' WHERE id IN (' . implode(',', $dbIds) . ')');
 				foreach($rows as $row)
 				{
-					if ($row['id'] === $id)
+					foreach($ids as &$id)
 					{
-						$id = $row;
-						break;
+						if (is_numeric($id) && $row['id'] === $id)
+						{
+							$this->explode($row);
+							cache_Apc::set($keyBase . $id, $row, 60);
+							$id = $row;
+							break;
+						}
 					}
 				}
 			}
-		}
-		foreach ($ids as &$row)
-		{
-			$this->explode($row);
+			//var_dump($ids);
 		}
 		return $ids;
 	}

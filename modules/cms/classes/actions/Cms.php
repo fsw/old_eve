@@ -6,7 +6,8 @@ class actions_Cms extends actions_Layout
 	
 	public function before($method, $args)
 	{
-		if (empty($_SESSION['user']))
+		parent::before($method, $args);
+		if (false && empty($_SESSION['user']))
 		{
 			$this->redirectTo(
 					actions_Users::hrefLogin(
@@ -14,12 +15,15 @@ class actions_Cms extends actions_Layout
 					)
 			);
 		}
-		parent::before($method, $args);
+		else
+		{
+			$this->layout->logged = true;
+		}
 	}
 	
 	public function actionIndex()
 	{
-		return new Widget('cms/index');
+		return new Widget('widgets/cms/index');
 	}
 	
 }

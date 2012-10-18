@@ -29,7 +29,7 @@ class cache_Array
 		}
 	}
 	
-	public static function delete()
+	public static function del()
 	{
 		$args = func_get_args();
 		$path = CADO_FILE_CACHE . implode(DIRECTORY_SEPARATOR, $args) . '.php';

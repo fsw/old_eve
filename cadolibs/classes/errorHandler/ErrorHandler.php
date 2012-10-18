@@ -33,7 +33,12 @@ class ErrorHandler
 		set_exception_handler(array($this, 'handleException'));
 		ob_start();
 	}
-
+	
+	public function setModel($model)
+	{
+		$this->model = $model;
+	}
+	
 	public function handleShutdown()
 	{
 		if (($error = error_get_last()) !== null)

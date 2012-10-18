@@ -21,6 +21,7 @@ define('CADO_FILE_CACHE', '<?php echo $this->file_cache ?>');
 define('CADO_FILE_UPLOADS', '<?php echo $this->webroot ?>/uploads/');
 define('CADO_DOMAIN', '<?php echo $this->domains[0] ?>');
 define('CADO_HOST', '<?php echo $this->host ?>');
+define('CADO_PUSHID', '<?php echo $this->pushid ?>');
 
 require_once('<?php echo $this->root ?>/cadolibs/Cado.php');
 Cado::init();

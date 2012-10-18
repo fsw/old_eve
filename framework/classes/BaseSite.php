@@ -1,4 +1,9 @@
 <?php
+/**
+ * @package Framework
+ * @author fsw
+ *
+ */
 
 abstract class BaseSite
 {
@@ -170,21 +175,32 @@ abstract class BaseSite
 		(empty($params) ? '' : '?' . http_build_query($params));;
 	}
 	
+	public function runTask($code, $args)
+	{
+		$file = Cado::findResource('tasks/' . $code . '.php');
+		if ($file === null)
+		{
+			throw new Exception('unknown task');
+		}
+		else
+		{
+			//var_dump($request->getPath());
+			include($file);
+			//var_dump($request->getPath());
+		}
+	}
+	
 	public function route(Request $request)
 	{
 		if ($request->getType() == 'cli')
 		{
-			$file = Cado::findResource('tasks/' . $request->glancePath() . '.php');
-			if ($file === null)
+			$code = $request->shiftPath();
+			$args = $request->shiftPath();
+			if (!empty($args))
 			{
-				throw new Exception('unknown task');
+				parse_str($args, $args);
 			}
-			else
-			{
-				var_dump($request->getPath());
-				include($file);
-				var_dump($request->getPath());
-			}
+			$this->runTask($code, $args);	
 			return null;
 		}
 		$className = BaseActions::getActionsClass($request->glancePath());

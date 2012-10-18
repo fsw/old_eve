@@ -50,6 +50,7 @@ switch(array_shift($argv))
 			'db_user' => $config['DB_USER'],
 			'db_pass' => $config['DB_PASS'],
 		  	'file_cache' => $config['FILE_CACHE'],
+		  	'pushid' => uniqid(),
 		  );
 		  if (!empty($config['SLAVE_DSN']))
 		  {
@@ -71,8 +72,17 @@ switch(array_shift($argv))
 		  
 		  chdir($current);
 		}
-		//file_put_contents('_remotes/' . $remote . '_webroots/apache.cfg', $apacheCfg);
-		
+
+		if (!empty($config['APACHE_CFG']))
+		{
+		  echo 'Copying apache config' . NL;
+		  $apath = '_remotes/' . $remote . '_webroots/apache.cfg';
+		  file_put_contents($apath, $apacheCfg);
+		  $cmd = 'rsync -avz --progress -e ssh ' . $apath . ' ' . $config['HOST'] . ':' . $config['APACHE_CFG'];
+		  echo $cmd . NL;
+		  system($cmd);
+		  echo 'Apache config copied' . NL;
+		}
 		//echo 'Switching webroots' . NL;
 		//system('mv webroots webroots_local');
 		//system('mv _remotes/' . $remote . '_webroots webroots');

@@ -136,7 +136,7 @@ table.admin tr td {
 }
 
 table.admin tr:nth-child(even) td {
-	background-color: #eee;
+	background-color: #f7f7f7;
 }
 
 table.admin tr th {
@@ -144,6 +144,11 @@ table.admin tr th {
 	background-color: #dde;
 	padding: 7px;
 	padding-bottom: 10px;
+}
+
+table.admin tr.disabled td {
+	background-color: #ddd;
+	color: #999;
 }
 
 table.admin tr td.actions {
@@ -252,4 +257,9 @@ div.footer {
 	margin: 10px auto 10px auto;
 	text-align: right;
 	color: #777;
+}
+
+#pagination li {
+	float: left;
+	margin-left: 20px;
 }

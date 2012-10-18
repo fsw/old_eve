@@ -2,7 +2,7 @@
 /**
  * @package Libs
  * @author fsw
- * @qualit 90%
+ * @done 90%
  *
  */
 class Db
@@ -173,6 +173,11 @@ class Db
 		$q = 'INSERT INTO `' . $table . '` SET ';
 		$q .= self::toSet($data);
 		$this->query($q, array_values($data));
+	}
+	
+	public function lastInsertId()
+	{
+		return $this->getWriter()->lastInsertId();
 	}
 	
 	public function update($table, $id, $data)
