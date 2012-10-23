@@ -41,9 +41,12 @@ final class Fs
 		return is_file($path);
 	}
 	
-	static function mkdir($path)
+	static function mkdir($path, $recursive = false)
 	{
-		mkdir($path, '0777', true);
+		if(!self::isDir($path))
+		{
+			mkdir($path, 0777, true);
+		}
 	}
 	
 	static function read($path)

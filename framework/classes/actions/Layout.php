@@ -3,7 +3,11 @@
 abstract class actions_Layout extends BaseActions
 {
 	protected $layoutName = 'frontend';
-
+	/**
+	 * @var Layout
+	 */
+	protected $layout;
+	
 	public function before($method, $args)
 	{
 		$this->layout = new Layout('layouts/' . $this->layoutName);

@@ -15,7 +15,7 @@ class Request
 	{
 		return 'http://' . 
 			(empty($subdomain) ? '' : implode('.', $subdomain) . '.') . 
-			CADO_DOMAIN . '/' . implode('/', $path) . (empty($path) ? '' : '.html') . 
+			Eve::$domains[0] . '/' . implode('/', $path) . (empty($path) ? '' : '.html') . 
 			(empty($params) ? '' : '?' . http_build_query($params));
 	}*/
 	
@@ -83,6 +83,11 @@ class Request
 			$this->domain = array_shift($this->subdomainList);
 			$this->domain = array_shift($this->subdomainList) . '.' . $this->domain;
 		}
+	}
+	
+	public function getReferer()
+	{
+		return empty($_SERVER['HTTP_REFERER']) ? Actions::hrefIndex() : $_SERVER['HTTP_REFERER'];
 	}
 	
 	public function getType()

@@ -34,7 +34,7 @@ class Mail
 		$nl = "\r\n";
 
 		$headers = 'MIME-Version: 1.0' . $nl;
-		$headers .= 'From: no-reply@' . CADO_DOMAIN . $nl;
+		$headers .= 'From: no-reply@' . Eve::$domains[0] . $nl;
 		$headers .= 'Content-Type: multipart/related; type="multipart/alternative"; boundary="' . $boundary . '"' . $nl;
 
 		$multipart = '';

@@ -48,6 +48,11 @@ class Template
 		return !isset($this->____data[$key]) ? null : self::quote($this->____data[$key]);
 	}
 	
+	public function unsecured($key)
+	{
+		return !isset($this->____data[$key]) ? null : $this->____data[$key];
+	}
+	
 	public function __toString()
 	{
 		try

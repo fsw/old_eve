@@ -7,7 +7,7 @@ class actions_Rootcms extends actions_Layout
 	public function before($method, $args)
 	{
 		parent::before($method, $args);
-		if ($method != 'actionLogin' && empty($_SESSION['rootcms']))
+		if ($method != 'login' && empty($_SESSION['rootcms']))
 		{
 			$this->redirectTo($this::hrefLogin());
 		}
@@ -92,7 +92,7 @@ class actions_Rootcms extends actions_Layout
 			$this->widget->data = $this->site->model($model)->getAll($limit, $page, $foundRows);
 		}
 		
-		$this->widget->pager = new Pager($limit, $page, $foundRows, $this::hrefModeler($model, $parent, '%PAGE%'));
+		$this->widget->pager = new Pager($limit, $page, $foundRows, $this::hrefModeler($model, $parent, '_PAGE_'));
 		return $this->widget;
 	}
 	

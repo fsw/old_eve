@@ -28,7 +28,20 @@ abstract class model_Collection extends Model
 		$ret[$this->getTableName()] = array();
 		foreach ($this->fields() as $key => $field)
 		{
-			if ($field instanceof Field)
+			
+			if ($field instanceof field_relation_One)
+			{
+				$ret[$this->getTableName()][$key] = 'int(11) DEFAULT NULL';
+			}
+			elseif ($field instanceof field_relation_Many)
+			{
+				$f = new field_Int();
+				$ret[$this->getTableName() . '_xref_' . $key] = array(
+						$this->getBaseName() . '_id' => $f->getDbDefinition(),
+						$key . '_id' => $f->getDbDefinition()
+				);
+			}
+			else
 			{
 				$definition = $field->getDbDefinition();
 				if (is_array($definition))
@@ -41,19 +54,7 @@ abstract class model_Collection extends Model
 				else
 				{
 					$ret[$this->getTableName()][$key] = $definition;
-				} 
-			}
-			elseif ($field instanceof relation_One)
-			{
-				$ret[$this->getTableName()][$key . '_id'] = 'int(11) DEFAULT NULL';
-			}
-			elseif ($field instanceof relation_Many)
-			{
-				$f = new field_Int();
-				$ret[$this->getTableName() . '_xref_' . $key] = array(
-						$this->getBaseName() . '_id' => $f->getDbDefinition(),
-						$key . '_id' => $f->getDbDefinition()
-				);
+				}
 			}
 		}
 		foreach ($this->getIndexes() as $key => $field)
@@ -65,7 +66,19 @@ abstract class model_Collection extends Model
 		}
 		return $ret;
 	}
-
+	
+	public function getAdminString($row)
+	{
+		return (!empty($row['name']) ? $row['name'] :  
+		(!empty($row['title']) ? $row['title'] :
+		(!empty($row['code']) ? $row['code'] : $row['id'])));
+	}
+	
+	public function getAdminCols()
+	{
+		return array('id');
+	}
+	
 	public function getTableName()
 	{
 		return $this->prefix . '_' . $this->getBaseName();
@@ -86,7 +99,17 @@ abstract class model_Collection extends Model
 	{
 		foreach ($this->fields() as $key => $field)
 		{
-			if ($field instanceof Field)
+			if ($field instanceof field_relation_One)
+			{
+				$row[$key] = (int)$row[$key];
+			}
+			elseif ($field instanceof field_relation_Many)
+			{
+				$row[$key] = $this->db->fetchCol(
+						'SELECT ' . $key . '_id FROM ' . $this->getTableName() . '_xref_' . $key . ' WHERE ' . $this->getBaseName() . '_id = ?',
+						array($row['id']));
+			}
+			else
 			{
 				$def = $field->getDbDefinition();
 				if (is_array($def))
@@ -102,15 +125,6 @@ abstract class model_Collection extends Model
 					$cell = $row[$key];
 				}
 				$row[$key] = $field->fromDb($cell);
-			}
-			elseif ($field instanceof relation_One)
-			{
-				$row[$key] = (int)$row[$key . '_id'];
-				unset($row[$key . '_id']);
-			}
-			elseif ($field instanceof relation_Many)
-			{
-				$row[$key] = array();
 			}
 		}
 	}
@@ -154,13 +168,27 @@ abstract class model_Collection extends Model
 		$ret = array();
 		foreach ($this->fields() as $key => $field)
 		{
-			if ($field instanceof relation_Many)
+			if ($field instanceof field_relation_Many)
 			{
-				
+				if (!empty($row['id']) && isset($row[$key]) && is_array($row[$key]))
+				{
+					$this->db->query('DELETE FROM ' . $this->getTableName() . '_xref_' . $key . ' WHERE ' .
+							$this->getBaseName() . '_id = ' . $row['id']);
+					foreach ($row[$key] as $r)
+					{
+						$this->db->insert($this->getTableName() . '_xref_' . $key,
+								array(
+									$this->getBaseName() . '_id' => $row['id'],
+									$key . '_id' => $r,
+						));
+					}
+					//var_dump($row[$key]);
+					//die();
+				}
 			}
-			elseif ($field instanceof relation_One && isset($row[$key]))
+			elseif ($field instanceof field_relation_One && isset($row[$key]))
 			{
-				$ret[$key . '_id'] = (int)$row[$key];
+				$ret[$key] = (int)$row[$key];
 			}
 			elseif (isset($row[$key]))
 			{
@@ -188,7 +216,10 @@ abstract class model_Collection extends Model
 		{
 			$row = $this->toDb($row);
 			$this->db->insert(self::getTableName(), $row);
-			return $this->db->lastInsertId();
+			$ret = $this->db->lastInsertId();
+			$row['id'] = $ret;
+			$this->toDb($row);
+			return $ret;
 		}
 		else
 		{
@@ -228,6 +259,7 @@ abstract class model_Collection extends Model
 		//$errors = $this->validate($row);
 		$row = $this->toDb($row);
 		$this->db->update($this->getTableName(), $id, $row);
+		return true;
 	}
 
 	public function searchIds($where = null, $bind = array(), $limit = null, $page = 1, &$foundRows = false)
@@ -266,21 +298,42 @@ abstract class model_Collection extends Model
 	public function search($where = null, $bind = array(), $limit = null, $page = 1, &$foundRows = false)
 	{
 		$ids = $this->searchIds($where, $bind, $limit, $page, $foundRows);
-		
+		return $this->getByIds($ids);
+	}
+	
+	public function searchOne($where = null, $bind = array())
+	{
+		$rows = $this->search($where, $bind);
+		return reset($rows);
+	}
+	
+	public function getDefaults()
+	{
+		//lorem ipsums
+		return array();
+	}
+	
+	public function getById($id)
+	{
+		return $this->searchOne('id = ?', array($id));
+	}
+	
+	public function getByIds($ids)
+	{
 		if (!empty($ids))
 		{
 			$keyBase = $this->getTableName() . '_';
 			$cacheKeys = array();
 			foreach ($ids as $id)
 			{
-				$cacheKeys[] = $keyBase . $id; 
+				$cacheKeys[] = $keyBase . $id;
 			}
 			//var_dump($cacheKeys);
 			$cache = cache_Apc::get($cacheKeys);
 			//var_dump($cache);
 			$dbIds = array();
 			foreach($ids as &$id)
-			{	
+			{
 				$found = false;
 				if (!empty($cache))
 				{
@@ -322,23 +375,6 @@ abstract class model_Collection extends Model
 			//var_dump($ids);
 		}
 		return $ids;
-	}
-	
-	public function searchOne($where = null, $bind = array())
-	{
-		$rows = $this->search($where, $bind);
-		return reset($rows);
-	}
-	
-	public function getDefaults()
-	{
-		//lorem ipsums
-		return array();
-	}
-	
-	public function getById($id)
-	{
-		return $this->searchOne('id = ?', array($id));
 	}
 	
 	public function getByField($key, $value)

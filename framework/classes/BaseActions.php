@@ -9,6 +9,10 @@ abstract class BaseActions
 	 * @var BaseSite
 	 */
 	protected $site = null;
+	
+	/**
+	 * @var Request
+	 */	
 	protected $request = null;
 	protected $method = null;
 	

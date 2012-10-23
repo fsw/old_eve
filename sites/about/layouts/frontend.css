@@ -1,0 +1,80 @@
+body {
+    background-color: #231F20;
+    font-family: Arial,Helvetica,sans-serif;
+}
+
+div#wrapper {
+    margin: 0 auto;
+    width: 960px;
+}
+
+div#header {
+	height:140px;
+	overflow:hidden;
+	background-image: url("/static/cado/watermark.png");
+    background-position: 0 5px;
+    background-repeat: no-repeat;
+}
+
+div#header h1 {
+	display: none;
+}
+
+div#header ul#menu {
+	float: right;
+	overflow: auto;
+	padding-right: 40px;
+}
+
+div#header ul#menu li {
+	float: left;
+}
+
+div#header ul#menu li a {
+	display: block;
+	height: 140px;
+	
+	font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 30px;
+    overflow: hidden;
+    padding: 55px 25px;
+    text-align: center;
+    color: white;
+}
+
+div#header ul#menu li a.current {
+	background-color: #ADF;
+	color: #311;
+	box-shadow: 0px 0px 10px #888;
+}
+
+div#body {
+	background-color: #ADF; /*#00ADEF;*/
+    border-radius: 20px;
+    color: #311;
+    
+    box-shadow: 0px 0px 10px #888;
+    
+    min-height: 100px;
+    overflow: hidden;
+    padding: 20px;
+}
+
+h1              { font-size: 2em; margin: .67em 0 }
+h2              { font-size: 1.5em; margin: .75em 0 }
+h3              { font-size: 1.17em; margin: .83em 0 }
+h4, p,
+blockquote, #body ul,
+fieldset, form,
+ol, dl, dir,
+menu            { margin: 1.12em 0 }
+
+h5              { font-size: .83em; margin: 1.5em 0 }
+h6              { font-size: .75em; margin: 1.67em 0 }
+h1, h2, h3, h4,
+h5, h6, b,
+strong          { font-weight: bolder }
+
+

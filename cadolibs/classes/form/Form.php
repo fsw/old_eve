@@ -7,7 +7,7 @@
 class Form extends Widget
 {
 	//protected $fields = array();
-	//protected $data = array();
+	protected $data = array();
 	//protected $errors = array();
 	
 	static $counter;
@@ -42,6 +42,11 @@ class Form extends Widget
 		$this->fields = $fields;
 	}
 	
+	public function setData($data)
+	{
+		$this->data = $data;
+	}
+	
 	public function getData()
 	{
 		return $this->data;
@@ -50,6 +55,11 @@ class Form extends Widget
 	public function getField($field)
 	{
 		return $this->data[$field];
+	}
+	
+	public function submitted()
+	{
+		return !empty($_POST[$this->name]);
 	}
 	
 	public function validate()

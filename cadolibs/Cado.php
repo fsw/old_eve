@@ -14,7 +14,7 @@ final class Cado
 	public static $outputCache = null;
 	
 	private static $errorHandler = null;
-	private static $roots = array('cadolibs', 'framework');
+	private static $roots = array('cadolibs');
 	
 	public static function init()
 	{

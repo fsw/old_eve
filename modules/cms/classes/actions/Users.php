@@ -6,6 +6,7 @@ class actions_Users extends actions_Frontend
 	{
 		$form = new Form();
 		$form->title = 'Login Form';
+		$form->class = 'login';
 		
 		$form->setFields(array(
 			'email' => new field_Email(),
@@ -14,10 +15,10 @@ class actions_Users extends actions_Frontend
 		
 		if ($form->validate())
 		{
-			$user = $this->site->model('users')->login($form->val('email'), $form->val('password'));
+			$user = $this->site->model('users')->login($form->getField('email'), $form->getField('password'));
 			if (!empty($user))
 			{
-				$this->redirectTo($redirectTo);
+				$this->redirectTo($redirectTo[0]);
 			}
 			else
 			{
@@ -29,7 +30,7 @@ class actions_Users extends actions_Frontend
 	
 	public function actionLogout()
 	{
-		users_Users::logout();
-		self::redirectTo(Routing::linkToAction('index'));
+		$this->site->model('users')->logout();
+		$this->redirectTo(Actions::hrefIndex());
 	}
 }

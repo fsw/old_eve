@@ -33,33 +33,7 @@ abstract class BaseSite
 	{
 		if (empty($this->db))
 		{
-			if (defined('CADO_SLAVE_DSN'))
-			{
-				$this->db = new Db(array(
-						array(
-							'dsn' => CADO_DB_DSN,
-							'user' => CADO_DB_USER,
-							'pass' => CADO_DB_PASS,
-							'write' => true,
-						),
-						array(
-							'dsn' => CADO_SLAVE_DSN,
-							'user' => CADO_SLAVE_USER,
-							'pass' => CADO_SLAVE_PASS,
-							'write' => false,
-						),
-				));
-			}
-			else
-			{
-				$this->db = new Db(array(
-						'dsn' => CADO_DB_DSN,
-						'user' => CADO_DB_USER,
-						'pass' => CADO_DB_PASS,
-				));
-			}
-			//TODO
-			//$this->cache = new Cache('path');
+			$this->db = new Db(Eve::$dbConfig);
 		}
 		return $this->db;	
 	}
@@ -72,9 +46,14 @@ abstract class BaseSite
 		if (empty($this->model[$code]))
 		{
 			$className = 'model_' . ucfirst($code);
-			$this->model[$code] = new $className($this->getDb(), 'cado_' . $this->code);
+			$this->model[$code] = new $className($this->getDb(), 'cado_' . $this->code, array(), $this->model);
 		}
 		return $this->model[$code];
+	}
+	
+	public function getConfigField($key)
+	{
+		return null;
 	}
 	
 	public function readDbStructure()
@@ -171,7 +150,7 @@ abstract class BaseSite
 		{
 			$path[] = $last;
 		} 
-		return 'http://' . CADO_DOMAIN . '/' . implode('/', $path) .
+		return 'http://' . Eve::$domains[0] . '/' . implode('/', $path) .
 		(empty($params) ? '' : '?' . http_build_query($params));;
 	}
 	
@@ -184,8 +163,9 @@ abstract class BaseSite
 		}
 		else
 		{
+			$task = new Task($this, $code);
+			$task->run($args);
 			//var_dump($request->getPath());
-			include($file);
 			//var_dump($request->getPath());
 		}
 	}
@@ -213,6 +193,7 @@ abstract class BaseSite
 			$request->shiftPath();
 		}
 		$method = method_exists($className, 'action' . ucfirst($request->glancePath())) ? 'action' . ucfirst($request->shiftPath()) : 'actionIndex';
+		$methodCode = lcfirst(substr($method, strlen('action')));
 		//TODO cache!
 		$reflection = new ReflectionMethod($className, $method);
 		$args = array();
@@ -237,7 +218,7 @@ abstract class BaseSite
 			$args[] = $value ?: ($param->isDefaultValueAvailable() ? $param->getDefaultValue() : null);
 		}
 		$class = new $className($this, $request, $method);
-		$class->before($method, $args);
+		$class->before($methodCode, $args);
 		$response = call_user_func_array(array($class, $method), $args);
 		$response = $class->after($response);
 		if (is_scalar($response) || (is_object($response) && method_exists($response, '__toString')))

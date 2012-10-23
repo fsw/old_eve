@@ -9,9 +9,9 @@
 class Pager extends Widget
 {
 	
-	public function __construct($limit, $page, $total , $href='?page=%PAGE%')
+	public function __construct($limit, $page, $total , $href='?page=_PAGE_', $template = 'widgets/pager')
 	{
-		parent::__construct('widgets/pager');
+		parent::__construct($template);
 		$this->page = $page; 
   		$this->href = $href;
   		$this->total = $total;
@@ -22,7 +22,7 @@ class Pager extends Widget
 	{
 		if ($this->page < $this->last)
 		{
-			return str_replace('%PAGE%', $this->page + 1, $this->href);
+			return str_replace('_PAGE_', $this->page + 1, $this->href);
 		}
 		else
 		{
@@ -34,7 +34,7 @@ class Pager extends Widget
 	{
 		if ($this->page > 1)
 		{
-			return str_replace('%PAGE%', $this->page - 1, $this->href);
+			return str_replace('_PAGE_', $this->page - 1, $this->href);
 		}
 		else
 		{

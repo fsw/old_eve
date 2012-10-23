@@ -2,9 +2,10 @@
 
 class field_Enum extends Field
 {
-	public function __construct($values)
+	public function __construct($values, $multi = false)
 	{
 		$this->values = $values;
+		$this->multi = $multi;
 	}
 	
 	public function validate($data)
@@ -23,12 +24,24 @@ class field_Enum extends Field
 	
 	public function getFormInput($key, $value)
 	{
-		$ret = '<select name="' . $key . '">';
-		foreach ($this->values as $k => $v)
+		if ($this->multi)
 		{
-			$ret .= '<option value="' . $k . '"' . ($k == $value ? ' selected="selected"' : '') . '>' . $v . '</option>';
+			$ret = '<div>';
+			foreach ($this->values as $k => $v)
+			{
+				$ret .= '<input type="checkbox" name="' . $key . '[' . $k . ']" value="' . $k . '"' . (in_array($k, $value) ? ' checked="checked"' : '') . '>' . $v . '</option><br/>';
+			}
+			$ret .= '</div>';
 		}
-		$ret .= '</select>';
+		else
+		{
+			$ret = '<select name="' . $key . '">';
+			foreach ($this->values as $k => $v)
+			{
+				$ret .= '<option value="' . $k . '"' . ($k == $value ? ' selected="selected"' : '') . '>' . $v . '</option>';
+			}
+			$ret .= '</select>';
+		}
 		return $ret;
 	}
 }

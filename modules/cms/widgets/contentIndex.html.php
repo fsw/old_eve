@@ -1,4 +1,5 @@
-<h1><?php echo $this->content['title']; ?></h1>
+<h1><?php echo $this->title; ?></h1>
+<h2><?php echo $this->subtitle; ?></h2>
 <div>
-<?php echo $this->content['body']; ?>
+<?php echo $this->unsecured('body'); ?>
 </div>

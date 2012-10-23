@@ -31,7 +31,8 @@ class field_relation_One extends field_Relation
 	{
 		$ret = '<select name="' . $key . '">';
 		$ret .= '<option value="0">NONE</option>';
-		$class = $this->model;
+		
+		//$class = $this->model->getSibling($model);
 		$rows = array();
 		/*
 		if (in_array('TreeCollection', class_parents($class)))

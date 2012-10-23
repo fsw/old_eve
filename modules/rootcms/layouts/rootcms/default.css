@@ -144,6 +144,7 @@ table.admin tr th {
 	background-color: #dde;
 	padding: 7px;
 	padding-bottom: 10px;
+	text-align: left;
 }
 
 table.admin tr.disabled td {

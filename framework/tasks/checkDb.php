@@ -1,13 +1,13 @@
 <?php 
 
 
-$models = $this->getModels();
+$models = $this->site->getModels();
 $tables = array();
 foreach ($models as $model)
 {
-	$tables = array_merge($tables, $this->model($model)->getStructure());
+	$tables = array_merge($tables, $this->site->model($model)->getStructure());
 }
-$current = $this->readDbStructure();
+$current = $this->site->readDbStructure();
 //var_dump($current);
 //die();
 $sqls = array();
@@ -82,4 +82,8 @@ if (!empty($run) && !empty($sqls[$run]))
 	$sqls[$run] = '-- DONE';
 }
 */
-var_dump($sqls);
+foreach ($sqls as $key => $sql)
+{
+	echo '-- ' . $key . NL;
+	echo $sql . ';' . NL;
+}

@@ -7,13 +7,25 @@ abstract class Model
 	private $errors = array();
 	protected $db;
 	protected $prefix;
+	protected $siblings;
 	
-	final public function __construct(Db $db, $prefix = 'cado', $privs = null)
+	final public function __construct(Db $db, $prefix = 'cado', $privs = null, &$siblings = array())
 	{
 		$this->db = $db;
 		$this->prefix = $prefix;
 		$this->setPrivs($privs);
+		$this->siblings = $siblings;
 		$this->init();
+	}
+	
+	protected function getSibling($code)
+	{
+		if (empty($this->siblings[$code]))
+		{
+			$className = 'model_' . ucfirst($code);
+			$this->siblings[$code] = new $className($this->db, $this->prefix, $this->privs, $this->siblings);
+		}
+		return $this->siblings[$code];
 	}
 	
 	final public function setPrivs($privs)

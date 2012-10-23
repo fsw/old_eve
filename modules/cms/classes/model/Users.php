@@ -12,7 +12,7 @@ class model_Users extends model_Collection
 	 			'name' => new field_Text(),
 	 			'avatar' => new field_Image(),
 	 			'bio' => new field_Longtext(),
-	 			'groups' => new field_relation_Many('model_Groups'),
+	 			'groups' => new field_relation_Many('groups'),
 			)
 		);
 	}
@@ -71,9 +71,19 @@ class model_Users extends model_Collection
 		$user = $this->getByEmail($email);
 		if (!empty($user) && ($user['password'] == $password))
 		{
+			$user['groups'] = $this->getSibling('groups')->getByIds($user['groups']);
+			$privIds = array();
+			foreach ($user['groups'] as $group)
+			{
+				$privIds = array_merge($privIds, $group['privilages']);
+			}
+			$user['privilages'] = $this->getSibling('privilages')->getByIds($privIds);
+			
 			$_SESSION['user'] = $user;
+			
+			return $user;
 		}
-		return $user;
+		return false;
 	}
 	
 	public function logout()

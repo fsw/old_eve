@@ -7,14 +7,35 @@ abstract class model_TreeCollection extends model_Collection
 		return array_merge(
 			parent::getFields(),
 			array(
-				'parent' => new field_relation_One(get_called_class()),
+				'parent' => new field_relation_One(lcfirst(substr(get_called_class(), strlen('_model')))),
 			)
 		);
 	}
 	
+	protected function getIndexes()
+	{
+		return array_merge(
+				parent::getIndexes(),
+				array(
+					'parent' => array(false, 'parent')
+				)
+		);
+	}
 	public function getChildren($parentId = 0, $limit = null, $page = 1, &$foundRows = false)
 	{
 		return $this->search('`parent` = ?', array($parentId), $limit, $page, $foundRows);
+	}
+	
+	public function getPath($id = 0)
+	{
+		$ret = array();
+		while ($id != 0)
+		{
+			 $c = $this->getById($id);
+			 $ret[] = $c;
+			 $id = $c['parent'];
+		}
+		return array_reverse($ret);
 	}
 	
 	public function getTree($parentId = 0)

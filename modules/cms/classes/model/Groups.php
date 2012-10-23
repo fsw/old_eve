@@ -9,8 +9,8 @@ class model_Groups extends model_Collection
  		parent::getFields(), 
  		array(
  			'name' => new field_Text(),
- 			'description' => new field_Password(),
- 			'privilages' => new field_relation_Many('model_Privilages'),
+ 			'description' => new field_Longtext(),
+ 			'privilages' => new field_relation_Many('privilages'),
  		)
 	);
   }

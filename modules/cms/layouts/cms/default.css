@@ -48,6 +48,17 @@ ul#mainMenu li.logout {
 	border-right: none;
 }
 
+ul#mainMenu li.user {
+	float: right;
+	height: 30px;
+	line-height: 15px;
+	color: white;
+	padding: 5px;
+	margin-right: 5px;
+	border-left: 1px solid #544;
+	border-right: none;
+}
+
 ul#mainMenu a {
     display: block;
     height: 40px;
@@ -203,7 +214,7 @@ div.form div.legend {
 }
 
 div.form form {
-	width: 560px;
+	width: 990px;
 	margin: 0 auto;
 	padding: 10px;
 	border: 1px dashed #aad;
@@ -223,8 +234,12 @@ div.form div.field label {
 	margin-right: 20px;
 }
 
+div.form div.field div.input {
+	margin-left: 140px;
+}
+
 div.form div.field input, div.form div.field textarea {
-	width: 300px;
+	width: 760px;
 	border: 1px solid #ccc;
 	padding: 5px 8px;
 }
@@ -252,4 +267,22 @@ div.footer {
 	margin: 10px auto 10px auto;
 	text-align: right;
 	color: #777;
+}
+
+
+ul.crumbs {
+	overflow: hidden; 	
+}
+
+ul.crumbs li {
+	float: left; 
+}
+
+ul.crumbs li a {
+	display: block;
+	padding: 10px;
+}
+
+ul.crumbs li a:after {
+	content: " > "; 
 }
