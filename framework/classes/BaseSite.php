@@ -1,14 +1,16 @@
 <?php
 /**
+ * Site.
+ * 
  * @package Framework
  * @author fsw
- *
  */
 
 abstract class BaseSite
 {
 	private $model = array();
 	private $db = null;
+	public static $site;	//temporary TODO refactor and remove
 	
 	public function __construct($code)
 	{
@@ -17,13 +19,23 @@ abstract class BaseSite
 	
 	public static function factory($siteCode)
 	{
+		Cado::addRoot('sites' . DS . $siteCode);
+		$site = new Site($siteCode);
+		Cado::shiftRoots();
 		//TODO get modules from site ???
-		foreach (Fs::listDirs('modules', false, true) as $moduleDir)
+		foreach ($site->getModules() as $module)
 		{
-			Cado::addRoot($moduleDir);
+			Cado::addRoot('modules' . DS . $module);
 		}
 		Cado::addRoot('sites' . DS . $siteCode);
-		return new Site($siteCode);
+		ErrorHandler::setCallback(array($site, 'errorCallback'));
+		self::$site = $site;
+		return $site;
+	}
+	
+	public function errorCallback($code, $message, $file, $line, $trace)
+	{
+		$this->model('errors')->saveError($code, $message, $file, $line, $trace);
 	}
 	
 	/**
@@ -199,17 +211,21 @@ abstract class BaseSite
 		$args = array();
 		foreach ($reflection->getParameters() as $param)
 		{
-			if ($param->getName() == 'extension')
+			if ($param->getName() == 'fullpath')
+			{
+				$value = implode('/', $request->getPath()) . $request->extension();
+			}
+			elseif ($param->getName() == 'extension')
 			{
 				$value = $request->extension();
 			}
-			elseif ($param->isArray()) //|| ($param->getName() == 'referer'))
+			elseif ($param->getName() == 'referer')
 			{
-				$value = $request->getParam($param->getName());
-				if (!is_array($value))
-				{
-					$value = array($value);
-				}
+				$value = $request->getReferer();
+			}
+			elseif (strpos($param->getName(), 'get') === 0)
+			{
+				$value = $request->getParam(lcfirst(substr($param->getName(), 3)));
 			}
 			else
 			{

@@ -12,6 +12,7 @@ array_shift($argv);
 
 //use cadolibs
 require_once('cadolibs/Cado.php');
+define('CADO_DEV', true);
 Cado::init();
 Cado::addRoot('framework');
 
@@ -45,7 +46,7 @@ switch (array_shift($argv))
 		$toPush = array();
 		if ($config['proto'] == 'ssh')
 		{
-			$toPush[0] = array('from' => '.', 'pattern'=>'cadolibs framework modules', 'to' => $config['srcRoot']);
+			$toPush[0] = array('from' => '.', 'pattern'=>'cadolibs framework modules docs', 'to' => $config['srcRoot']);
 		}
 		$apacheCfg = '';
 		
@@ -87,6 +88,7 @@ switch (array_shift($argv))
 					'siteConfig' => $siteConfig,
 					'host' => $remote,
 					'devAgent' => $config['devAgent'],
+					'devEmail' => @$config['devEmail'],
 					'srcRoot' => $config['srcRoot'],
 					'dev' => false,
 					'dbConfig' => $config['dbConfig'],

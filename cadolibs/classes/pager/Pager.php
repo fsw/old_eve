@@ -41,4 +41,15 @@ class Pager extends Widget
 			return null;
 		}
 	}
+	
+	public function hrefFirstPage()
+	{
+		return str_replace('_PAGE_', 1, $this->href);
+	}
+	
+	public function hrefLastPage()
+	{
+		return str_replace('_PAGE_', $this->last, $this->href);
+	}
+	
 }

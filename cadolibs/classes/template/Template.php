@@ -1,9 +1,9 @@
 <?php
 /**
- * 
- * @author fsw 
- *
+ * @package CadoLibs
+ * @author fsw
  */
+
 class Template
 {
 	protected $____path = null;
@@ -55,24 +55,30 @@ class Template
 	
 	public function __toString()
 	{
+		Dev::startTimer('render');
 		try
 		{
 			if ($path = Cado::findResource($this->____path . '.php'))
 			{
 				ob_start();
 				require($path);
-				return ob_get_clean();
+				$ret = ob_get_clean();
 			}
 			elseif ($path = Cado::findResource($this->____path))
 			{
-				return Fs::read($path);
+				$ret = Fs::read($path);
 			}
-			throw new Exception('Template "' . $this->____path . '" not found.');
+			else
+			{
+				throw new Exception('Template "' . $this->____path . '" not found.');
+			}
 		}
 		catch (Exception $e)
 		{
 			Cado::handleException($e);
 		}
+		Dev::stopTimer();
+		return $ret;
 	}
 	
 }

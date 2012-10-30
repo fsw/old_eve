@@ -47,6 +47,11 @@ else
 		
 		public static function showDevFooter()
 		{
+			while (!empty(self::$timerNamesStack))
+			{
+				self::stopTimer();
+			}
+			$errors = BaseSite::$site->model('errors')->getAll();
 			require(Cado::findResource('devfooter.html.php'));
 		}
 	}

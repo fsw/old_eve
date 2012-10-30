@@ -1,41 +1,21 @@
-#### Cado Framework ####
+# EveFramework #
 
 WARNING: This Framework is far from production state yet!
 
-### SHORT INTRO ###
+Visit http://eve.cadosolutions.com/ for more info.
 
-Cado Framework is designed for painless development and deployment of PHP applications.
-...
+## PACKAGE CONTENTS ##
 
-### SETTING UP DEVELOPMENT ENVIRONMENT ###
+*	docs - documentation
+*	cadolibs - CadoLibs classes and files
+*	framework - EveFramework classes and files.
+*	modules - various extensions to framework providing common website-features, simple CMS for example.
+*	sites - websites codes
+*	_remotes - configuration of remotes
+*	remote.php - php script to juggle sites and remotes
+*	README - this file
+*	LICENSE - BSD license
 
-1) download / checkout cado framework and place it in location readable by apache.
+## INSTALLATION ##
 
-2) create localhost mysql database with user "cado" and password "cado"
-
-2) create folder sites/<yoursitecode> (or checkout your site code from your repository)
-  -	make sure there is a file named sites/yoursitecode/classes/Site.php that contains class Site extending BaseSite.
-  -	for an example see sites/example1
-
-3) run ./admin.php install <yoursitecode>
-  - this will create globally writeable webroots/<yoursitecode> folder
-
-4) make sure apache will point your development domain to webroots/<yoursitecode>. 
-  -	you can include webroots/apache.cfg in your apache configuration to automatic include all installed sites, 
-	just make sure <yoursitecode>.cado is pointing to localhost.
-
-
-### PACKAGE CONTENTS ###
-
-Core components of this package are:
-* cadolibs - set of independent PHP libraries. 
-	After including cadolibs/Cado.php and calling Cado::init() smart autoloader will be using this folder to search for classes
-* framework - extension to cadolibs providing basic MVC framework.
-* modules - various extensions to framework providing common website-features, simple CMS for example.
-* admin.php - php script to boost development process
-
-
-### REMOTES EXPORTS ###
-
-todo
-
+please see docs/INTRO.md

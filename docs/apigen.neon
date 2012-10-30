@@ -18,7 +18,7 @@ charset: auto
 main:
 
 # Title of generated documentation
-title: Cado Framework
+title: EveFramework
 # Documentation base URL
 baseUrl:
 # Google Custom Search ID

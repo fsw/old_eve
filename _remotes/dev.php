@@ -5,6 +5,8 @@ $config = array(
 		'proto' => 'dev',
 		
 		'devAgent' => 'FireFlux',
+		'devEmail' => 'francio@franico.pl',
+		
 		'domain' => 'eve',
 		
 		'apacheCfg' => dirname(dirname(__FILE__)) . '/webroots/apache.cfg',

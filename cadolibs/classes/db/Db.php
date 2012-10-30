@@ -1,10 +1,14 @@
 <?php
 /**
- * @package Libs
+ * Database access.
+ * 
+ * Instance of this class represents one database connection.
+ * Connect only when necessairy so can be constructed at application start
+ * 
+ * @package CadoLibs
  * @author fsw
- * @done 90%
- *
  */
+
 class Db
 {
 	private $config = null;
@@ -13,7 +17,7 @@ class Db
 	private $prefix = '';
 	
 	/**
-	 * Connect only when necessairy so can be constructed at application start
+	 * 
 	 * 
 	 * @param Array $config database connection parameters
 	 * 

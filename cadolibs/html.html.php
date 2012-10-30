@@ -24,9 +24,9 @@
 </head>
 <body>
 	<?php echo $this->htmlBody; ?>
+	<?php Dev::showDevFooter(); ?>
 	<?php foreach ($this->jsUrls as $url): ?>
 		<script src="<?php echo $url; ?>"></script>
 	<?php endforeach; ?>
-	<?php Dev::showDevFooter(); ?>
 </body>
 </html>

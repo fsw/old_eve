@@ -9,4 +9,7 @@
 	<div id="body">
 	<?php echo $this->unsecured('widget') ?> 
 	</div>
+	<div class="footer">
+		Powered by <a href="http://eve.cadosolutions.com/">EveFramework</a>
+	</div>
 </div>

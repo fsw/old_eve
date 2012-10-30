@@ -1,3 +1,8 @@
+<?php if ($this->readOnly): ?>
+<div class="info">
+	You don't have permissions to administrate this content. You are viewing it in "read only" mode.
+</div>
+<?php endif; ?>
 
 <?php if ($this->tree): ?>
 <ul class="crumbs">
@@ -7,6 +12,9 @@
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>
+
+
+
 <?php echo $this->pager ?>
 <table class="admin">
 <tr>
@@ -32,9 +40,24 @@
 	</th>
 </tr>
 <?php foreach ($this->rows as $row): ?>
-	<tr>
+	<tr <?php if ($this->toggable && empty($row['enable'])) echo 'class="disabled"'; ?>>
 		<?php foreach ($this->columns as $key): ?>
-			<td><?php echo is_array($row[$key]) ? implode(',', $row[$key]) : $row[$key]; ?></td>
+			<td>
+			<?php //TODO!!!!! ?>
+			<?php if (is_array($row[$key])): ?>
+				<?php if (!empty($row[$key]['url']) && !empty($row[$key]['thumb'])): ?>
+					<a class="fancy" href="<?php echo $row[$key]['url']; ?>">
+					<img src="<?php echo $row[$key]['thumb']; ?>" alt="thumb"/>
+					<br/>
+					<?php echo $row[$key]['url']; ?>
+					</a>
+				<?php else: ?>
+					<?php echo implode(',', $row[$key]); ?>
+				<?php endif; ?>
+			<?php else: ?> 
+				<?php echo $row[$key]; ?>
+			<?php endif; ?>
+			</td>
 		<?php endforeach; ?>
 		<td class="actions">
 			<?php $first = true;?>

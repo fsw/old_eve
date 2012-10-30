@@ -1,4 +1,10 @@
 <?php
+/**
+ * All model classes should extend this.
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 abstract class Model
 {

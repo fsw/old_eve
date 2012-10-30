@@ -17,11 +17,14 @@ class Markdown
 	static $parser;
 	static function fromFile($path)
 	{
+		Dev::startTimer('markdown');
 		if (!isset(static::$parser))
 		{
-			$parser = new Markdown_Parser();
+			$parser = new MarkdownExtra_Parser();
 		}
-		return $parser->transform(Fs::read($path));
+		$ret = $parser->transform(Fs::read($path));
+		Dev::stopTimer();
+		return $ret;
 	}
 }
 

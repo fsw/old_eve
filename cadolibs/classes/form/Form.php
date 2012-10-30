@@ -1,9 +1,9 @@
 <?php
 /**
- * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class Form extends Widget
 {
 	//protected $fields = array();
@@ -81,7 +81,8 @@ class Form extends Widget
 			$data = $this->data;
 			foreach ($this->fields as $key => $field)
 			{
-				$data[$key] = $field->fromPost(empty($_POST[$this->name][$key]) ? null : $_POST[$this->name][$key]);
+				$val = array_key_exists($key, $_POST[$this->name]) ? $_POST[$this->name][$key] : null;
+				$data[$key] = $field->fromPost($val);
 				$error = $field->validate($data[$key]);
 				if ($error !== true)
 				{

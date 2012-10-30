@@ -1,4 +1,10 @@
 <?php
+/**
+ * Exception type that can be thrown by model to indicate user error.
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 class model_Exception extends Exception
 {

@@ -6,7 +6,7 @@
  */
 class Layout extends Widget
 {	
-	private $htmlTitle = 'CadoFramework';
+	private $htmlTitle = 'EveFramework';
 	private $htmlDescription = '';
 	private $cssUrls = array();
 	private $jsUrls = array();

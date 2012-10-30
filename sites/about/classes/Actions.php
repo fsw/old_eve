@@ -1,6 +1,6 @@
 <?php
 
-class Actions extends actions_Frontend
+class Actions extends actions_Layout
 {
 	public function before($method, $args)
 	{
@@ -10,13 +10,13 @@ class Actions extends actions_Frontend
 	public function actionIndex()
 	{
 		$this->layout->setHtmlTitle('Eve Framework');
-		return Markdown::fromFile('doc/ABOUT.md');
+		return Markdown::fromFile('docs/ABOUT.md');
 	}
 	
 	public function actionIntro()
 	{
 		$this->layout->setHtmlTitle('Eve Framework - Quick Introduction');
-		return Markdown::fromFile('doc/INTRO.md');
+		return Markdown::fromFile('docs/INTRO.md');
 	}	
 	
 	public function actionDocs()
@@ -28,7 +28,7 @@ class Actions extends actions_Frontend
 			$this->layout->addJs('/static/apigen/elementlist.js');
 				
 			$file = implode('/' , $this->request->getPath()) . '.' . $this->request->extension();
-			$file = Fs::read('doc/html/' . $file);
+			$file = Fs::read('docs/html/' . $file);
 			$this->layout->setHtmlTitle(substr($file,
 					strpos($file, '<title>') + 7,
 					strpos($file, '</title>') - strpos($file, '<title>') - 7

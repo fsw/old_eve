@@ -45,7 +45,7 @@
 			<?php endif; ?>
 		</div>
 		<div class="footer">
-			Powered by <a href="http://cadosolutions.com/framework">CadoFramework</a>
+			Powered by <a href="http://eve.cadosolutions.com/">EveFramework</a>
 		</div>
 	</body>
 </html>

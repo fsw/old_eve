@@ -13,12 +13,18 @@ class Eve {
 	static $pushid =  <?php var_export($this->pushid); ?>;
 	static $domains = <?php var_export($this->siteConfig['domains']); ?>;
 	static $host = '<?php echo $this->host ?>';
+	static $devEmail = <?php var_export($this->devEmail); ?>;
 	static $webroot = '<?php echo $this->siteConfig['webroot'] ?>/';
 	static $uploads = '<?php echo $this->siteConfig['webroot'] ?>/uploads/';
 }
 
 require_once('<?php echo $this->srcRoot ?>/cadolibs/Cado.php');
 Cado::init();
+<?php if ($this->dev) : ?>
+	Dev::startTimer('all');
+<?php endif; ?>
 Cado::addRoot('framework');
-
 echo BaseSite::factory('<?php echo $this->siteCode ?>')->route(new Request());
+<?php if ($this->dev) : ?>
+	Dev::stopTimer();
+<?php endif; ?>

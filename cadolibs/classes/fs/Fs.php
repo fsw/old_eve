@@ -1,9 +1,13 @@
 <?php
 /**
+ * Filesystem access.
  * 
+ * Set of static function to speed up common file system operations.
+ * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 final class Fs
 {
 	const TYPE_ANY = 0;

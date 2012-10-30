@@ -13,6 +13,7 @@ class model_Users extends model_Collection
 	 			'avatar' => new field_Image(),
 	 			'bio' => new field_Longtext(),
 	 			'groups' => new field_relation_Many('groups'),
+				'enable' => new field_Bool(),
 			)
 		);
 	}
@@ -77,7 +78,7 @@ class model_Users extends model_Collection
 			{
 				$privIds = array_merge($privIds, $group['privilages']);
 			}
-			$user['privilages'] = $this->getSibling('privilages')->getByIds($privIds);
+			$user['privilages'] = $this->getSibling('privilages')->getColByIds('code', $privIds);
 			
 			$_SESSION['user'] = $user;
 			
@@ -91,6 +92,11 @@ class model_Users extends model_Collection
 		unset($_SESSION['user']);
 	}
 	
+	public function hasPriv($priv)
+	{
+		return CADO_DEV ? true : (empty($_SESSION['user']['privilages']) ? false : in_array($priv, $_SESSION['user']['privilages']));
+	}
+
 	public function isLoggedIn()
 	{
 		return !empty($_SESSION['user']);

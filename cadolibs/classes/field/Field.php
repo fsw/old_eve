@@ -1,4 +1,10 @@
 <?php
+/**
+ * Value.
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 abstract class Field
 {

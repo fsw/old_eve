@@ -13,6 +13,10 @@ class cache_Apc
 	
 	public static function get($key)
 	{
+		if (CADO_DEV)
+		{
+			return null;
+		}
 		Dev::startTimer('apc');
 		Dev::logEvent('apc', $key);
 		$ret = apc_fetch($key, $success);

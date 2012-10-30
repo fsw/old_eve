@@ -20,6 +20,10 @@ class actions_Cms extends actions_Layout
 			$this->layout->logged = true;
 			$this->layout->modules = $this->site->getModules();
 			$this->layout->addJs('/static/tinymce/jscripts/tiny_mce/tiny_mce.js');
+			
+			$this->layout->addJs('/static/fancybox/jquery.fancybox-1.3.4.pack.js');
+			$this->layout->addCss('/static/fancybox/jquery.fancybox-1.3.4.css');
+				
 			$this->cmsData = $this->site->getConfigField('cmsData');
 			if (empty($this->cmsData))
 			{
@@ -40,11 +44,18 @@ class actions_Cms extends actions_Layout
 	}
 	
 	
+	public function actionToggle($model, $id)
+	{
+		$current = $this->site->model($model)->getById($id);
+		$this->site->model($model)->update($id, array('enable' => !$current['enable']));
+		$this->redirectTo($this->request->getReferer());
+	}
+	
 	public function actionSave($model, $id, array $data)
 	{
 		$form = new Form();
 		$form->id = $model . 'Form';
-		$form->title = 'save ' . $model;
+		$form->title = ($id == 0 ? 'Add ' : 'Edit ') . ucfirst(substr($model, 0, strlen($model) - 1));
 		$fields = $this->site->model($model)->fields();
 		foreach ($fields as $key => $field)
 		{
@@ -87,7 +98,12 @@ class actions_Cms extends actions_Layout
 		}
 		if ($form->validate())
 		{
-			$ret = $this->site->model($model)->save($form->getData());
+			$data = $form->getData();
+			if (array_key_exists('password', $data) && empty($data['password']))
+			{
+				unset($data['password']);
+			}
+			$ret = $this->site->model($model)->save($data);
 			if ($ret == true)
 			{
 				$this->redirectTo($_SESSION['saveReferer']);
@@ -100,14 +116,37 @@ class actions_Cms extends actions_Layout
 		return $form;
 	}
 	
+	public function actionFileBrowser()
+	{
+		return actionList('files');
+	}
+	
 	public function actionList($model, Array $search)
 	{
 		$widget = new Widget('widgets/cms/list');
-		$actions = array('Add' => self::hrefSave($model, 0));
-		$rowActions = array(
-				'Edit' => self::hrefSave($model, '_ID_'),
-				'Trash' => self::hrefSave($model, 0)
-		);
+		
+		$actions = array();
+		$rowActions = array();
+		$widget->readOnly = true;
+		if ($this->site->model($model)->field('enable') !== null)
+		{
+			$widget->toggable = true;
+		}
+		
+		if ($this->site->model('users')->hasPriv('admin_' . $model))
+		{
+			$actions = array('Add' => self::hrefSave($model, 0));
+			$rowActions = array(
+					'Edit' => self::hrefSave($model, '_ID_'),
+			);
+			
+			if ($this->site->model($model)->field('enable') !== null)
+			{
+				$rowActions['On/Off'] = self::hrefToggle($model, '_ID_');
+			}
+			
+			$widget->readOnly = false;
+		}
 		
 		$modelClass = $this->site->model($model);
 		$where = '1';
@@ -123,9 +162,13 @@ class actions_Cms extends actions_Layout
 			$parent = empty($search['parent']) ? 0 : $search['parent'];
 			
 			$widget->path = $modelClass->getPath($parent);
-			
+							
 			$rowActions['Children'] = self::hrefList($model, array('parent' => '_ID_'));
-			$actions['Add'] = self::hrefSave($model, 0, array('parent' => $parent));
+			
+			if ($widget->readOnly == false)
+			{
+				$actions['Add'] = self::hrefSave($model, 0, array('parent' => $parent));
+			}
 			
 			$where .= ' AND `parent`=?';
 			$bind[] = $parent;
@@ -137,7 +180,7 @@ class actions_Cms extends actions_Layout
 		switch($model)
 		{
 			case 'menus':
-				$columns = array('id', 'title', 'slug');
+				$columns = array('id', 'order', 'title', 'slug');
 				break;
 			case 'users':
 				$columns = array('id', 'name', 'email');

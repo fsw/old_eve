@@ -1,4 +1,10 @@
 <?php
+/**
+ * Database table.
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 abstract class model_TreeCollection extends model_Collection
 {
@@ -21,9 +27,9 @@ abstract class model_TreeCollection extends model_Collection
 				)
 		);
 	}
-	public function getChildren($parentId = 0, $limit = null, $page = 1, &$foundRows = false)
+	public function getChildren($parentId = 0, $where = '1', $limit = null, $page = 1, &$foundRows = false)
 	{
-		return $this->search('`parent` = ?', array($parentId), $limit, $page, $foundRows);
+		return $this->search('`parent` = ? AND ' . $where, array($parentId), $limit, $page, $foundRows);
 	}
 	
 	public function getPath($id = 0)
@@ -38,14 +44,14 @@ abstract class model_TreeCollection extends model_Collection
 		return array_reverse($ret);
 	}
 	
-	public function getTree($parentId = 0)
+	public function getTree($parentId = 0, $where = '1')
 	{
-		$rows = $this->getChildren($parentId);
+		$rows = $this->getChildren($parentId, $where);
 		foreach($rows as &$row)
 		{
 			if(!empty($row['id']))
 			{
-				$row['children'] = $this->getTree($row['id']);
+				$row['children'] = $this->getTree($row['id'], $where);
 			}
 		}
 		return $rows;

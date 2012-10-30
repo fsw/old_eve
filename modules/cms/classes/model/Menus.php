@@ -14,6 +14,8 @@ class model_Menus extends model_TreeCollection
 								'external' => 'External'
 								)),
 						'content' => new field_relation_One('contents'),
+						'order' => new field_Int(),
+						'enable' => new field_Bool(),
 						'external' => new field_Text(),
 				)
 		);
@@ -46,7 +48,7 @@ class model_Menus extends model_TreeCollection
 	public function getMenu($slug)
 	{
 		$head = $this->getByField('slug', $slug);
-		return $this->getTree($head['id']);
+		return $this->getTree($head['id'], '`enable` = 1 ORDER BY `order` ASC');
 	}
 	
 }

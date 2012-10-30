@@ -13,7 +13,7 @@ final class Cado
 	public static $root = null;
 	public static $outputCache = null;
 	
-	private static $errorHandler = null;
+	public static $errorHandler = null;
 	private static $roots = array('cadolibs');
 	
 	public static function init()
@@ -36,17 +36,30 @@ final class Cado
 	
 	public static function autoload($className)
 	{
+		if ($className !== 'Dev')
+		{
+			//Dev::startTimer('autoloader');
+		}
 		$file = self::getClassFileName($className);
 		if ($file === null)
 		{
 			throw new Exception('class ' . $className . ' not found');
 		}
 		require($file);
+		if ($className !== 'Dev')
+		{
+			//Dev::endTimer();
+		}
 	}
 	
 	public static function addRoot($root)
 	{
 		array_unshift(self::$roots, $root);
+	}
+	
+	public static function shiftRoots()
+	{
+		array_shift(self::$roots);
 	}
 	
 	public static function getClassFileName($className)

@@ -1,8 +1,7 @@
 <?php
 /**
- *
+ * @package CadoLibs
  * @author fsw
- *
  */
 
 class ErrorHandler
@@ -24,7 +23,9 @@ class ErrorHandler
 			E_DEPRECATED => 'E_DEPRECATED',
 			E_USER_DEPRECATED => 'E_USER_DEPRECATED',
 	);
-			
+
+	private static $callback = null;
+	
 	public function __construct()
 	{
 		error_reporting(E_ALL);
@@ -34,9 +35,9 @@ class ErrorHandler
 		ob_start();
 	}
 	
-	public function setModel($model)
+	public static function setCallback($callback)
 	{
-		$this->model = $model;
+		self::$callback = $callback;
 	}
 	
 	public function handleShutdown()
@@ -63,6 +64,10 @@ class ErrorHandler
 	
 	private function handler($code, $message, $file, $line, $trace = array())
 	{
+		if ((self::$callback !== null) && !CADO_DEV)
+		{
+			call_user_func(self::$callback, $code, $message, $file, $line, $trace);
+		}
 		if (PHP_SAPI === 'cli')
 		{
 			echo 'ERROR!';

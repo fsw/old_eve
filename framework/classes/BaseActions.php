@@ -1,4 +1,10 @@
 <?php
+/**
+ * Actions.
+ * 
+ * @package Framework
+ * @author fsw
+ */
 
 abstract class BaseActions
 {	

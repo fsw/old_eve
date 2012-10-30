@@ -9,9 +9,10 @@ class model_Contents extends model_Collection
 			array(
 	 			'title' => new field_Text(),
 				'subtitle' => new field_Text(),		
-				'slug' => new field_Text(),  //TODO key na to
+				'slug' => new field_Text(),
 	 			'body' => new field_Richtext(),
 				'group' => new field_relation_One('groups'),
+				'enable' => new field_Bool(),
 			)
 		);
 	}

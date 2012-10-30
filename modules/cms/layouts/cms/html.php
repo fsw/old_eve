@@ -47,5 +47,5 @@
 <?php echo $this->widget; ?>
 </div>
 <div class="footer">
-	Powered by <a href="http://cadosolutions.com/framework">CadoFramework</a>
+	Powered by <a href="http://cadosolutions.com/eve">EveFramework</a>
 </div>

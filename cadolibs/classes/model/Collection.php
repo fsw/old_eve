@@ -1,4 +1,10 @@
 <?php
+/**
+ * Database table.
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 abstract class model_Collection extends Model
 {
@@ -19,7 +25,7 @@ abstract class model_Collection extends Model
 		{
 			$this->fields = $this->getFields();
 		}
-		return $this->fields[$key];
+		return empty($this->fields[$key]) ? null : $this->fields[$key];
 	}
 	
 	public function getStructure()
@@ -190,7 +196,7 @@ abstract class model_Collection extends Model
 			{
 				$ret[$key] = (int)$row[$key];
 			}
-			elseif (isset($row[$key]))
+			elseif (array_key_exists($key, $row))
 			{
 				$cell = $field->toDb($row[$key]);
 				if (is_array($cell))
@@ -280,7 +286,11 @@ abstract class model_Collection extends Model
 		{
 			$cached = array();
 			$cached['ids'] = $this->db->fetchCol($q, $bind);
-			$cached['found'] = $this->db->fetchOne('SELECT FOUND_ROWS()');
+			$cached['found'] = count($cached['ids']);
+			if (($limit !== null) && ($cached['found'] < $limit))
+			{
+				$cached['found'] = $this->db->fetchOne('SELECT FOUND_ROWS()');
+			}
 			cache_Apc::set($cacheKey, $cached, 60);
 		}
 		if ($foundRows !== false)
@@ -304,6 +314,10 @@ abstract class model_Collection extends Model
 	public function searchOne($where = null, $bind = array())
 	{
 		$rows = $this->search($where, $bind);
+		if (empty($rows))
+		{
+			return null;
+		}
 		return reset($rows);
 	}
 	
@@ -316,6 +330,16 @@ abstract class model_Collection extends Model
 	public function getById($id)
 	{
 		return $this->searchOne('id = ?', array($id));
+	}
+	
+	public function getColByIds($col, $ids)
+	{
+		$rows = $this->getByIds($ids);
+		foreach ($rows as &$row)
+		{
+			$row = $row[$col];
+		}
+		return $rows;
 	}
 	
 	public function getByIds($ids)

@@ -26,10 +26,14 @@ class field_Enum extends Field
 	{
 		if ($this->multi)
 		{
+			if (empty($value))
+			{
+				$value = array();
+			}
 			$ret = '<div>';
 			foreach ($this->values as $k => $v)
 			{
-				$ret .= '<input type="checkbox" name="' . $key . '[' . $k . ']" value="' . $k . '"' . (in_array($k, $value) ? ' checked="checked"' : '') . '>' . $v . '</option><br/>';
+				$ret .= '<input type="checkbox" name="' . $key . '[' . $k . ']" value="' . $k . '"' . (in_array($k, $value) ? ' checked="checked"' : '') . '>' . $v . '<br/>';
 			}
 			$ret .= '</div>';
 		}
