@@ -1,0 +1,12 @@
+_remotes/*
+.buildpath
+.project
+.settings
+docs/html
+webroots
+
+sites/*
+
+!sites/demo
+!sites/about
+
