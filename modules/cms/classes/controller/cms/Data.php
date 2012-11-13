@@ -1,6 +1,6 @@
 <?php
 
-abstract class actions_cms_Data extends actions_Cms
+abstract class controller_cms_Data extends controller_Cms
 {
 	protected $model = null;
 	protected $columns = array('id');

@@ -1,16 +1,15 @@
 <?php
 
-class actions_Static extends BaseActions
+class controller_Static extends Controller
 {
-	public function actionIndex()
+	public function actionIndex($fullpath)
 	{
-		$path = implode('/', $this->request->getPath()) . '.' . $this->request->extension();
-		$filePath = Cado::findResource('static/' . $path);
+		$filePath = Cado::findResource('static/' . $fullpath);
 		if ($filePath !== null)
 		{
 			//TODO cache will do!
 			//var_dump($filePath, Cado::$outputCache . 'static/' . $path);
-			Fs::copyr($filePath, Cado::$outputCache . 'static/' . $path);
+			Fs::copyr($filePath, Cado::$outputCache . 'static/' . $fullpath);
 			if ($this->request->extension() == 'css')
 			{
 				header('Content-Type: text/css');
@@ -27,7 +26,7 @@ class actions_Static extends BaseActions
 	public function actionActions($path, $extension)
 	{
 		//TODO minimize
-		$className = BaseActions::getActionsClass($path);
+		$className = Controller::getActionsClass($path);
 		$actions = new $className($this->site, $this->request, null); 
 		switch ($extension)
 		{

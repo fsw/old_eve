@@ -1,6 +1,6 @@
 <?php
 
-class actions_Contact extends actions_Frontend
+class controller_Contact extends controller_Frontend
 {	
 	public function actionIndex()
 	{
@@ -14,7 +14,7 @@ class actions_Contact extends actions_Frontend
 			$ret = $this->site->model('contacts')->add($form->getValues());
 			if ($ret == true)
 			{
-				$this->redirectTo(actions_Contact::hrefSent());
+				$this->redirectTo(controller_Contact::hrefSent());
 			}
 			else
 			{

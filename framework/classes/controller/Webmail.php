@@ -1,6 +1,6 @@
 <?php
 
-class actions_Webmail extends BaseActions
+class controller_Webmail extends Controller
 {
 	public function actionIndex($template, Array $data)
 	{

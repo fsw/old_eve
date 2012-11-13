@@ -1,6 +1,6 @@
 <?php
 
-class actions_Rootcms extends actions_Layout
+class controller_Rootcms extends controller_Layout
 {
 	protected $layoutName = 'rootcms';
 	
@@ -19,17 +19,17 @@ class actions_Rootcms extends actions_Layout
 				array( 'title' => 'Tools',
 						'href' => '#',
 						'children' => array(
-								array('title' => 'checkDb', 'href' => actions_Rootcms::hrefDbCheck()),
+								array('title' => 'checkDb', 'href' => controller_Rootcms::hrefDbCheck()),
 								),
 						)
 			);
 			$modelerMenu = array();
 			foreach ($this->site->getModels() as $model)
 			{
-				$modelerMenu[] = array('title' => $model, 'href' => actions_Rootcms::hrefModeler($model));
+				$modelerMenu[] = array('title' => $model, 'href' => controller_Rootcms::hrefModeler($model));
 			}
 			$mainMenu[] = array('title' => 'Modeler', 'href' => '#', 'children' => $modelerMenu);
-			$mainMenu[] = array('title' => '', 'href' => actions_Rootcms::hrefLogout(), 'class' => 'logout');
+			$mainMenu[] = array('title' => '', 'href' => controller_Rootcms::hrefLogout(), 'class' => 'logout');
 			$this->layout->mainMenu = $mainMenu;
 		}
 	}

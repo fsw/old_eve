@@ -1,6 +1,6 @@
 <?php
 
-class actions_Uploads extends BaseActions
+class controller_Uploads extends Controller
 {
 	public function actionIndex($fullpath)
 	{

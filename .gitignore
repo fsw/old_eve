@@ -5,6 +5,7 @@ _remotes/*
 docs/html
 webroots
 
+cache/*
 sites/*
 
 !sites/demo

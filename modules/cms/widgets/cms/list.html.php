@@ -6,9 +6,9 @@
 
 <?php if ($this->tree): ?>
 <ul class="crumbs">
-	<li><a href="<?php echo actions_Cms::hrefList($this->model, array('parent' => 0)); ?>"><?php echo $this->model ?></a></li>
+	<li><a href="<?php echo controller_Cms::hrefList($this->model, array('parent' => 0)); ?>"><?php echo $this->model ?></a></li>
 <?php foreach($this->path as $crumb): ?>
-	<li><a href="<?php echo actions_Cms::hrefList($this->model, array('parent' => $crumb['id'])); ?>"><?php echo $crumb['title'] ?></a></li>
+	<li><a href="<?php echo controller_Cms::hrefList($this->model, array('parent' => $crumb['id'])); ?>"><?php echo $crumb['title'] ?></a></li>
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>
@@ -23,13 +23,13 @@
 			<?php $search = $this->search; ?>
 			<?php if (!empty($search['order']) && ($search['order'] == $key)) : ?>
 				<?php $search['order'] = '-' . $key; ?>
-				<a href="<?php echo actions_Cms::hrefList($this->model, $search); ?>">&#9660; <?php echo $key; ?></a>
+				<a href="<?php echo controller_Cms::hrefList($this->model, $search); ?>">&#9660; <?php echo $key; ?></a>
 			<?php elseif (!empty($search['order']) && ($search['order'] == '-' . $key)) : ?>
 				<?php unset($search['order']); ?>
-				<a href="<?php echo actions_Cms::hrefList($this->model, $search); ?>">&#9650; <?php echo $key; ?></a>
+				<a href="<?php echo controller_Cms::hrefList($this->model, $search); ?>">&#9650; <?php echo $key; ?></a>
 			<?php else: ?>
 				<?php $search['order'] = $key; ?>
-				<a href="<?php echo actions_Cms::hrefList($this->model, $search); ?>"><?php echo $key; ?></a>
+				<a href="<?php echo controller_Cms::hrefList($this->model, $search); ?>"><?php echo $key; ?></a>
 			<?php endif; ?>
 		</th>
 	<?php endforeach; ?>

@@ -1,6 +1,6 @@
 <?php
 
-class Actions extends actions_Frontend
+class controller_Index extends controller_Frontend
 {
 	public function actionIndex()
 	{

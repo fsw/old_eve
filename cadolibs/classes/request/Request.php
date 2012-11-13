@@ -107,7 +107,7 @@ class Request
 	
 	public function getReferer()
 	{
-		return empty($_SERVER['HTTP_REFERER']) ? Actions::hrefIndex() : $_SERVER['HTTP_REFERER'];
+		return empty($_SERVER['HTTP_REFERER']) ? controller_Index::hrefIndex() : $_SERVER['HTTP_REFERER'];
 	}
 	
 	public function getType()

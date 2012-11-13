@@ -1,6 +1,6 @@
 <?php
 
-class Actions extends actions_Layout
+class controller_Index extends controller_Layout
 {
 	public function before($method, $args)
 	{

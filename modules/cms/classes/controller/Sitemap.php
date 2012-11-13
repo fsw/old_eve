@@ -1,6 +1,6 @@
 <?php
 
-class actions_Sitemap extends actions_Frontend
+class controller_Sitemap extends controller_Frontend
 {
 	protected $layoutName = 'frontend';
 	

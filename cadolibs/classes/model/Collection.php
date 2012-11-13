@@ -9,6 +9,7 @@
 abstract class model_Collection extends Model
 {
 	private $fields = null;
+	protected $useArrayCache = false;
 	
 	public function fields()
 	{

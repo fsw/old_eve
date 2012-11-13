@@ -124,7 +124,7 @@ abstract class BaseSite extends Module
 	public static function unroute($class, $method = 'actionIndex', $args = array())
 	{
 		$path = array(); 
-		if (($code = BaseActions::getActionsCode($class)) != 'index')
+		if (($code = Controller::getActionsCode($class)) != 'index')
 		{
 			$path[] = $code; 
 		}
@@ -214,7 +214,7 @@ abstract class BaseSite extends Module
 	{
 		//TODO array_cache
 		$map = array();
-		foreach (Cado::getDescendants('BaseActions') as $className)
+		foreach (Cado::getDescendants('Controller') as $className)
 		{
 			$className = array_shift(explode('_', $className));
 			
@@ -257,10 +257,10 @@ abstract class BaseSite extends Module
 			$this->runTask($code, $args);
 			return null;
 		}
-		$className = BaseActions::getActionsClass($request->glancePath());
+		$className = Controller::getActionsClass($request->glancePath());
 		if ($className === null)
 		{
-			$className = 'Actions';
+			$className = 'controller_Index';
 		}
 		else
 		{
@@ -271,15 +271,22 @@ abstract class BaseSite extends Module
 		//TODO cache!
 		$reflection = new ReflectionMethod($className, $method);
 		$args = array();
+		
+		$pathChecked = false;
+		$extChecked = false;
+		
 		foreach ($reflection->getParameters() as $param)
 		{
 			if ($param->getName() == 'fullpath')
 			{
 				$value = implode('/', $request->getPath()) . '.' . $request->extension();
+				$pathChecked = true;
+				$extChecked = true;
 			}
 			elseif ($param->getName() == 'extension')
 			{
 				$value = $request->extension();
+				$extChecked = true;
 			}
 			elseif ($param->getName() == 'referer')
 			{
@@ -295,10 +302,22 @@ abstract class BaseSite extends Module
 			}
 			$args[] = $value ?: ($param->isDefaultValueAvailable() ? $param->getDefaultValue() : null);
 		}
+		
+		
+		if ($request->isPathEmpty())
+		{
+			$pathChecked = true;
+		}
+		if (!$pathChecked || (!$extChecked && $request->extension() != 'html'))
+		{
+			self::show404();
+		}
+		
 		$class = new $className($this, $request, $method);
 		$class->before($methodCode, $args);
 		$response = call_user_func_array(array($class, $method), $args);
 		$response = $class->after($response);
+		
 		if (is_scalar($response) || (is_object($response) && method_exists($response, '__toString')))
 		{
 			return $response;
@@ -319,7 +338,7 @@ abstract class BaseSite extends Module
 	
 	public static function show404()
 	{
-		$layout = new Layout('404');
+		$layout = new Layout('layouts/404');
 		echo $layout;
 		exit;
 	}

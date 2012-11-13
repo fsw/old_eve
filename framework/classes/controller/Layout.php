@@ -1,6 +1,6 @@
 <?php 
 
-abstract class actions_Layout extends BaseActions
+abstract class controller_Layout extends Controller
 {
 	protected $layoutName = 'frontend';
 	/**
@@ -11,7 +11,7 @@ abstract class actions_Layout extends BaseActions
 	public function before($method, $args)
 	{
 		$this->layout = new Layout('layouts/' . $this->layoutName);
-		$this->layout->addCss(actions_Static::hrefActions(BaseActions::getActionsCode($this), 'css'));
+		$this->layout->addCss(controller_Static::hrefActions(Controller::getActionsCode($this), 'css'));
 		$this->layout->addJs('/static/jquery.js');
 		if (CADO_DEV)
 		{
@@ -22,7 +22,7 @@ abstract class actions_Layout extends BaseActions
 			$this->layout->attachDevbar = true;
 		}
 		//$this->layout->addJs('/static/modernizr.js');
-		$this->layout->addJs(actions_Static::hrefActions(BaseActions::getActionsCode($this), 'js'));
+		$this->layout->addJs(controller_Static::hrefActions(Controller::getActionsCode($this), 'js'));
 	}
 
 	public function after($response)

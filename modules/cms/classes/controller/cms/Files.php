@@ -1,6 +1,6 @@
 <?php 
 
-class actions_cms_Files extends actions_cms_Data
+class controller_cms_Files extends controller_cms_Data
 {
 	protected $model = 'files';
 	protected $columns = array('id', 'name', 'file');

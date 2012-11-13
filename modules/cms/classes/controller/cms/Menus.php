@@ -1,6 +1,6 @@
 <?php 
 
-class actions_cms_Menus extends actions_cms_Data
+class controller_cms_Menus extends controller_cms_Data
 {
 	
 	protected $model = 'menus';

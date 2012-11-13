@@ -9,10 +9,10 @@
 		</ul>
 	</li>
 	
-	<li><a href="<?php echo actions_cms_Users::hrefIndex(); ?>">Users</a>
+	<li><a href="<?php echo controller_cms_Users::hrefIndex(); ?>">Users</a>
 		<ul>
-		<li><a href="<?php echo actions_cms_Groups::hrefIndex(); ?>">Groups</a></li>
-		<li><a href="<?php echo actions_cms_Privilages::hrefIndex(); ?>">Privilages</a></li>
+		<li><a href="<?php echo controller_cms_Groups::hrefIndex(); ?>">Groups</a></li>
+		<li><a href="<?php echo controller_cms_Privilages::hrefIndex(); ?>">Privilages</a></li>
 		</ul>
 	</li>
 	
@@ -20,20 +20,20 @@
 	<li><a href="#">Config...</a>
 		<ul>
 		<?php foreach ($this->modules as $code => $name): ?>
-		<li><a href="<?php echo actions_Cms::hrefConfig($code); ?>"><?php echo $name; ?></a></li>
+		<li><a href="<?php echo controller_Cms::hrefConfig($code); ?>"><?php echo $name; ?></a></li>
 		<?php endforeach; ?>
 		</ul>
 	</li>
 	
 	<li><a href="#">Tools...</a>
 		<ul>
-		<li><a href="<?php echo actions_Cms::hrefExport(); ?>">Backup (export)</a></li>
-		<li><a href="<?php echo actions_Cms::hrefImport(); ?>">Restore (import)</a></li>
-		<li><a href="<?php echo actions_Cms::hrefCache(); ?>">Cache</a></li>
-		<li><a href="<?php echo actions_Cms::hrefErrors(); ?>">Errors</a></li>
+		<li><a href="<?php echo controller_Cms::hrefExport(); ?>">Backup (export)</a></li>
+		<li><a href="<?php echo controller_Cms::hrefImport(); ?>">Restore (import)</a></li>
+		<li><a href="<?php echo controller_Cms::hrefCache(); ?>">Cache</a></li>
+		<li><a href="<?php echo controller_Cms::hrefErrors(); ?>">Errors</a></li>
 		</ul>
 	</li>
-	<li class="logout"><a href="<?php echo actions_Users::hrefLogout(); ?>" title="Logout">&nbsp;</a></li>
+	<li class="logout"><a href="<?php echo controller_Users::hrefLogout(); ?>" title="Logout">&nbsp;</a></li>
 	<li class="user">
 		logged in as <b><?php echo $this->user['name']; ?></b>
 		<br/>

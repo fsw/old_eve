@@ -8,7 +8,7 @@
 		<th><?php echo $key; ?></th>
 	<?php endforeach; ?>
 	<th>
-		<a title="Add" class="button" href="<?php echo actions_Rootcms::hrefModelerSave($this->model, 0); ?>">Add</a>
+		<a title="Add" class="button" href="<?php echo controller_Rootcms::hrefModelerSave($this->model, 0); ?>">Add</a>
 	</th>
 </tr>
 <?php foreach ($this->data as $row): ?>
@@ -17,9 +17,9 @@
 			<td><?php var_dump($row[$key]); ?></td>
 		<?php endforeach; ?>
 		<td class="actions">
-			<a title="Edit" href="<?php echo actions_Rootcms::hrefModelerSave($this->model, $row['id']); ?>">Edit</a>
+			<a title="Edit" href="<?php echo controller_Rootcms::hrefModelerSave($this->model, $row['id']); ?>">Edit</a>
 			|
-			<a title="Trash" onClick="$(this).parents('tr').fadeOut(); return false;" class="apiCall" href="<?php echo actions_Api::hrefJson($this->model, 'deleteById', $row['id']); ?>">Trash</a>
+			<a title="Trash" onClick="$(this).parents('tr').fadeOut(); return false;" class="apiCall" href="<?php echo controller_Api::hrefJson($this->model, 'deleteById', $row['id']); ?>">Trash</a>
 		</td>	
 	</tr>
 <?php endforeach; ?>

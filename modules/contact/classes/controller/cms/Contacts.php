@@ -1,6 +1,6 @@
 <?php 
 
-class actions_cms_Contacts extends actions_cms_Data
+class controller_cms_Contacts extends controller_cms_Data
 {
 	protected $model = 'contacts';
 	protected $columns = array('id', 'email');

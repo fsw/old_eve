@@ -1,6 +1,6 @@
 <?php
 
-class actions_Cms extends actions_Layout
+class controller_Cms extends controller_Layout
 {
 	protected $layoutName = 'cms';
 	
@@ -10,7 +10,7 @@ class actions_Cms extends actions_Layout
 		if (empty($_SESSION['user']))
 		{
 			$this->redirectTo(
-					actions_Users::hrefLogin(
+					controller_Users::hrefLogin(
 						Site::unroute(get_class($this), 'action' . ucfirst($method), $args)
 					)
 			);
@@ -32,10 +32,10 @@ class actions_Cms extends actions_Layout
 			$this->layout->addCss('/static/fancybox/jquery.fancybox-1.3.4.css');
 			
 			$dataMenu = array();
-			$dataActions = Cado::getDescendants('actions_cms_Data');
+			$dataActions = Cado::getDescendants('controller_cms_Data');
 			foreach ($dataActions as $className)
 			{
-				if (!in_array($className, array('actions_cms_Users', 'actions_cms_Groups', 'actions_cms_Privilages')))
+				if (!in_array($className, array('controller_cms_Users', 'controller_cms_Groups', 'controller_cms_Privilages')))
 				{
 					$dataMenu[substr($className, strrpos($className, '_') + 1)] = $className::hrefIndex();
 				}

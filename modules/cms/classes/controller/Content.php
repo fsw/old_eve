@@ -1,6 +1,6 @@
 <?php
 
-class actions_Content extends actions_Frontend
+class controller_Content extends controller_Frontend
 {
 	public function actionIndex($slug)
 	{

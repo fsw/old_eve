@@ -6,7 +6,7 @@
  * @author fsw
  */
 
-abstract class BaseActions
+abstract class Controller
 {	
 	
 	protected $layoutName = null;
@@ -91,7 +91,7 @@ abstract class BaseActions
 	public static function getActionsClass($actionsCode)
 	{
 		$chunks = ($actionsCode == 'index' ? array() : explode('-', $actionsCode));
-		array_unshift($chunks, 'actions');
+		array_unshift($chunks, 'controller');
 		$chunks[] = ucfirst(array_pop($chunks));
 		$className = implode('_', $chunks);
 		return Cado::classExists($className) ? $className : null;

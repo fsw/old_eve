@@ -1,6 +1,6 @@
 <?php 
 
-class actions_Api extends BaseActions
+class controller_Api extends Controller
 {
 	private function call($model, $method, Array $args)
 	{

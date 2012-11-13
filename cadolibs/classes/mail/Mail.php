@@ -102,7 +102,7 @@ class Mail
 
 	public static function send($to, $subject, $template, $vars = array(), $attach = array())
 	{
-		$vars['webViewLink'] = actions_Webmail::hrefIndex($template, $vars);
+		$vars['webViewLink'] = controller_Webmail::hrefIndex($template, $vars);
 		
 		$htmlBody = new Template('mails/' . $template . '/mail.html', $vars);
 		$txtBody = new Template('mails/' . $template . '/mail.txt', $vars);

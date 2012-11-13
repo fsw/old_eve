@@ -1,6 +1,6 @@
 <?php 
 
-class actions_cms_Contents extends actions_cms_Data
+class controller_cms_Contents extends controller_cms_Data
 {
 	
 	protected $model = 'contents';

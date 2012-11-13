@@ -1,6 +1,6 @@
 <?php 
 
-class actions_cms_Privilages extends actions_cms_Data
+class controller_cms_Privilages extends controller_cms_Data
 {
 	
 	protected $model = 'privilages';

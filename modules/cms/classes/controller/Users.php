@@ -1,6 +1,6 @@
 <?php
 
-class actions_Users extends actions_Frontend
+class controller_Users extends controller_Frontend
 {
 	public function actionLogin($getRedirectTo)
 	{
@@ -31,6 +31,6 @@ class actions_Users extends actions_Frontend
 	public function actionLogout()
 	{
 		$this->site->model('users')->logout();
-		$this->redirectTo(Actions::hrefIndex());
+		$this->redirectTo(controller_Index::hrefIndex());
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 class model_Menus extends model_TreeCollection
 {
+	protected $useArrayCache = true;
+	
 	public function getFields()
 	{
 		return array_merge(
@@ -29,7 +31,7 @@ class model_Menus extends model_TreeCollection
 		{
 			case 'content':
 				$content = $this->getSibling('contents')->getById($row['content']);
-				$row['href'] = actions_Content::hrefIndex($content['slug']);
+				$row['href'] = controller_Content::hrefIndex($content['slug']);
 				break;
 			case 'external':
 				$row['href'] = $row['external'];

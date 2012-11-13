@@ -1,6 +1,6 @@
 <?php
 
-abstract class actions_Frontend extends actions_Layout
+abstract class controller_Frontend extends controller_Layout
 {
 	protected $layoutName = 'frontend';
 	
