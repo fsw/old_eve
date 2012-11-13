@@ -8,7 +8,7 @@ class model_Configs extends model_Collection
 			parent::getFields(),
 			array(
 	 			'key' => new field_Text(),
-				'value' => new field_Longtext(),
+				'value' => new field_Array(),
 			)
 		);
 	}

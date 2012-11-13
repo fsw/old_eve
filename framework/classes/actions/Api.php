@@ -7,7 +7,7 @@ class actions_Api extends BaseActions
 		return array($model, $method, $args);
 	}
 	
-	public function actionXlm($model, $method, Array $args)
+	public function actionXml($model, $method, Array $args)
 	{
 		$ret = $this->call($format, $model, $method, $args);
 		$xml = new SimpleXMLElement('<root/>');

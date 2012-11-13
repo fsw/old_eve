@@ -1,11 +1,11 @@
 <?php
-/**
+/** 
+ * Simple Pager
  * 
- * @author fsw 
- *
- * pager class
- * TODO: make it 'smart'
+ * @package CadoLibs
+ * @author fsw
  */
+
 class Pager extends Widget
 {
 	

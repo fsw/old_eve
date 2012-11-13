@@ -1,9 +1,11 @@
 <?php
 /**
+ * Memcached.
  * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class cache_Memcached
 {
 	static $connection = null;

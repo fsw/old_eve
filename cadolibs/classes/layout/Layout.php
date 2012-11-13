@@ -1,9 +1,9 @@
 <?php
-/**
- * 
+/** 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class Layout extends Widget
 {	
 	private $htmlTitle = 'EveFramework';
@@ -40,9 +40,18 @@ class Layout extends Widget
 	
 	public function __toString()
 	{
-		$this->htmlBody = parent::__toString();
-		ob_start();
-		require(Cado::findResource('html.html.php'));
+		Dev::startTimer('render');
+		try
+		{
+			$this->htmlBody = parent::__toString();
+			ob_start();
+			require(Cado::findResource('html.html.php'));
+		}
+		catch (Exception $e)
+		{
+			Cado::handleException($e);
+		}
+		Dev::stopTimer();
 		return ob_get_clean();
 	}
 	

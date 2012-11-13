@@ -2,23 +2,23 @@
 
 class actions_Users extends actions_Frontend
 {
-	public function actionLogin(Array $redirectTo)
+	public function actionLogin($getRedirectTo)
 	{
 		$form = new Form();
 		$form->title = 'Login Form';
 		$form->class = 'login';
 		
-		$form->setFields(array(
-			'email' => new field_Email(),
-			'password' => new field_Password()
+		$form->addElements(array(
+			'email' => array('field' => new field_Email()),
+			'password' => array('field' => new field_Password())
 		));
 		
 		if ($form->validate())
 		{
-			$user = $this->site->model('users')->login($form->getField('email'), $form->getField('password'));
+			$user = $this->site->model('users')->login($form->getValue('email'), $form->getValue('password'));
 			if (!empty($user))
 			{
-				$this->redirectTo($redirectTo[0]);
+				$this->redirectTo($getRedirectTo);
 			}
 			else
 			{

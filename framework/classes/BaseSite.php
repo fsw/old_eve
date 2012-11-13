@@ -6,15 +6,24 @@
  * @author fsw
  */
 
-abstract class BaseSite
+abstract class BaseSite extends Module
 {
-	private $model = array();
-	private $db = null;
-	public static $site;	//temporary TODO refactor and remove
+	private static $model = array();
+	private static $code = null;
+	
+	private static $db = null;
+	private static $instance = null;
 	
 	public function __construct($code)
 	{
 		$this->code = $code;
+		self::$code = $code;
+		self::$instance = $this;
+	}
+	
+	public static function getInstance()
+	{
+		return static::$instance;
 	}
 	
 	public static function factory($siteCode)
@@ -22,14 +31,12 @@ abstract class BaseSite
 		Cado::addRoot('sites' . DS . $siteCode);
 		$site = new Site($siteCode);
 		Cado::shiftRoots();
-		//TODO get modules from site ???
 		foreach ($site->getModules() as $module)
 		{
 			Cado::addRoot('modules' . DS . $module);
 		}
 		Cado::addRoot('sites' . DS . $siteCode);
 		ErrorHandler::setCallback(array($site, 'errorCallback'));
-		self::$site = $site;
 		return $site;
 	}
 	
@@ -41,45 +48,46 @@ abstract class BaseSite
 	/**
 	 * @return Db
 	 */
-	public function getDb()
+	public static function getDb()
 	{
-		if (empty($this->db))
+		if (empty(self::$db))
 		{
-			$this->db = new Db(Eve::$dbConfig);
+			self::$db = new Db(Eve::$dbConfig);
 		}
-		return $this->db;	
+		return self::$db;	
 	}
 	
 	/**
 	 * @return Model 
 	 */
-	public function model($code)
+	public static function model($code)
 	{
-		if (empty($this->model[$code]))
+		if (empty(self::$model[$code]))
 		{
 			$className = 'model_' . ucfirst($code);
-			$this->model[$code] = new $className($this->getDb(), 'cado_' . $this->code, array(), $this->model);
+			self::$model[$code] = new $className(self::getDb(), Eve::$dbConfig['prefix'] . self::$code, array(), self::$model);
 		}
-		return $this->model[$code];
-	}
-	
-	public function getConfigField($key)
-	{
-		return null;
+		return self::$model[$code];
 	}
 	
 	public function readDbStructure()
 	{
 		$ret = array();
-		$structure = $this->getDb()->getStructure();
+		$tools = new db_Tools($this->getDb());
+		$structure = $tools->getStructure();
 		foreach($structure as $name=>$fields)
 		{
-			if (strpos($name, 'cado_' . $this->code) === 0)
+			if (strpos($name, Eve::$dbConfig['prefix'] . self::$code) === 0)
 			{
 				$ret[$name] = $fields;
 			}
 		}
 		return $ret;
+	}
+	
+	public static function getModuleCode()
+	{
+		return 'site';	
 	}
 	
 	public function getModels()
@@ -98,9 +106,14 @@ abstract class BaseSite
 		return array();
 	}
 	
-	public function getCode()
+	public static function getCode()
 	{
 		return Cado::$siteCode;
+	}
+	
+	public static function getDbPrefix()
+	{
+		return Eve::$dbConfig['prefix'] . self::$code . '_';
 	}
 	
 	public function isModuleOn($code)
@@ -133,9 +146,12 @@ abstract class BaseSite
 				{
 					//$arg = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
 				}
-				elseif ($param->isArray())
+				elseif (strpos($param->getName(), 'get') === 0)
 				{
-					$params[$param->getName()] = $value;
+					if (!empty($value))
+					{
+						$params[lcfirst(substr($param->getName(), 3))] = $value;
+					}
 				}
 				else
 				{
@@ -157,13 +173,25 @@ abstract class BaseSite
 		}
 		//TODO error on wrong number
 		//TODO
+		//var_dump($path);
 		$last = array_pop($path) . '.' . $extension;
 		if ($last != 'index.html')
 		{
-			$path[] = $last;
-		} 
-		return 'http://' . Eve::$domains[0] . '/' . implode('/', $path) .
+			$path = implode('/', $path) . '/' . $last;
+		}
+		else 
+		{
+			$path = empty($path) ? '' : (implode('/', $path) . '/');
+		}
+		//var_dump($path, $params);
+		return 'http://' . Eve::$domains[0] . '/' . $path .
 		(empty($params) ? '' : '?' . http_build_query($params));;
+	}
+	
+	public function runAction($path, $args)
+	{
+		$className = 'action_' . implode('_', $path);
+		
 	}
 	
 	public function runTask($code, $args)
@@ -182,17 +210,51 @@ abstract class BaseSite
 		}
 	}
 	
+	public static function getActionsMap()
+	{
+		//TODO array_cache
+		$map = array();
+		foreach (Cado::getDescendants('BaseActions') as $className)
+		{
+			$className = array_shift(explode('_', $className));
+			
+			$base = array();
+			foreach (get_class_methods($className) as $method)
+			{
+				if (strpos($method, 'action') === 0)
+				{
+					//var_dump($className, $method);
+					//$map[]
+				}
+			}
+		}
+		return $map;
+	}
+	
+	public static function getUrlsMap()
+	{
+		return array();
+	}
+	
 	public function route(Request $request)
 	{
+		//var_dump(self::getActionsMap());
 		if ($request->getType() == 'cli')
 		{
 			$code = $request->shiftPath();
-			$args = $request->shiftPath();
-			if (!empty($args))
+			$args = array();
+			while ($bit = $request->shiftPath())
 			{
-				parse_str($args, $args);
+				if (strpos($bit, '=') === false)
+				{
+					$args[] = $bit;
+				}
+				else
+				{
+					$args[substr($bit, 0, strpos($bit, '='))] = substr($bit, strpos($bit, '=') + 1);
+				}
 			}
-			$this->runTask($code, $args);	
+			$this->runTask($code, $args);
 			return null;
 		}
 		$className = BaseActions::getActionsClass($request->glancePath());
@@ -213,7 +275,7 @@ abstract class BaseSite
 		{
 			if ($param->getName() == 'fullpath')
 			{
-				$value = implode('/', $request->getPath()) . $request->extension();
+				$value = implode('/', $request->getPath()) . '.' . $request->extension();
 			}
 			elseif ($param->getName() == 'extension')
 			{

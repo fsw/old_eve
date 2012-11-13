@@ -24,7 +24,9 @@
 </head>
 <body>
 	<?php echo $this->htmlBody; ?>
-	<?php Dev::showDevFooter(); ?>
+	<?php if($this->attachDevbar): ?>
+		<?php Dev::showDevFooter(); ?>
+	<?php endif; ?>
 	<?php foreach ($this->jsUrls as $url): ?>
 		<script src="<?php echo $url; ?>"></script>
 	<?php endforeach; ?>

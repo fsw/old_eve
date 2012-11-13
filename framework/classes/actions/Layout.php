@@ -16,8 +16,10 @@ abstract class actions_Layout extends BaseActions
 		if (CADO_DEV)
 		{
 			$this->layout->addJs('/static/jixedbar/src/jquery.jixedbar.js');
+			$this->layout->addJs('/static/jquery/cookie.js');
 			$this->layout->addJs('/static/dev.js');
 			$this->layout->addCss('/static/jixedbar/themes/default/jx.stylesheet.css');
+			$this->layout->attachDevbar = true;
 		}
 		//$this->layout->addJs('/static/modernizr.js');
 		$this->layout->addJs(actions_Static::hrefActions(BaseActions::getActionsCode($this), 'js'));

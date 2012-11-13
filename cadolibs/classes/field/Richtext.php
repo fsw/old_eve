@@ -9,6 +9,6 @@ class field_Richtext extends field_Text
 	
 	public function getFormInput($key, $value)
 	{
-		return '<textarea class="tinymce" name="' . $key . '" placeholder="' . $this->placeholder . '" >' . $value . '</textarea>';
+		return '<textarea class="tinymce" name="' . $key . '" placeholder="' . $this->placeholder . '" >' . htmlspecialchars($value) . '</textarea>';
 	}
 }

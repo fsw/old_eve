@@ -1,8 +1,7 @@
 <?php
-/**
- *
+/** 
+ * @package CadoLibs
  * @author fsw
- *
  */
 
 class Mail

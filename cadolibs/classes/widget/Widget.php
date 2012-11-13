@@ -1,9 +1,9 @@
 <?php
-/**
- * 
- * @author fsw 
- *
+/** 
+ * @package CadoLibs
+ * @author fsw
  */
+
 class Widget extends Template
 {
 	private $___basePath;

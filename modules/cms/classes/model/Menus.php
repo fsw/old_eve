@@ -6,7 +6,7 @@ class model_Menus extends model_TreeCollection
 		return array_merge(
 				parent::getFields(),
 				array(
-						'slug' => new field_Text(),
+						//'slug' => new field_Text(),
 						'title' => new field_Text(),
 						'type' => new field_Enum(array(
 								'group' => 'Group',
@@ -44,11 +44,5 @@ class model_Menus extends model_TreeCollection
 		unset($row['href']);
 		parent::implode($row);
 	}
-	
-	public function getMenu($slug)
-	{
-		$head = $this->getByField('slug', $slug);
-		return $this->getTree($head['id'], '`enable` = 1 ORDER BY `order` ASC');
-	}
-	
+		
 }

@@ -10,6 +10,8 @@ class model_Contents extends model_Collection
 	 			'title' => new field_Text(),
 				'subtitle' => new field_Text(),		
 				'slug' => new field_Text(),
+				'seo_keywords' => new field_Text(),
+				'seo_description' => new field_Longtext(),
 	 			'body' => new field_Richtext(),
 				'group' => new field_relation_One('groups'),
 				'enable' => new field_Bool(),

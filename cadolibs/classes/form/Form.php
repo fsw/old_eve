@@ -6,66 +6,100 @@
 
 class Form extends Widget
 {
-	//protected $fields = array();
-	protected $data = array();
-	//protected $errors = array();
+	protected $elements = array();
+	protected $errors = array();
 	
 	static $counter;
 	
-	public function __construct($path = 'form')
+	public function __construct($name = 'form', $template = 'form')
 	{
-		parent::__construct($path);
-		$this->name = 'form' . (++static::$counter);
+		parent::__construct($template);
+		$this->name = $name;
+		
+		$this->elements = array();
 		$this->errors = array();
-		$this->submitText = 'Submit';	
-		$this->fields = array();
-		$this->data = array();
+		
+		$this->submitText = 'Submit';
 	}
 	
 	public function addErrors($array)
 	{
+		//TODO
 		$this->errors = array_merge($this->errors, $array);
 	}
 	
-	public function addError($msg)
+	public function addError($message)
 	{
-		$this->addErrors(array($msg));
+		$this->addErrors(array($message));
 	}
 	
-	public function setErrors($array)
+	public function addElements($elements)
 	{
-		$this->errors = $array;
+		foreach ($elements as $key => $element)
+		{
+			if ($element instanceof Field)
+			{
+				$element = array('field' => $element);
+			}
+			if (empty($element['title']))
+			{
+				$element['title'] = $key;
+			}
+			if (empty($element['desc']))
+			{
+				$element['desc'] = '';
+			}
+			$element['value'] = null;
+			$this->elements[$key] = $element;
+		}		
 	}
 	
-	public function setFields($fields)
+	public function addElement($key, $element)
 	{
-		$this->fields = $fields;
+		$this->addElements(array($key => $element));
 	}
 	
-	public function setData($data)
+	public function setValues($values)
 	{
-		$this->data = $data;
+		foreach ($values as $key=>$value)
+		{
+			if (!empty($this->elements[$key]))
+			{
+				$this->elements[$key]['value'] = $value;			
+			}
+			else
+			{
+				//TODO after fixing expand/collapse
+				//throw new Exception('unknown element "' . $key . '"');
+			}
+		}
 	}
 	
-	public function getData()
+	public function getValues()
 	{
-		return $this->data;
+		$ret = array();
+		foreach ($this->elements as $key=>$value)
+		{
+			$ret[$key] = $this->elements[$key]['value'];
+		}
+		return $ret;
 	}
 	
-	public function getField($field)
+	public function getValue($key)
 	{
-		return $this->data[$field];
+		return $this->elements[$key]['value'];
 	}
 	
-	public function submitted()
+	public function isSubmitted()
 	{
 		return !empty($_POST[$this->name]);
 	}
 	
 	public function validate()
-	{		
+	{
 		if (!empty($_POST[$this->name]))
 		{
+			$valid = true;
 			if (!empty($_FILES[$this->name]))
 			{
 				foreach (array('name', 'type', 'size', 'tmp_name', 'error') as $field)
@@ -76,28 +110,20 @@ class Form extends Widget
 					}
 				}
 			}
-			//var_dump($_POST);
-			//die();
-			$data = $this->data;
-			foreach ($this->fields as $key => $field)
+			
+			foreach ($this->elements as $key => &$element)
 			{
 				$val = array_key_exists($key, $_POST[$this->name]) ? $_POST[$this->name][$key] : null;
-				$data[$key] = $field->fromPost($val);
-				$error = $field->validate($data[$key]);
+				$element['value'] = $element['field']->fromPost($val);
+				$error = $element['field']->validate($element['value']);
 				if ($error !== true)
 				{
-					//TODO
-					$tmp = $this->errors;
-					$tmp[$key] = $error;
-					$this->errors = $tmp;
+					$element['error'] = $error;
+					$valid = false;
 				}
 			}
-			$this->data = $data;
-			//unset($data['token']);
-			if (empty($this->errors))
-			{
-				return true;
-			}
+			
+			return $valid;
 		}
 		return false;
 	}

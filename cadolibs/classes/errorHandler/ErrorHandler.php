@@ -25,6 +25,7 @@ class ErrorHandler
 	);
 
 	private static $callback = null;
+	private static $buffer = false;
 	
 	public function __construct()
 	{
@@ -33,6 +34,7 @@ class ErrorHandler
 		set_error_handler(array ($this, 'handleError'));
 		set_exception_handler(array($this, 'handleException'));
 		ob_start();
+		static::$buffer = true;
 	}
 	
 	public static function setCallback($callback)
@@ -48,7 +50,10 @@ class ErrorHandler
 		}
 		else
 		{
-			ob_end_flush();
+			if (static::$buffer)
+			{
+				ob_end_flush();
+			}
 		}
 	}
 
@@ -66,19 +71,31 @@ class ErrorHandler
 	{
 		if ((self::$callback !== null) && !CADO_DEV)
 		{
-			call_user_func(self::$callback, $code, $message, $file, $line, $trace);
+			try
+			{
+				call_user_func(self::$callback, $code, $message, $file, $line, $trace);
+			}
+			catch (Exception $e)
+			{
+				//???	
+			}
 		}
 		if (PHP_SAPI === 'cli')
 		{
-			echo 'ERROR!';
-			var_dump($code, $message, $file, $line, $trace);
+			echo 'ERROR:' . NL;
+			echo $file . ':' . $line . ' ' . $message . '(' . $code . ')' . NL;
+			var_dump($trace);
 			exit;
 		}
 		if (!empty($_SERVER['SERVER_PROTOCOL']))
 		{
 			header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
 		}
-		ob_end_clean();
+		while (ob_get_status(true))
+		{
+			ob_end_clean();
+		}
+		static::$buffer = false;
 		$file = str_replace(Cado::$root, '', $file);
 		$printDebug = CADO_DEV;
 		foreach($trace as &$t)

@@ -1,9 +1,11 @@
 <?php
 /**
+ * Array cache.
  * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class cache_Array
 {
 	public static function set()

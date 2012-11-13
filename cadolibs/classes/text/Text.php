@@ -1,9 +1,11 @@
 <?php
-/**
+/** 
+ * Common text processing functions
  * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class Text
 {
 	public static function excerpt($text, $maxLength = 100)

@@ -13,16 +13,16 @@
 			<br/>
 		<?php } ?>
 		
-		<?php foreach ($this->fields as $key => $field) { ?>
+		<?php foreach ($this->elements as $key => $element) { ?>
 			<div class="field field<?php echo ucfirst($key) ?>">
-				<?php if (!empty($this->errors[$key])) { ?>
+				<?php if (!empty($element['error'])) { ?>
 				<div class="errors">
-					<?php echo $this->errors[$key] ?>
+					<?php echo $element['error'] ?>
 				</div>
 				<?php } ?>
 				<label><?php echo $key ?></label>
-				<div class="input">
-					<?php echo $field->getFormInput($this->name . '[' . $key . ']', array_key_exists($key, $this->data) ? $this->data[$key] : null) ?>
+				<div class="input">				
+					<?php echo $element['field']->getFormInput($this->name . '[' . $key . ']', $element['value']) ?>
 				</div>
 			</div>
 		<?php } ?>

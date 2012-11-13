@@ -18,6 +18,9 @@ Classes for database access, caching, form generation, very simple ORM, template
 
 # Cases #
 
-Cases will come here soon...
+*	[This website]() is using EveFramework, its sources can be fount in repository under sites/about
+*	[Demo website](http://demo.eve.cadosolutions.com/) is also using Eve CMS, its sources can be found under sites/demo
+*	more cases will come here soon...
+
 
 

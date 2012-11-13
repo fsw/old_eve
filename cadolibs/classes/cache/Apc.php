@@ -1,19 +1,24 @@
 <?php
 /**
+ * APC cache.
  * 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class cache_Apc
 {
 	public static function set($key, $value, $ttl = 60)
 	{
-		apc_store($key, $value, $ttl);
+		if (function_exists('apc_store'))
+		{
+			apc_store($key, $value, $ttl);
+		}
 	}
 	
 	public static function get($key)
 	{
-		if (CADO_DEV)
+		if ((CADO_DEV && (empty($_COOKIE['use_cache']) || $_COOKIE['use_cache'] == 'false')) || !function_exists('apc_fetch'))
 		{
 			return null;
 		}
@@ -26,7 +31,10 @@ class cache_Apc
 	
 	public static function del($key)
 	{
-		apc_delete($key);
+		if (function_exists('apc_delete'))
+		{
+			apc_delete($key);
+		}
 	}
 	
 }

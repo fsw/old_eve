@@ -282,7 +282,6 @@
 							}
 							
 						});
-						
 						return false; // return false to prevent any unnecessary click action
 					});
 
@@ -614,6 +613,7 @@
 					
 					// nav items click event
 					$("li", obj).click(function () {
+
 						if ($("ul", this).exists()) {
 							$(this).find("a:first").click();
 							return false;

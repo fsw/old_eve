@@ -1,15 +1,8 @@
 <?php
-#
-# Markdown Extra  -  A text-to-HTML conversion tool for web writers
-#
-# PHP Markdown & Extra
-# Copyright (c) 2004-2008 Michel Fortin
-# <http://www.michelf.com/projects/php-markdown/>
-#
-# Original Markdown
-# Copyright (c) 2004-2006 John Gruber
-# <http://daringfireball.net/projects/markdown/>
-#
+/** 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 class Markdown
 {
@@ -28,6 +21,17 @@ class Markdown
 	}
 }
 
+#
+# Markdown Extra  -  A text-to-HTML conversion tool for web writers
+#
+# PHP Markdown & Extra
+# Copyright (c) 2004-2008 Michel Fortin
+# <http://www.michelf.com/projects/php-markdown/>
+#
+# Original Markdown
+# Copyright (c) 2004-2006 John Gruber
+# <http://daringfireball.net/projects/markdown/>
+#
 # Change to ">" for HTML output
 @define( 'MARKDOWN_EMPTY_ELEMENT_SUFFIX',  " />");
 

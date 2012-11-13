@@ -27,24 +27,47 @@ class field_relation_One extends field_Relation
 		return 'int(11) NOT NULL';
 	}
 	
-	public function XXXgetFormInput($key, $value)
+	public static function flatTree($model, $values)
 	{
-		$ret = '<select name="' . $key . '">';
-		$ret .= '<option value="0">NONE</option>';
-		
-		//$class = $this->model->getSibling($model);
-		$rows = array();
-		/*
-		if (in_array('TreeCollection', class_parents($class)))
+		$ret = array();
+		foreach ($values as $val)
 		{
-			$rows = $class->getAllAsTree();
+			$ret[$val['id']] = Site::model($model)->getAdminString($val);
+			foreach(self::flatTree($model, $val['children']) as $id => $name)
+			{
+				$ret[$id] = ' &raquo; ' . $name;
+			}
+		}
+		return $ret;
+	}
+	
+	public function getFormInput($key, $value)
+	{
+		$options = array(0 => 'none');
+		$object = Site::model($this->model);
+		if ($object instanceof model_TreeCollection)
+		{ 
+			$values = Site::model($this->model)->getTree();
+			//var_dump($values);
+			foreach(self::flatTree($this->model, $values) as $id => $name)
+			{
+				$options[$id] = $name;
+			}
 		}
 		else
 		{
-			$rows = $class->getAll();
+			$values = Site::model($this->model)->getAll();
+			foreach ($values as $val)
+			{
+				$options[$val['id']] = Site::model($this->model)->getAdminString($val);
+			}
 		}
-		*/
-		$ret .= $this->printFlat($rows, $value);
+		
+		$ret = '<select name="' . $key . '">';
+		foreach ($options as $k => $v)
+		{
+			$ret .= '<option value="' . $k . '"' . ($k == $value ? ' selected="selected"' : '') . '>' . $v . '</option>';
+		}
 		$ret .= '</select>';
 		return $ret;
 	}

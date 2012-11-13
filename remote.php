@@ -34,6 +34,35 @@ function check($condition, $message)
 
 switch (array_shift($argv))
 {
+	case 'pushTable':
+		//get remote config
+		check($remote = array_shift($argv), 'please provide remote code');
+		check(Fs::isFile('_remotes/' . $remote . '.php'), 'cant find remote ' . $remote);
+		require('_remotes/' . $remote . '.php');
+		check(is_array($config), 'malformed remote config');
+		check(in_array($config['proto'], array('ssh')), 'bad proto');
+		
+		$configRemote = $config; 
+		require('_remotes/dev.php');
+		$configLocal= $config;
+		
+		$localDb = new Db($configLocal['dbConfig']);
+		
+		$siteCode = array_shift($argv);
+		$table = array_shift($argv);
+		
+		$local_table_name = $configLocal['dbConfig']['prefix'] . $siteCode . '_' . $table;
+		$remote_table_name = $configRemote['dbConfig']['prefix'] . $siteCode . '_' . $table;
+		
+		$tools = new db_Tools($localDb);
+		$dump = $tools->dump(array($local_table_name => $remote_table_name), false, true);
+		
+		$id = uniqid();
+		echo $dump;
+		die('TODO');
+		//system('ssh ' . $config['host'] . ' ' . $cmd);
+		
+		break;
 	case 'push':
 		
 		//get remote config
@@ -43,6 +72,7 @@ switch (array_shift($argv))
 		check(is_array($config), 'malformed remote config');
 		check(in_array($config['proto'], array('ssh', 'dev')), 'unknown proto');
 		
+		$commands = array();
 		$toPush = array();
 		if ($config['proto'] == 'ssh')
 		{
@@ -80,8 +110,9 @@ switch (array_shift($argv))
 				$toPush[0]['pattern'] .= ' sites/' . $siteCode;
 			}
 			Fs::mkdir('_remotes/' . $remote . '_webroots/' . $siteCode);
+			system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $siteCode);
 			Fs::mkdir('_remotes/' . $remote . '_webroots/' . $siteCode . '/uploads');
-			//system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $key . '/uploads');
+			system('chmod a+rwx _remotes/' . $remote . '_webroots/' . $siteCode . '/uploads');
 			
 			$templateData = array(
 					'siteCode' => $siteCode,
@@ -105,8 +136,8 @@ switch (array_shift($argv))
 					new Template('templates/htaccess', $templateData)
 			);
 			Fs::write(
-					'_remotes/' . $remote . '_webroots/' . $siteCode . '/maintenance.html',
-					new Template('templates/maintenance.html', $templateData)
+					'_remotes/' . $remote . '_webroots/' . $siteCode . '/maintenance.php',
+					new Template('templates/maintenance.php', $templateData)
 			);
 			
 			$apacheCfg .= new Template('templates/apache.cfg', $templateData);
@@ -118,7 +149,12 @@ switch (array_shift($argv))
 			);
 			
 			$toPush[] = array('from' => '_remotes/' . $remote . '_webroots/' . $siteCode, 'pattern'=>'*', 'to' => $siteConfig['webroot']);
-		
+			
+			$commands[] = 'php ' . $siteConfig['webroot'] . '/index.dev.php checkDb';	
+			if (!empty($config['superUser']) && !empty($config['superPass']))
+			{
+				$commands[] = 'php ' . $siteConfig['webroot'] . '/index.dev.php api call users register '. $config['superUser'] . ' ' . $config['superPass'];
+			}
 		}
 		if (!empty($config['apacheCfg']))
 		{
@@ -165,6 +201,21 @@ switch (array_shift($argv))
 			chdir($current);
 		}
 		echo 'PUSHED' . NL;
+		foreach ($commands as $cmd)
+		{
+			switch ($config['proto'])
+			{
+				case 'dev':
+					echo $cmd . NL;
+					system($cmd);
+					break;
+				case 'ssh':
+					echo $cmd . NL;
+					system('ssh ' . $config['host'] . ' ' . $cmd);
+					break;
+			}
+		}
+		echo 'CONFIGURED' . NL;
 		break;
 	default:
 		printUsageAndExit();

@@ -1,9 +1,9 @@
 <?php
-/**
- * 
+/** 
+ * @package CadoLibs
  * @author fsw
- *
  */
+
 class Html
 {
 	private static function attrs($attrs)

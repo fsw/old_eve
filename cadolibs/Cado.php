@@ -27,6 +27,7 @@ final class Cado
 		chdir(self::$root);
 		spl_autoload_register(array('Cado', 'autoload'));
 		self::$errorHandler = new ErrorHandler();
+		Dev::startTimer('all');
 	}
 	
 	public static function handleException(Exception $e)

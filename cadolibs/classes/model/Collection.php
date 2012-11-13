@@ -124,6 +124,7 @@ abstract class model_Collection extends Model
 					foreach (array_keys($def) as $subkey)
 					{
 						$cell[$subkey] = $row[$key . '_' . $subkey];
+						unset($row[$key . '_' . $subkey]);
 					}
 				}
 				else
@@ -287,9 +288,16 @@ abstract class model_Collection extends Model
 			$cached = array();
 			$cached['ids'] = $this->db->fetchCol($q, $bind);
 			$cached['found'] = count($cached['ids']);
-			if (($limit !== null) && ($cached['found'] < $limit))
+			if ($limit !== null)
 			{
-				$cached['found'] = $this->db->fetchOne('SELECT FOUND_ROWS()');
+				if ($cached['found'] == $limit)
+				{
+					$cached['found'] = $this->db->fetchOne('SELECT FOUND_ROWS()');
+				}
+				else
+				{
+					$cached['found'] = (($page - 1) * $limit) + $cached['found'];
+				}
 			}
 			cache_Apc::set($cacheKey, $cached, 60);
 		}

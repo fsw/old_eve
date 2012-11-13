@@ -1,4 +1,10 @@
 <?php
+/**
+ * HTTP Request
+ * 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 class Request
 {
@@ -179,7 +185,11 @@ class Request
 	{
 		return $this->getPathElem(0);
 	}
-
+	
+	public function isPathEmpty()
+	{
+		return empty($this->pathList);
+	}
 	
 	public function getSubdomain()
 	{

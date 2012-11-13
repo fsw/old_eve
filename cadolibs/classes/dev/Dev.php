@@ -1,4 +1,8 @@
 <?php 
+/** 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 if (!CADO_DEV)
 {
@@ -51,7 +55,7 @@ else
 			{
 				self::stopTimer();
 			}
-			$errors = BaseSite::$site->model('errors')->getAll();
+			$errors = BaseSite::getInstance()->model('errors')->getAll();
 			require(Cado::findResource('devfooter.html.php'));
 		}
 	}

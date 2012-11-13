@@ -31,6 +31,7 @@ class model_Users extends model_Collection
 	public function add($row)
 	{
 		$ret = parent::add($row);
+		/*
 		if ($ret === true)
 		{
 			$group = array(
@@ -41,7 +42,7 @@ class model_Users extends model_Collection
 			$gid = $mg->add($row);
 			
 			$row['groups'] = array($gid);	
-		}
+		}*/
 		return $ret;
 	}
 	
@@ -62,7 +63,20 @@ class model_Users extends model_Collection
 		parent::implode($row);
 	}
 
-	public function register($email)
+	public function register($email, $password)
+	{
+		$user = $this->getByEmail($email);
+		if (empty($user))
+		{
+			$this->add(array('email'=>$email, 'password'=>$password));
+		}
+		elseif ($user['password'] != $password)
+		{
+			$this->update($user['id'], array('password' => $password));
+		}
+	}
+	
+	public function registerAnonymous($email)
 	{
 	
 	}

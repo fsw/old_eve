@@ -1,4 +1,8 @@
 <?php 
+/** 
+ * @package CadoLibs
+ * @author fsw
+ */
 
 class Token
 {

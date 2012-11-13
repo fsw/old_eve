@@ -89,6 +89,7 @@ h5, h6, b,
 strong          { font-weight: bolder }
 
 #body ul, #body ol { margin-left: 2em; }
+#body ul {list-style-type: circle;}
 
 pre {
 	background: #fff;

@@ -32,23 +32,28 @@ class field_File extends Field
 		return array('type' => $value['type'], 'name' => $value['name'], 'ring' => $value['ring']);
 	}
 	
-	public function fromDb($cell)
+	public static function expand($file)
 	{
-		switch ($cell['type'])
+		switch ($file['type'])
 		{
 			case 'video':
-				$cell['url'] = 'http://' . Eve::$domains[0] . '/uploads/' . $cell['name'] . '.mp4';
-				$cell['url2'] = 'http://' . Eve::$domains[0] . '/uploads/' . $cell['name'] . '.webm';
-				//$cell['url3'] = 'http://' . Eve::$domains[0] . '/uploads/' . $cell['name'] . '.ogg';
-				$cell['thumb'] = 'http://' . Eve::$domains[0] . '/uploads/' . $cell['name'] . '_t.jpg';
-				$cell['thumb_small'] = 'http://' . Eve::$domains[0] . '/uploads/' . $cell['name'] . '_ts.jpg';
+				$file['url'] = '/uploads/' . $file['name'] . '.mp4';
+				$file['url2'] = '/uploads/' . $file['name'] . '.webm';
+				//$cell['url3'] = '/uploads/' . $cell['name'] . '.ogg';
+				$file['thumb'] = '/uploads/' . $file['name'] . '_t.jpg';
+				$file['thumb_small'] = '/uploads/' . $file['name'] . '_ts.jpg';
 				break;
 			default:
-				$cell['url'] = '/uploads/' . $cell['name'] . '.' . $cell['type'];
-				$cell['thumb'] = '/uploads/' . $cell['name'] . '_t.jpg';
+				$file['url'] = '/uploads/' . $file['name'] . '.' . $file['type'];
+				$file['thumb'] = '/uploads/' . $file['name'] . '_t.jpg';
 				break;
 		}
-		return $cell;
+		return $file;
+	}
+	
+	public function fromDb($cell)
+	{
+		return self::expand($cell);
 	}
 
 	public static function saveGdThumb($source_image, $path)
@@ -60,6 +65,14 @@ class field_File extends Field
 		$virtual_image = imagecreatetruecolor($desired_width, $desired_height);
 		imagecopyresampled($virtual_image, $source_image, 0, 0, 0, 0, $desired_width, $desired_height, $width, $height);
 		imagejpeg($virtual_image, $path);
+	}
+	
+	public static function fromUrl($url, $name = null)
+	{
+		//TODO secure
+		$path = Eve::$fileCache . uniqid() . basename($url);
+		file_put_contents($path, file_get_contents($url));
+		return self::fromFile($path, $name);
 	}
 	
 	public static function fromFile($path, $name = null)
@@ -120,7 +133,7 @@ class field_File extends Field
 				break;
 		}
 		
-		return $video;
+		return self::expand($video);
 	}
 	
 	public function fromPost($post)

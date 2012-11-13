@@ -20,11 +20,5 @@ class Eve {
 
 require_once('<?php echo $this->srcRoot ?>/cadolibs/Cado.php');
 Cado::init();
-<?php if ($this->dev) : ?>
-	Dev::startTimer('all');
-<?php endif; ?>
 Cado::addRoot('framework');
 echo BaseSite::factory('<?php echo $this->siteCode ?>')->route(new Request());
-<?php if ($this->dev) : ?>
-	Dev::stopTimer();
-<?php endif; ?>

@@ -105,10 +105,10 @@ class Db
 	public function fetchOne($sql, $bind = array())
 	{
 		Dev::startTimer('db');
-		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
 		$ret = $sth->fetchColumn();
+		Dev::logEvent('db', $sql, $bind, $ret);
 		Dev::stopTimer();
 		return $ret;
 	}
@@ -135,6 +135,11 @@ class Db
 		return $ret;
 	}
 
+	public function quote($value)
+	{
+		return $this->getReader()->quote($value);
+	}
+	
 	public function query($sql, $bind = array())
 	{
 		Dev::startTimer('db');
@@ -195,41 +200,6 @@ class Db
 	public function delete($table, $id)
 	{
 		$this->query('DELETE FROM `' . $table . '` WHERE id = ' . $id);
-	}
-
-	
-	public function getStructure()
-	{
-		$current = array();
-		foreach ($this->fetchCol('SHOW TABLES') as $t)
-		{
-			$current[$t] = array();
-			$create = $this->fetchRow('SHOW CREATE TABLE ' . $t);
-			$create = $create['Create Table'];
-			$create = substr($create, strpos($create, '(') + 1, strrpos($create, ')') - strpos($create, '(') - 1);
-			$create = explode(',' . "\n", $create);
-			foreach ($create as $row)
-			{
-				if (strpos($row, 'KEY') !== false)
-				{
-					if (strpos($row, 'PRIMARY') !== false)
-					{
-						$current[$t]['index_primary'] = trim($row);
-					}
-					else
-					{
-						$start = strpos($row, '`') + 1;
-						$current[$t][substr($row, $start, strpos($row, '`', $start) - $start)] = trim($row);
-					}
-				}
-				else
-				{
-					$current[$t][substr($row, strpos($row, '`') + 1, strrpos($row, '`') - strpos($row, '`') - 1)] =
-					trim(substr($row, strrpos($row, '`') + 1));
-				}
-			}
-		}
-		return $current;
 	}
 
 }

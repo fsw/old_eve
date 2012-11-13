@@ -86,4 +86,9 @@ foreach ($sqls as $key => $sql)
 {
 	echo '-- ' . $key . NL;
 	echo $sql . ';' . NL;
+	
+	if (CADO_DEV && !empty($args['force']))
+	{
+		$this->site->getDb()->query($sql);
+	}
 }
