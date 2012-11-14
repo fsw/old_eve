@@ -51,11 +51,13 @@ else
 		
 		public static function showDevFooter()
 		{
+			self::startTimer('dev');
+			$errors = BaseSite::getInstance()->model('errors')->getAll();
+			self::stopTimer();
 			while (!empty(self::$timerNamesStack))
 			{
 				self::stopTimer();
 			}
-			$errors = BaseSite::getInstance()->model('errors')->getAll();
 			require(Cado::findResource('devfooter.html.php'));
 		}
 	}

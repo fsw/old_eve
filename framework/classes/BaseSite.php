@@ -123,57 +123,71 @@ abstract class BaseSite extends Module
 	
 	public static function unroute($class, $method = 'actionIndex', $args = array())
 	{
+		Dev::startTimer('unroute');
 		$path = array(); 
 		if (($code = Controller::getActionsCode($class)) != 'index')
 		{
 			$path[] = $code; 
 		}
-		$path[] = lcfirst(substr($method, 6));
+		if ($method != 'actionIndex')
+		{
+			$path[] = lcfirst(substr($method, 6));
+		}
+		
+		$map = self::getActionsMap();
+		$pointer =& $map;
+		$i = 0;
+		while (!empty($pointer['sub']) && array_key_exists($path[$i], $pointer['sub']))
+		{
+			$pointer =& $pointer['sub'][$path[$i++]];
+		}
+		if(empty($pointer['here']))
+		{
+			throw new Exception('Broken routing');
+		}
+		
 		$defsCount = 0;
 		$params = array();
 		$extension = 'html';
-		if (method_exists($class, $method))
+		
+		foreach ($pointer['here']['args'] as $name => $default)
 		{
-			$reflection = new ReflectionMethod($class, $method);
-			foreach ($reflection->getParameters() as $param)
+			$value = count($args) ? array_shift($args) : $default;
+			if ($name === 'extension')
 			{
-				$value = count($args) ? array_shift($args) : ($param->isDefaultValueAvailable() ? $param->getDefaultValue() : null);
-				if ($param->getName() === 'extension')
+				$extension = $value;
+			}
+			elseif ($name === 'ajax')
+			{
+				//$arg = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
+			}
+			elseif (strpos($name, 'get') === 0)
+			{
+				if (!empty($value))
 				{
-					$extension = $value;
+					$params[lcfirst(substr($name, 3))] = $value;
 				}
-				elseif ($param->getName() === 'ajax')
+			}
+			else
+			{
+				//TODO null here!
+				if ($default == $value)
 				{
-					//$arg = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
-				}
-				elseif (strpos($param->getName(), 'get') === 0)
-				{
-					if (!empty($value))
-					{
-						$params[lcfirst(substr($param->getName(), 3))] = $value;
-					}
+					$defsCount ++;
 				}
 				else
 				{
-					if ($param->isDefaultValueAvailable() && ($param->getDefaultValue() == $value))
-					{
-						$defsCount ++;
-					}
-					else
-					{
-						$defsCount = 0;
-					}
-					$path[] = $value;
+					$defsCount = 0;
 				}
-			}
-			for ($i =0; $i<$defsCount; $i++)
-			{
-				array_pop($path);
+				$path[] = $value;
 			}
 		}
-		//TODO error on wrong number
-		//TODO
-		//var_dump($path);
+			
+		for ($i =0; $i<$defsCount; $i++)
+		{
+			array_pop($path);
+		}
+		
 		$last = array_pop($path) . '.' . $extension;
 		if ($last != 'index.html')
 		{
@@ -183,9 +197,10 @@ abstract class BaseSite extends Module
 		{
 			$path = empty($path) ? '' : (implode('/', $path) . '/');
 		}
-		//var_dump($path, $params);
-		return 'http://' . Eve::$domains[0] . '/' . $path .
-		(empty($params) ? '' : '?' . http_build_query($params));;
+		
+		$ret = 'http://' . Eve::$domains[0] . '/' . $path . (empty($params) ? '' : '?' . http_build_query($params));
+		Dev::stopTimer();
+		return $ret;
 	}
 	
 	public function runAction($path, $args)
@@ -212,21 +227,56 @@ abstract class BaseSite extends Module
 	
 	public static function getActionsMap()
 	{
-		//TODO array_cache
-		$map = array();
-		foreach (Cado::getDescendants('Controller') as $className)
+		$map = cache_Array::get('actionsmap');
+		if ($map === null)
 		{
-			$className = array_shift(explode('_', $className));
-			
-			$base = array();
-			foreach (get_class_methods($className) as $method)
+			$map = array('sub'=>array());
+			foreach (Cado::getDescendants('Controller') as $className)
 			{
-				if (strpos($method, 'action') === 0)
+				$pointer = &$map;
+				$path = substr($className, strlen('controller_'));
+				foreach (explode('_', $path) as $bit)
 				{
-					//var_dump($className, $method);
-					//$map[]
+					if ($bit != 'Index')
+					{
+						if (!array_key_exists(lcfirst($bit), $pointer['sub']))
+						{
+							$pointer['sub'][lcfirst($bit)] = array('sub'=>array());
+						}
+						$pointer = &$pointer['sub'][lcfirst($bit)];
+					}
+				}
+				$base = array();
+				foreach (get_class_methods($className) as $methodName)
+				{
+					if (strpos($methodName, 'action') === 0)
+					{
+						$name = substr($methodName, strlen('action'));
+						$funcPointer = &$pointer;
+						if ($name != 'Index')
+						{
+							if (!array_key_exists(lcfirst($name), $pointer['sub']))
+							{
+								$pointer['sub'][lcfirst($name)] = array();
+							}
+							$funcPointer = &$pointer['sub'][lcfirst($name)];
+						}
+						
+						$funcPointer['here'] = array(
+								'class' => $className,
+								'method' => $methodName,
+								'args' => array());
+						
+						$reflection = new ReflectionMethod($className, $methodName);
+						foreach ($reflection->getParameters() as $param)
+						{
+							$funcPointer['here']['args'][$param->getName()] = $param->isDefaultValueAvailable() ? $param->getDefaultValue() : null;
+						}
+								
+					}
 				}
 			}
+			cache_Array::set('actionsmap', $map);
 		}
 		return $map;
 	}
@@ -238,7 +288,6 @@ abstract class BaseSite extends Module
 	
 	public function route(Request $request)
 	{
-		//var_dump(self::getActionsMap());
 		if ($request->getType() == 'cli')
 		{
 			$code = $request->shiftPath();
@@ -257,42 +306,45 @@ abstract class BaseSite extends Module
 			$this->runTask($code, $args);
 			return null;
 		}
-		$className = Controller::getActionsClass($request->glancePath());
-		if ($className === null)
-		{
-			$className = 'controller_Index';
-		}
-		else
-		{
-			$request->shiftPath();
-		}
-		$method = method_exists($className, 'action' . ucfirst($request->glancePath())) ? 'action' . ucfirst($request->shiftPath()) : 'actionIndex';
-		$methodCode = lcfirst(substr($method, strlen('action')));
-		//TODO cache!
-		$reflection = new ReflectionMethod($className, $method);
-		$args = array();
 		
+		Dev::startTimer('1_route');
+		$map = self::getActionsMap();
+		$pointer =& $map;
+		while(!empty($pointer['sub']) && array_key_exists($request->glancePath(), $pointer['sub']))
+		{
+			$pointer =& $pointer['sub'][$request->shiftPath()];
+		}
+		if (empty($pointer['here']))
+		{
+			Dev::stopTimer();
+			self::show404();
+		}
+		$className = $pointer['here']['class'];
+		$methodName = $pointer['here']['method'];
+		$methodCode = lcfirst(substr($methodName, strlen('action')));
+		
+		$args = array();
 		$pathChecked = false;
 		$extChecked = false;
 		
-		foreach ($reflection->getParameters() as $param)
+		foreach ($pointer['here']['args'] as $name => $default)
 		{
-			if ($param->getName() == 'fullpath')
+			if ($name == 'fullpath')
 			{
 				$value = implode('/', $request->getPath()) . '.' . $request->extension();
 				$pathChecked = true;
 				$extChecked = true;
 			}
-			elseif ($param->getName() == 'extension')
+			elseif ($name == 'extension')
 			{
 				$value = $request->extension();
 				$extChecked = true;
 			}
-			elseif ($param->getName() == 'referer')
+			elseif ($name == 'referer')
 			{
 				$value = $request->getReferer();
 			}
-			elseif (strpos($param->getName(), 'get') === 0)
+			elseif (strpos($name, 'get') === 0)
 			{
 				$value = $request->getParam(lcfirst(substr($param->getName(), 3)));
 			}
@@ -300,7 +352,7 @@ abstract class BaseSite extends Module
 			{
 				$value = $request->shiftPath();
 			}
-			$args[] = $value ?: ($param->isDefaultValueAvailable() ? $param->getDefaultValue() : null);
+			$args[] = $value ?: $default;
 		}
 		
 		
@@ -310,13 +362,28 @@ abstract class BaseSite extends Module
 		}
 		if (!$pathChecked || (!$extChecked && $request->extension() != 'html'))
 		{
+			//var_dump($pathChecked, $extChecked, $request->extension(), 'asdfasdf');
+			Dev::stopTimer();
 			self::show404();
 		}
 		
-		$class = new $className($this, $request, $method);
+		Dev::stopTimer();
+		
+		Dev::startTimer('2_construct');
+		$class = new $className($this, $request, $methodName);
+		Dev::stopTimer();
+		
+		Dev::startTimer('3_before');
 		$class->before($methodCode, $args);
-		$response = call_user_func_array(array($class, $method), $args);
+		Dev::stopTimer();
+		
+		Dev::startTimer('4_action');
+		$response = call_user_func_array(array($class, $methodName), $args);
+		Dev::stopTimer();
+		
+		Dev::startTimer('5_after');
 		$response = $class->after($response);
+		Dev::stopTimer();
 		
 		if (is_scalar($response) || (is_object($response) && method_exists($response, '__toString')))
 		{

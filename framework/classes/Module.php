@@ -20,18 +20,26 @@ abstract class Module
 	
 	public static function getConfig($key = null)
 	{
-		$config = Site::model('configs')->getByField('key', static::getModuleCode());
+		$configs = cache_Array::get('configs');
+		if ($configs === null)
+		{
+			$configs = array();
+			$rows = Site::model('configs')->getAll();
+			foreach ($rows as $row)
+			{
+				$configs[$row['key']] = $row['value'];
+			}
+			cache_Array::set('configs', $configs);
+		}
+		
+		$config = $configs[static::getModuleCode()];
 		if (empty($key))
 		{
-			if (empty($config['value']))
-			{
-				return array();
-			}
-			return $config['value'];
+			return empty($config) ? array() : $config;
 		}
-		if (!empty($config['value'][$key]))
+		if (!empty($config[$key]))
 		{
-			return $config['value'][$key];
+			return $config[$key];
 		}
 		return null;
 	}

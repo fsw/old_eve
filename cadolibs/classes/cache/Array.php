@@ -12,23 +12,29 @@ class cache_Array
 	{
 		$args = func_get_args();
 		$value = var_export(array_pop($args), true);
-		$path = Eve::$fileCache . implode(DS, $args) . '.php';
-		Fs::write($path, '<?php\n$x=' . $value);
+		$path = Eve::$fileCache . 'arraycache' . DS . implode(DS, $args) . '.php';
+		Fs::rwrite($path, '<?php' . NL . '$x=' . $value . ';' . NL);
 	}
 	
 	public static function get()
 	{
-		$args = func_get_args();
-		$path = Eve::$fileCache . implode(DS, $args) . '.php';
-		if (Fs::exists($path))
-		{
-			include $path;
-			return $x;
-		}
-		else
+		if ((CADO_DEV && (empty($_COOKIE['use_cache']) || $_COOKIE['use_cache'] == 'false')))
 		{
 			return null;
 		}
+		Dev::startTimer('arraycache');
+		$args = func_get_args();
+		$path = Eve::$fileCache . 'arraycache' . DS . implode(DS, $args) . '.php';
+		if (Fs::exists($path))
+		{
+			include $path;
+		}
+		else
+		{
+			$x = null;
+		}
+		Dev::stopTimer();
+		return $x;
 	}
 	
 	public static function del()

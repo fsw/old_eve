@@ -42,7 +42,7 @@ class Request
 			$path = empty($_SERVER['REDIRECT_URL']) ? '' : $_SERVER['REDIRECT_URL'];
 			if (empty($path) || ($path[strlen($path) - 1] === '/'))
 			{
-				$this->pathList = empty($path) ? array() : explode('/', substr($path, 1, -1));
+				$this->pathList = empty($path) || $path === '/' ? array() : explode('/', substr($path, 1, -1));
 				$this->pathList[] = 'index';
 				$this->extension = 'html';
 			}

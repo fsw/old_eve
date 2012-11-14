@@ -63,6 +63,22 @@ final class Fs
 		return file_put_contents($path, $contents);
 	}
 	
+	/**
+	 * Tries to create directory for path
+	 * @param string $path
+	 * @param string $contents
+	 * @return bool
+	 */
+	static function rwrite($path, $contents)
+	{
+		while (!is_dir(dirname($path)))
+		{
+			//TODO rec?
+			mkdir(dirname($path), 0777, true);
+		}
+		return file_put_contents($path, $contents);
+	}
+	
 	static function listFiles($path, $recursive = false, $returnFullPath = false)
 	{
 		return self::_list($path, self::TYPE_FILE, $recursive, $returnFullPath);
