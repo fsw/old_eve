@@ -43,7 +43,6 @@ class Request
 			if (empty($path) || ($path[strlen($path) - 1] === '/'))
 			{
 				$this->pathList = empty($path) || $path === '/' ? array() : explode('/', substr($path, 1, -1));
-				$this->pathList[] = 'index';
 				$this->extension = 'html';
 			}
 			elseif (substr($path, -10) === 'index.html')
