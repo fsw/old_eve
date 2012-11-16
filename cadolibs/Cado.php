@@ -28,6 +28,16 @@ final class Cado
 		spl_autoload_register(array('Cado', 'autoload'));
 		self::$errorHandler = new ErrorHandler();
 		Dev::startTimer('all');
+		if (get_magic_quotes_gpc()) {
+			function stripslashes_gpc(&$value)
+			{
+				$value = stripslashes($value);
+			}
+			array_walk_recursive($_GET, 'stripslashes_gpc');
+			array_walk_recursive($_POST, 'stripslashes_gpc');
+			array_walk_recursive($_COOKIE, 'stripslashes_gpc');
+			array_walk_recursive($_REQUEST, 'stripslashes_gpc');
+		}
 	}
 	
 	public static function handleException(Exception $e)

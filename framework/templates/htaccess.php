@@ -3,7 +3,7 @@
 	Header set X-UA-Compatible "IE=edge"
 </IfModule>
 
-php_flag magic_quotes_gpc Off
+# php_flag magic_quotes_gpc Off
 
 ErrorDocument 503 /maintenance.php
 
