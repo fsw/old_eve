@@ -8,39 +8,44 @@
 
 class cache_Array
 {
-	public static function set()
+	private static $cache;
+	
+	public static function set($key, $value)
 	{
-		$args = func_get_args();
-		$value = var_export(array_pop($args), true);
-		$path = Eve::$fileCache . 'arraycache' . DS . implode(DS, $args) . '.php';
-		Fs::rwrite($path, '<?php' . NL . '$x=' . $value . ';' . NL);
+		$path = Eve::$fileCache . 'arraycache' . DS . $key . '.php';
+		Fs::rwrite($path, '<?php' . NL . '$ret=' . var_export($value, true) . ';' . NL);
 	}
 	
-	public static function get()
+	public static function get($key)
 	{
+		Dev::startTimer('arraycache');
+		$path = Eve::$fileCache . 'arraycache' . DS . $key . '.php';
+		
 		if ((CADO_DEV && (empty($_COOKIE['use_cache']) || $_COOKIE['use_cache'] == 'false')))
 		{
-			return null;
+			$ret = null;
 		}
-		Dev::startTimer('arraycache');
-		$args = func_get_args();
-		$path = Eve::$fileCache . 'arraycache' . DS . implode(DS, $args) . '.php';
-		if (Fs::exists($path))
+		elseif (!empty(static::$cache[$key]))
+		{
+			$ret = static::$cache[$key];
+		}
+		elseif (Fs::exists($path))
 		{
 			include $path;
+			static::$cache[$key] = $ret;
 		}
 		else
 		{
-			$x = null;
+			$ret = null;
 		}
 		Dev::stopTimer();
-		return $x;
+		
+		return $ret;
 	}
 	
-	public static function del()
+	public static function del($key)
 	{
-		$args = func_get_args();
-		$path = Eve::$fileCache . implode(DS, $args) . '.php';
+		$path = Eve::$fileCache . 'arraycache' . DS . $key . '.php';
 		Fs::remove($path);
 	}
 	

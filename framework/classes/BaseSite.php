@@ -124,23 +124,25 @@ abstract class BaseSite extends Module
 	public static function unroute($class, $method = 'actionIndex', $args = array())
 	{
 		Dev::startTimer('unroute');
-		$path = array(); 
-		if (($code = Controller::getActionsCode($class)) != 'index')
+		$path = explode('_', $class);
+		$last = array_pop($path);
+		if ($last != 'Index')
 		{
-			$path[] = $code; 
+			$path[] = lcfirst($last);
 		}
+		array_shift($path); //remove 'controller_'
 		if ($method != 'actionIndex')
 		{
 			$path[] = lcfirst(substr($method, 6));
 		}
-		
 		$map = self::getActionsMap();
+		
 		$pointer =& $map;
 		$i = 0;
-		while (!empty($pointer['sub']) && array_key_exists($path[$i], $pointer['sub']))
+		while (($i < count($path)) && !empty($pointer['sub']) && array_key_exists($path[$i], $pointer['sub']))
 		{
 			$pointer =& $pointer['sub'][$path[$i++]];
-		}
+		}		
 		if(empty($pointer['here']))
 		{
 			throw new Exception('Broken routing');
@@ -346,7 +348,7 @@ abstract class BaseSite extends Module
 			}
 			elseif (strpos($name, 'get') === 0)
 			{
-				$value = $request->getParam(lcfirst(substr($param->getName(), 3)));
+				$value = $request->getParam(lcfirst(substr($name, 3)));
 			}
 			else
 			{
