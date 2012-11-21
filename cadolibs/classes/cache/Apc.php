@@ -23,8 +23,8 @@ class cache_Apc
 			return null;
 		}
 		Dev::startTimer('apc');
-		Dev::logEvent('apc', $key);
 		$ret = apc_fetch($key, $success);
+		Dev::logEvent('apc', $key, $ret);
 		Dev::stopTimer();
 		return $success ? $ret : null;
 	}

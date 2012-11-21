@@ -17,7 +17,7 @@ class controller_cms_Contents extends controller_cms_Data
 	{
 		if ($data['download_remote'])
 		{
-			preg_match_all('~<img.*?src=.([\/.a-z0-9:_-]+).*?>~si', $data['body'], $matches);
+			preg_match_all('~<img.*?src=.([\/.%a-z0-9:_-]+).*?>~si', $data['body'], $matches);
 			foreach ($matches[1] as $src)
 			{
 				if (strpos($src, "http://") === 0)

@@ -4,7 +4,7 @@
  * @author fsw
  */
 
-class Layout extends Widget
+class Layout extends Template
 {	
 	private $htmlTitle = 'EveFramework';
 	private $htmlDescription = '';
@@ -12,6 +12,19 @@ class Layout extends Widget
 	private $jsUrls = array();
 	private $metaProperties = array();
 	private $htmlBody = null;
+	
+	public function __construct($path, Array $data = null)
+	{
+		$path = 'layouts/' . $path;
+		if (Cado::findResource($path))
+		{
+	  		parent::__construct($path . '/html', $data);
+		}
+		else
+		{
+			parent::__construct($path . '.html', $data);
+		}
+	}
 	
 	public function setHtmlTitle($htmlTitle)
 	{
@@ -45,7 +58,7 @@ class Layout extends Widget
 		{
 			$this->htmlBody = parent::__toString();
 			ob_start();
-			require(Cado::findResource('html.html.php'));
+			require(Cado::findResource('widgets/html.html.php'));
 		}
 		catch (Exception $e)
 		{

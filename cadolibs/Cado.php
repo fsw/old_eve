@@ -25,10 +25,26 @@ final class Cado
 		self::$root = dirname(dirname(__FILE__)) . DS;
 		self::$outputCache = getcwd() . DS;
 		chdir(self::$root);
+		/*
+		require('classes' . DS . 'cache' . DS . 'Array.php');
+		require('classes' . DS . 'dev' . DS . 'Dev.php');
+		require('classes' . DS . 'fs' . DS . 'Fs.php');
+		if (cache_Array::get('cadoClasses') === null)
+		{
+			$before = get_declared_classes();
+				
+			spl_autoload_register(array('Cado', 'autoload'));
+			self::includeAll();
+			$after = get_declared_classes();
+			var_dump(array_diff($after, $before));
+			//cache_Array::get('cadoClasses')
+		}*/
 		spl_autoload_register(array('Cado', 'autoload'));
 		self::$errorHandler = new ErrorHandler();
 		Dev::startTimer('all');
-		if (get_magic_quotes_gpc()) {
+		//TODO
+		if (get_magic_quotes_gpc())
+		{
 			function stripslashes_gpc(&$value)
 			{
 				$value = stripslashes($value);
@@ -38,6 +54,7 @@ final class Cado
 			array_walk_recursive($_COOKIE, 'stripslashes_gpc');
 			array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 		}
+		
 	}
 	
 	public static function handleException(Exception $e)
@@ -49,18 +66,23 @@ final class Cado
 	{
 		if ($className !== 'Dev')
 		{
-			//Dev::startTimer('autoloader');
+			Dev::startTimer('classloader');
+			Dev::logEvent('autoload', $className);
 		}
 		$file = self::getClassFileName($className);
-		if ($file === null)
+		if ($file !== null)
 		{
-			throw new Exception('class ' . $className . ' not found');
+			require($file);
 		}
-		require($file);
 		if ($className !== 'Dev')
 		{
-			//Dev::endTimer();
+			Dev::stopTimer();
 		}
+	}
+	
+	public static function getRoots()
+	{
+		return self::$roots;
 	}
 	
 	public static function addRoot($root)
@@ -75,6 +97,10 @@ final class Cado
 	
 	public static function getClassFileName($className)
 	{
+		{
+			//self::includeAll();
+			
+		}
 		$path = explode('_', $className);
 		$baseName = array_pop($path);
 		$path = implode(DS, $path);
@@ -100,16 +126,20 @@ final class Cado
 	
 	public static function findResource($path)
 	{
+		Dev::startTimer('resourceloader');
 		//just for windows sake
 		$path = str_replace('/', DS, $path);
+		$ret = null;
 		foreach (static::$roots as $root)
 		{
 			if (file_exists(self::$root . $root . DS . $path))
 			{
-				return self::$root . $root . DS . $path;
+				$ret = self::$root . $root . DS . $path;
+				break;
 			}
 		}
-		return null;
+		Dev::stopTimer();
+		return $ret;
 	}
 	
 	/**

@@ -12,18 +12,11 @@ abstract class BaseSite extends Module
 	private static $code = null;
 	
 	private static $db = null;
-	private static $instance = null;
 	
 	public function __construct($code)
 	{
 		$this->code = $code;
 		self::$code = $code;
-		self::$instance = $this;
-	}
-	
-	public static function getInstance()
-	{
-		return static::$instance;
 	}
 	
 	public static function factory($siteCode)
@@ -70,10 +63,10 @@ abstract class BaseSite extends Module
 		return self::$model[$code];
 	}
 	
-	public function readDbStructure()
+	public static function readDbStructure()
 	{
 		$ret = array();
-		$tools = new db_Tools($this->getDb());
+		$tools = new db_Tools(self::getDb());
 		$structure = $tools->getStructure();
 		foreach($structure as $name=>$fields)
 		{
@@ -90,7 +83,7 @@ abstract class BaseSite extends Module
 		return 'site';	
 	}
 	
-	public function getModels()
+	public static function getModels()
 	{
 		$models = Cado::getDescendants('Model');
 		$ret = array();
@@ -99,11 +92,6 @@ abstract class BaseSite extends Module
 			$ret[] = lcfirst(str_replace('model_', '', $className));
 		}
 		return $ret;
-	}
-	
-	public function getModules()
-	{
-		return array();
 	}
 	
 	public static function getCode()
@@ -211,7 +199,7 @@ abstract class BaseSite extends Module
 		
 	}
 	
-	public function runTask($code, $args)
+	public static function runTask($code, $args)
 	{
 		$file = Cado::findResource('tasks/' . $code . '.php');
 		if ($file === null)
@@ -220,11 +208,12 @@ abstract class BaseSite extends Module
 		}
 		else
 		{
-			$task = new Task($this, $code);
+			$task = new Task($code);
 			$task->run($args);
 			//var_dump($request->getPath());
 			//var_dump($request->getPath());
 		}
+		return null;
 	}
 	
 	public static function getActionsMap()
@@ -288,7 +277,7 @@ abstract class BaseSite extends Module
 		return array();
 	}
 	
-	public function route(Request $request)
+	public static function route(Request $request)
 	{
 		if ($request->getType() == 'cli')
 		{
@@ -305,8 +294,7 @@ abstract class BaseSite extends Module
 					$args[substr($bit, 0, strpos($bit, '='))] = substr($bit, strpos($bit, '=') + 1);
 				}
 			}
-			$this->runTask($code, $args);
-			return null;
+			return self::runTask($code, $args);
 		}
 		
 		Dev::startTimer('1_route');
@@ -372,7 +360,7 @@ abstract class BaseSite extends Module
 		Dev::stopTimer();
 		
 		Dev::startTimer('2_construct');
-		$class = new $className($this, $request, $methodName);
+		$class = new $className($request, $methodName);
 		Dev::stopTimer();
 		
 		Dev::startTimer('3_before');
@@ -407,8 +395,13 @@ abstract class BaseSite extends Module
 	
 	public static function show404()
 	{
-		$layout = new Layout('layouts/404');
-		echo $layout;
+		echo new Layout('404');
+		exit;
+	}
+	
+	public static function redirectTo($url)
+	{
+		header('Location: ' . $url);
 		exit;
 	}
 }

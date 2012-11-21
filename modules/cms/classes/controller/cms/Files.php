@@ -9,7 +9,7 @@ class controller_cms_Files extends controller_cms_Data
 	{
 		if ($method=='browser')
 		{
-			$this->layout = new Layout('layouts/tinyMceWindow');
+			$this->layout = new Layout('tinyMceWindow');
 		}
 		else
 		{

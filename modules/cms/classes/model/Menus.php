@@ -3,10 +3,10 @@ class model_Menus extends model_TreeCollection
 {
 	protected $useArrayCache = true;
 	
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-				parent::getFields(),
+				parent::initFields(),
 				array(
 						//'slug' => new field_Text(),
 						'title' => new field_Text(),

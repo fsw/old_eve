@@ -31,11 +31,21 @@
    <ul>
    <?php foreach (self::$events as $class => $events): ?>
 		<li title="<?php echo $class ?>"><a href="#" ><img src="/static/icons/16/info.png" alt="" /><?php echo $class ?> <b>(<?php echo count($events); ?>)</b></a>
-         <ul>
-			<?php foreach ($events as $event): ?>
-				<li><?php echo $event ?></li>
-			<?php endforeach; ?>
-		</ul>
+	        <ul>
+				<?php foreach ($events as $event): ?>
+				<li>
+					<?php foreach ($event as $arg): ?>
+						<span>
+						<?php if (is_array($arg)): ?>
+							<a title="<?php echo htmlspecialchars(print_r($arg, true)) ?>">array</a>
+						<?php else: ?>
+							<?php echo $arg ?>
+						<?php endif; ?>
+						</span>
+					<?php endforeach; ?>
+				</li>
+				<?php endforeach; ?>
+			</ul>
 		</li>
 	<?php endforeach; ?>
 	</ul>

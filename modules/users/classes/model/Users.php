@@ -2,33 +2,35 @@
 
 class model_Users extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'email' => new field_Email(),
 	 			'password' => new field_Password(),
-	 			'name' => new field_Text(),
-	 			'avatar' => new field_Image(),
-	 			'bio' => new field_Longtext(),
+				//TODO Site::hookUserFields()
+	 			//'name' => new field_Text(),
+	 			//'avatar' => new field_Image(),
+	 			//'bio' => new field_Longtext(),
+				//'enable' => new field_Bool(),
+				'default_group' => new field_relation_Many('groups'),
 	 			'groups' => new field_relation_Many('groups'),
-				'enable' => new field_Bool(),
 			)
 		);
 	}
 
-	public function getIndexes()
+	protected function initIndexes()
 	{
 		return array_merge(
-		parent::getIndexes(),
+		parent::initIndexes(),
 		array(
  			'email' => array(true, 'email'),
 		)
 		);
 	}
 	
-	public function add($row)
+	public function add(array $row)
 	{
 		$ret = parent::add($row);
 		/*
@@ -78,7 +80,7 @@ class model_Users extends model_Collection
 	
 	public function registerAnonymous($email)
 	{
-	
+		$this->add(array('email'=>$email, 'password'=>$password));
 	}
 	
 	public function login($email, $password)

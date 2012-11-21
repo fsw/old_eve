@@ -4,13 +4,13 @@
 //list 'model'
 //call 'model' 'function' 'arg1' 'arg2'
 
-$models = $this->site->getModels();
+$models = Site::getModels();
 
 $cmd = array_shift($args);
 $model = array_shift($args);
 if (!empty($model) && in_array($model, $models))
 {
-	$obj = $this->site->model($model);
+	$obj = Site::model($model);
 }
 
 switch($cmd)

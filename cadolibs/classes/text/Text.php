@@ -16,7 +16,10 @@ class Text
 	public static function slug($text)
 	{
 		$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $text);
+		$clean = str_replace('&', ' and ', $clean);
 		$clean = preg_replace("/[^a-zA-Z0-9]/", '-', $clean);
+		$clean = str_replace('--', '-', $clean);
+		$clean = str_replace('--', '-', $clean);
 		$clean = strtolower(trim($clean, '-'));
 		return empty($clean) ? 'slug' : $clean;
 	}

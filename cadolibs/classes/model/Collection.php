@@ -9,31 +9,56 @@
 abstract class model_Collection extends Model
 {
 	private $fields = null;
-	protected $useArrayCache = false;
+	private $indexes = null;
 	
-	public function fields()
+	protected $useArrayCache = false;
+
+	protected function initFields()
+	{
+		return array(
+				'id' => new field_Id()
+		);
+	}
+	
+	protected function initIndexes()
+	{
+		return array(
+				'primary' => array('id')
+		);
+	}
+	
+	public function getFields()
 	{
 		if ($this->fields === null)
 		{
-			$this->fields = $this->getFields();
+			$this->fields = $this->initFields();
 		}
 		return $this->fields;
 	}
 	
-	public function field($key)
+	public function getField($key)
 	{
 		if ($this->fields === null)
 		{
-			$this->fields = $this->getFields();
+			$this->fields = $this->initFields();
 		}
 		return empty($this->fields[$key]) ? null : $this->fields[$key];
+	}
+	
+	public function getIndexes()
+	{
+		if ($this->indexes === null)
+		{
+			$this->indexes = $this->initIndexes();
+		}
+		return $this->indexes;
 	}
 	
 	public function getStructure()
 	{
 		$ret = array();
 		$ret[$this->getTableName()] = array();
-		foreach ($this->fields() as $key => $field)
+		foreach ($this->getFields() as $key => $field)
 		{
 			
 			if ($field instanceof field_relation_One)
@@ -81,20 +106,23 @@ abstract class model_Collection extends Model
 		(!empty($row['code']) ? $row['code'] : $row['id'])));
 	}
 	
-	public function getAdminCols()
-	{
-		return array('id');
-	}
-	
 	public function getTableName()
 	{
 		return $this->prefix . '_' . $this->getBaseName();
 	}
-
+	
+	protected function canSave(&$row)
+	{
+	}
+	
+	protected function beforeSave(&$row)
+	{
+	}
+	
 	protected function validate($row)
 	{
 		$errors = array();
-		foreach ($this->fields() as $key => $field)
+		foreach ($this->getFields() as $key => $field)
 		{
 			$ret = $field->validate(isset($row[$key]) ? $row[$key] : null);
 			$this->assertOne($key, $ret === true, $ret);
@@ -104,7 +132,7 @@ abstract class model_Collection extends Model
 
 	protected function explode(&$row)
 	{
-		foreach ($this->fields() as $key => $field)
+		foreach ($this->getFields() as $key => $field)
 		{
 			if ($field instanceof field_relation_One)
 			{
@@ -142,7 +170,7 @@ abstract class model_Collection extends Model
 	{
 		var_dump("IMPLODING", $row);
 		die();
-		foreach ($this->fields() as $key => $field)
+		foreach ($this->getFields() as $key => $field)
 		{
 			if ($field instanceof relation_Many)
 			{
@@ -156,7 +184,7 @@ abstract class model_Collection extends Model
 		}
 		foreach ($row as $key=>$value)
 		{
-			$cell = $this->field($key)->toDb($value);
+			$cell = $this->getFields($key)->toDb($value);
 			if (is_array($cell))
 			{
 				foreach ($cell as $k=>$v)
@@ -174,7 +202,7 @@ abstract class model_Collection extends Model
 	private function toDb($row)
 	{
 		$ret = array();
-		foreach ($this->fields() as $key => $field)
+		foreach ($this->getFields() as $key => $field)
 		{
 			if ($field instanceof field_relation_Many)
 			{
@@ -217,8 +245,9 @@ abstract class model_Collection extends Model
 		return $ret;
 	}
 		
-	public function add($row)
+	public function add(array $row)
 	{
+		$this->beforeSave($row);
 		$errors = $this->validate($row);
 		if (empty($errors))
 		{
@@ -234,22 +263,8 @@ abstract class model_Collection extends Model
 			return $errors;
 		}
 	}
-	
-	protected function getFields()
-	{
-		return array(
-				'id' => new field_Id()
-		);
-	}
 
-	protected function getIndexes()
-	{
-		return array(
-				'primary' => array('id')
-		);
-	}
-
-	public function save($row)
+	public function save(array $row)
 	{
 		if (empty($row['id']))
 		{
@@ -261,10 +276,11 @@ abstract class model_Collection extends Model
 		}
 	}
 
-	public function update($id, $row)
+	public function update($id, array $row)
 	{
 		cache_Apc::del($this->getTableName() . '_' . $id);
 		//$errors = $this->validate($row);
+		$this->beforeSave($row);
 		$row = $this->toDb($row);
 		$this->db->update($this->getTableName(), $id, $row);
 		return true;

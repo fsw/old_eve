@@ -25,7 +25,7 @@ class Request
 			(empty($params) ? '' : '?' . http_build_query($params));
 	}*/
 	
-	public function __construct()
+	public function __construct($url = null)
 	{
 		if (PHP_SAPI === 'cli')
 		{
@@ -33,6 +33,10 @@ class Request
 			array_shift($argv);
 			//parse_str(implode('&', $argv), $args);
 			$this->pathList = $argv;
+		}
+		elseif (!empty($url))
+		{
+			
 		}
 		else
 		{
@@ -92,7 +96,7 @@ class Request
 	
 	public static function getCurrentPageUrl()
 	{
-		$pageURL = (@$_SERVER['HTTPS'] == 'on') ? 'https://' : 'http://';
+		$pageURL = (empty($_SERVER['HTTPS']) || ($_SERVER['HTTPS'] != 'on')) ? 'http://' : 'https://';
 		if ($_SERVER['SERVER_PORT'] != '80')
 		{
 			$pageURL .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];

@@ -3,10 +3,10 @@
 class model_Privilages extends model_Collection
 {
 
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'code' => new field_Text(),
 	 			'description' => new field_Longtext(),

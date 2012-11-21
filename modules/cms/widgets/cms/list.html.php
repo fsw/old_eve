@@ -6,9 +6,8 @@
 
 <?php if ($this->tree): ?>
 <ul class="crumbs">
-	<li><a href="<?php echo controller_Cms::hrefList($this->model, array('parent' => 0)); ?>"><?php echo $this->model ?></a></li>
-<?php foreach($this->path as $crumb): ?>
-	<li><a href="<?php echo controller_Cms::hrefList($this->model, array('parent' => $crumb['id'])); ?>"><?php echo $crumb['title'] ?></a></li>
+<?php foreach($this->path as $title => $href): ?>
+	<li><a href="<?php echo $href; ?>"><?php echo $title; ?></a></li>
 <?php endforeach; ?>
 </ul>
 <?php endif; ?>

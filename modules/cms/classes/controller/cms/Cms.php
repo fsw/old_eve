@@ -112,11 +112,11 @@ class controller_Cms extends controller_Layout
 	public function actionExport()
 	{
 		$form = new Form();
-		$models = $this->site->getModels();
+		$models = Site::getModels();
 		$tables = array();
 		foreach ($models as $model)
 		{
-			$tables = array_merge($tables, $this->site->model($model)->getStructure());
+			$tables = array_merge($tables, Site::model($model)->getStructure());
 		}
 		foreach (array_keys($tables) as $table)
 		{

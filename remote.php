@@ -123,7 +123,7 @@ switch (array_shift($argv))
 					'srcRoot' => $config['srcRoot'],
 					'dev' => false,
 					'dbConfig' => $config['dbConfig'],
-					'fileCache' => $config['fileCache'],
+					'fileCache' => $config['fileCache'] . $siteCode . '/',
 					'pushid' => uniqid(),
 			);
 			

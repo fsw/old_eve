@@ -8,6 +8,11 @@
 
 abstract class Module
 {
+	public function getModules()
+	{
+		return array();
+	}
+	
 	public static function getModuleCode()
 	{
 		return lcfirst(str_replace('module_', '', get_called_class()));

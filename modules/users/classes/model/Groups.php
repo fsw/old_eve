@@ -3,10 +3,10 @@
 class model_Groups extends model_Collection
 {
 
-  public function getFields()
+  protected function initFields()
   {
  	return array_merge(
- 		parent::getFields(), 
+ 		parent::initFields(), 
  		array(
  			'name' => new field_Text(),
  			'description' => new field_Longtext(),

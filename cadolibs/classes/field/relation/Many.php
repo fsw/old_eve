@@ -2,15 +2,24 @@
 
 class field_relation_Many extends field_Relation
 {
-	public function __construct($model, $field = null)
+	public function getDbDefinition()
 	{
-		$this->model = $model;
-		$this->field = $field;
+		return null;
 	}
 	
 	public function getFormInput($key, $value)
 	{
-		return '<input type="text" name="' . $key . '" value="">';
+		$options = $this->getOptions();
+		if (empty($value))
+		{
+			$value = array();
+		}
+		$ret = '<div>';
+		foreach ($options as $k => $v)
+		{
+			$ret .= '<input type="checkbox" name="' . $key . '[' . $k . ']" value="' . $k . '"' . (in_array($k, $value) ? ' checked="checked"' : '') . '>' . $v . '<br/>';
+		}
+		$ret .= '</div>';
+		return $ret;
 	}
-
 }

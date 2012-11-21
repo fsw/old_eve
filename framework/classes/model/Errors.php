@@ -2,10 +2,10 @@
 
 class model_Errors extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'code' => new field_Int(),
 				'message' => new field_Text(),

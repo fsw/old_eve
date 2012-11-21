@@ -27,7 +27,7 @@ class controller_Static extends Controller
 	{
 		//TODO minimize
 		$className = Controller::getActionsClass($path);
-		$actions = new $className($this->site, $this->request, null); 
+		$actions = new $className($this->request, null); 
 		switch ($extension)
 		{
 			case 'js':

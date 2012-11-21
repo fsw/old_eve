@@ -84,7 +84,7 @@ class ErrorHandler
 		{
 			echo 'ERROR:' . NL;
 			echo $file . ':' . $line . ' ' . $message . '(' . $code . ')' . NL;
-			var_dump($trace);
+			//var_dump($trace);
 			exit;
 		}
 		if (!empty($_SERVER['SERVER_PROTOCOL']))
@@ -139,7 +139,7 @@ class ErrorHandler
 				}
 			}
 		}
-		require(Cado::findResource('error.html.php'));
+		require(Cado::findResource('widgets/error.html.php'));
 		//Cado::includeResource('error.html.php');
 		exit;
 	}

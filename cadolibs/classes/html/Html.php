@@ -16,17 +16,48 @@ class Html
 		return $ret;
 	}
 	
-	public static function select($attrs, $options)
+	public static function select($attrs, $options, $value = null)
 	{
 		$ret[] = '<select' . self::attrs($attrs) . '>';
-		foreach ($options as $key => $value)
+		foreach ($options as $key => $val)
 		{
-			$ret[] = '<option value="' . $key . '">' . $value . '</option>';
+			$ret[] = '<option value="' . $key . '"' . ($value == $key ? ' selected="selected"' : '') . '>' . $val . '</option>';
 		}
 		$ret[] = '</select>';
 		return implode('', $ret);
 	}
 	
+	public static function menu($attrs, $data)
+	{
+		$ret[] = '<ul' . self::attrs($attrs) . '>';
+		foreach ($data as $key => &$value)
+		{
+			if (is_string($value))
+			{
+				$value = array('href' => $value, 'title' => $key);
+			}
+		}
+		foreach ($data as $row)
+		{
+			$a = array();
+			if (!empty($row['current']))
+			{
+				$a['class'] = 'current'; 
+			}
+			$ret[] = '<li' . self::attrs($a) . '>';
+			$ret[] = '<a href="' . $row['href'] . '">' . $row['title'] . '</a>';
+			if (!empty($row['children']))
+			{
+				$ret[] = self::menu(array(), $row['children']);
+			}
+			$ret[] = '</li>';
+		}
+		$ret[] = '</ul>';
+		return implode('', $ret);
+		
+	}
+	
+	//TOREMOVE
 	public static function ulTree($data, $callback, $subKey = 'children', $ulAttrs = array(), $liAttrs = array())
 	{
 		$ret[] = '<ul' . self::attrs($ulAttrs) . '>';

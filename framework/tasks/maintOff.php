@@ -1,3 +1,3 @@
 <?php 
 echo 'turning maintenance OFF';
-Fs::write($this->site->getWebroot() . 'maintenance.lock', 'Y');
+Fs::write(Site::getWebroot() . 'maintenance.lock', 'Y');

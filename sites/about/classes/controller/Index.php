@@ -19,7 +19,7 @@ class controller_Index extends controller_Layout
 		return Markdown::fromFile('docs/INTRO.md');
 	}	
 	
-	public function actionDocs()
+	public function actionDocs($fullpath = 'index.html')
 	{
 		if ($this->request->extension()==='html')
 		{
@@ -27,8 +27,7 @@ class controller_Index extends controller_Layout
 			$this->layout->addJs('/static/apigen/resources/combined.js');
 			$this->layout->addJs('/static/apigen/elementlist.js');
 				
-			$file = implode('/' , $this->request->getPath()) . '.' . $this->request->extension();
-			$file = Fs::read('docs/html/' . $file);
+			$file = Fs::read('docs/html/' . $fullpath);
 			$this->layout->setHtmlTitle(substr($file,
 					strpos($file, '<title>') + 7,
 					strpos($file, '</title>') - strpos($file, '<title>') - 7

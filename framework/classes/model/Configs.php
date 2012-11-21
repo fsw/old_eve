@@ -2,10 +2,10 @@
 
 class model_Configs extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'key' => new field_Text(),
 				'value' => new field_Array(),

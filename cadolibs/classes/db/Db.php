@@ -94,10 +94,10 @@ class Db
 	public function fetchAll($sql, $bind = array())
 	{
 		Dev::startTimer('db');
-		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
 		$ret = $sth->fetchAll(PDO::FETCH_ASSOC);
+		Dev::logEvent('db', $sql, $bind, $ret);
 		Dev::stopTimer();
 		return $ret;
 	}
@@ -116,10 +116,10 @@ class Db
 	public function fetchRow($sql, $bind = array())
 	{
 		Dev::startTimer('db');
-		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
 		$ret = $sth->fetch(PDO::FETCH_ASSOC);
+		Dev::logEvent('db', $sql, $bind, $ret);
 		Dev::stopTimer();
 		return $ret;
 	}
@@ -127,10 +127,10 @@ class Db
 	public function fetchCol($sql, $bind = array())
 	{
 		Dev::startTimer('db');
-		Dev::logEvent('db', $sql);
 		$sth = $this->getReader()->prepare($sql);
 		$sth->execute($bind);
 		$ret = $sth->fetchAll(PDO::FETCH_COLUMN);
+		Dev::logEvent('db', $sql, $bind, $ret);
 		Dev::stopTimer('db');
 		return $ret;
 	}
@@ -143,9 +143,9 @@ class Db
 	public function query($sql, $bind = array())
 	{
 		Dev::startTimer('db');
-		Dev::logEvent('db', $sql);
 		$q = $this->getWriter()->prepare($sql);
 		$q->execute($bind);
+		Dev::logEvent('db', $sql, $bind);
 		Dev::stopTimer();
 	}
 

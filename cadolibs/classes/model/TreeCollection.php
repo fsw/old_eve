@@ -8,20 +8,20 @@
 
 abstract class model_TreeCollection extends model_Collection
 {
-	protected function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 				'parent' => new field_relation_One(lcfirst(substr(get_called_class(), strlen('_model')))),
 			)
 		);
 	}
 	
-	protected function getIndexes()
+	protected function initIndexes()
 	{
 		return array_merge(
-				parent::getIndexes(),
+				parent::initIndexes(),
 				array(
 					'parent' => array(false, 'parent')
 				)

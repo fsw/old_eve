@@ -2,10 +2,10 @@
 
 class model_Files extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'name' => new field_Text(),
 	 			'file' => new field_File(),

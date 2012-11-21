@@ -4,6 +4,6 @@ class Site extends BaseSite
 {
 	public function getModules()
 	{
-		return array('cms');
+		return array('cms', 'contact');
 	}
 }

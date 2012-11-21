@@ -7,15 +7,15 @@ abstract class controller_cms_Data extends controller_Cms
 	
 	protected function getFormFields()
 	{
-		$fields = $this->site->model($this->model)->fields();
+		$fields = Site::model($this->model)->getFields();
 		foreach ($fields as $key => $field)
 		{
 			if ($field instanceof field_relation_Many)
 			{
-				$values = $this->site->model($field->model)->getAll();
+				$values = Site::model($field->model)->getAll();
 				foreach ($values as $val)
 				{
-					$options[$val['id']] = $this->site->model($field->model)->getAdminString($val);
+					$options[$val['id']] = Site::model($field->model)->getAdminString($val);
 				}
 				$fields[$key] = new field_Enum($options, true);
 			}
@@ -30,7 +30,7 @@ abstract class controller_cms_Data extends controller_Cms
 		{
 			unset($data['password']);
 		}	
-		return $this->site->model($this->model)->save($data);
+		return Site::model($this->model)->save($data);
 	}
 	
 	public function actionIndex($getSearch = array())
@@ -40,19 +40,19 @@ abstract class controller_cms_Data extends controller_Cms
 		$actions = array();
 		$rowActions = array();
 		$widget->readOnly = true;
-		if ($this->site->model($this->model)->field('enable') !== null)
+		if (Site::model($this->model)->getField('enable') !== null)
 		{
 			$widget->toggable = true;
 		}
 		
-		if ($this->site->model('users')->hasPriv('admin_' . $this->model))
+		if (Site::model('users')->hasPriv('admin_' . $this->model))
 		{
 			$actions = array('Add' => self::hrefSave(0));
 			$rowActions = array(
 					'Edit' => self::hrefSave('_ID_'),
 			);
 			
-			if ($this->site->model($this->model)->field('enable') !== null)
+			if (Site::model($this->model)->getField('enable') !== null)
 			{
 				$rowActions['On/Off'] = self::hrefToggle('_ID_');
 			}
@@ -60,7 +60,7 @@ abstract class controller_cms_Data extends controller_Cms
 			$widget->readOnly = false;
 		}
 		
-		$modelClass = $this->site->model($this->model);
+		$modelClass = Site::model($this->model);
 		$where = '1';
 		$bind = array();
 		
@@ -73,8 +73,15 @@ abstract class controller_cms_Data extends controller_Cms
 			
 			$parent = empty($getSearch['parent']) ? 0 : $getSearch['parent'];
 			
-			$widget->path = $modelClass->getPath($parent);
-							
+			$path = array();
+			$path[$this->model] = self::hrefIndex(array('parent' => 0));
+			
+			foreach ($modelClass->getPath($parent) as $elem)
+			{
+				$path[$elem['title']] = self::hrefIndex(array('parent' => $elem['id']));
+			}
+			$widget->path = $path;
+			
 			$rowActions['Children'] = self::hrefIndex(array('parent' => '_ID_'));
 			
 			if ($widget->readOnly == false)
@@ -137,7 +144,7 @@ abstract class controller_cms_Data extends controller_Cms
 		
 		if (!empty($id))
 		{
-			$current = $this->site->model($this->model)->getById($id);
+			$current = Site::model($this->model)->getById($id);
 			//var_dump($current);
 			$form->setValues($current);
 		}

@@ -19,4 +19,9 @@ class module_Cms extends Module
 		}
 		return $ret;
 	}
+	
+	public function getModules()
+	{
+		return array('users');
+	}
 }

@@ -13,6 +13,7 @@ class cache_Array
 	public static function set($key, $value)
 	{
 		$path = Eve::$fileCache . 'arraycache' . DS . $key . '.php';
+		static::$cache[$key] = $value;
 		Fs::rwrite($path, '<?php' . NL . '$ret=' . var_export($value, true) . ';' . NL);
 	}
 	

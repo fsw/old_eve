@@ -23,6 +23,19 @@ final class Fs
 	
 	static function getMime($path)
 	{
+		if (!function_exists('finfo_open'))
+		{
+			$ext = pathinfo($path, PATHINFO_EXTENSION);
+			switch ($ext)
+			{
+				case 'css':
+					return 'text/css';
+				case 'js':
+					return 'application/x-javascript';
+				default :
+					return 'application/octet-stream';
+			} 
+		}
 		if (self::$finfoMime === null)
 		{
 			self::$finfoMime = finfo_open(FILEINFO_MIME_TYPE);

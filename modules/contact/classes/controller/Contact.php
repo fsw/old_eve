@@ -6,12 +6,12 @@ class controller_Contact extends controller_Frontend
 	{
 		$form = new Form();
 		$form->title = 'Contact us';
-		$fields = $this->site->model('contacts')->fields();
+		$fields = Site::model('contacts')->getFields();
 		unset($fields['id']);
 		$form->addElements($fields);
 		if ($form->validate())
 		{
-			$ret = $this->site->model('contacts')->add($form->getValues());
+			$ret = Site::model('contacts')->add($form->getValues());
 			if ($ret == true)
 			{
 				$this->redirectTo(controller_Contact::hrefSent());

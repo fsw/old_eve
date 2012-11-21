@@ -9,13 +9,11 @@
 class Task
 {
 	
-	private $site;
 	private $code;
 	
-	public function __construct(BaseSite $site, $code)
+	public function __construct($code)
 	{
 		$this->code = $code;
-		$this->site = $site;
 	}
 	
 	public function run($args)

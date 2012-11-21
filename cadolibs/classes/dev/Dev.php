@@ -12,7 +12,7 @@ if (!CADO_DEV)
 		
 		public static function stopTimer(){}
 		
-		public static function logEvent($class, $what){}
+		public static function logEvent($class){}
 		
 		public static function showDevFooter(){}
 	}
@@ -44,21 +44,23 @@ else
 			self::$times[$name] += $time;
 		}
 		
-		public static function logEvent($class, $what)
+		public static function logEvent($class)
 		{
-			self::$events[$class][] = $what;
+			$args = func_get_args();
+			array_shift($args);
+			self::$events[$class][] = $args;
 		}
 		
 		public static function showDevFooter()
 		{
 			self::startTimer('dev');
-			$errors = BaseSite::getInstance()->model('errors')->getAll();
+			$errors = Site::model('errors')->getAll();
 			self::stopTimer();
 			while (!empty(self::$timerNamesStack))
 			{
 				self::stopTimer();
 			}
-			require(Cado::findResource('devfooter.html.php'));
+			require(Cado::findResource('widgets/devfooter.html.php'));
 		}
 	}
 }

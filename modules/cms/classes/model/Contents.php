@@ -2,10 +2,10 @@
 
 class model_Contents extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'title' => new field_Text(),
 				'subtitle' => new field_Text(),		
@@ -19,17 +19,17 @@ class model_Contents extends model_Collection
 		);
 	}
 	
-	public function getIndexes()
+	public function initIndexes()
 	{
 		return array_merge(
-			parent::getIndexes(),
+			parent::initIndexes(),
 			array(
 	 			'slug' => array(true, 'slug'),
 			)
 		);
 	}
 	
-	public function implode(&$row)
+	protected function beforeSave(&$row)
 	{
 		if (empty($row['slug']))
 		{
@@ -46,11 +46,10 @@ class model_Contents extends model_Collection
 			}
 			$base = $row['slug'];
 			$i = 1;
-			do 
+			do
 			{
 				$row['slug'] = $base . '-' . (++$i);
 			} while (in_array($row['slug'], $occupiedSlugs));
 		}
 	}
-	
 }

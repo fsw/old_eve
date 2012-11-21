@@ -6,28 +6,16 @@
 
 class Widget extends Template
 {
-	private $___basePath;
-	public function __construct($path)
+	public function __construct($path, Array $data = null)
 	{
-		$this->___basePath = $path;
+		$path = 'widgets/' . $path;
 		if (Cado::findResource($path))
 		{
-	  		parent::__construct($path . '/html');
+	  		parent::__construct($path . '/html', $data);
 		}
 		else
 		{
-			parent::__construct($path . '.html');
+			parent::__construct($path . '.html', $data);
 		}
 	}
-	
-	public function getJs()
-	{
-		//$this->___basePath
-	}
-	
-	public function getCss()
-	{
-	
-	}
-	
 }

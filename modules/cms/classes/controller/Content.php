@@ -5,7 +5,7 @@ class controller_Content extends controller_Frontend
 	public function actionIndex($slug)
 	{
 		$widget = new Widget('widgets/contentIndex');
-		$model = $this->site->model('contents');
+		$model = Site::model('contents');
 		$content = $model->getByField('slug', $slug);
 		$widget->title = $content['title'];
 		$widget->subtitle = $content['subtitle'];

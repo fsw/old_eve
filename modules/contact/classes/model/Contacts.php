@@ -2,10 +2,10 @@
 
 class model_Contacts extends model_Collection
 {
-	public function getFields()
+	protected function initFields()
 	{
 		return array_merge(
-			parent::getFields(),
+			parent::initFields(),
 			array(
 	 			'name' => new field_Text(),
 				'email' => new field_Email(),

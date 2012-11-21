@@ -1,13 +1,13 @@
 <?php 
 
 
-$models = $this->site->getModels();
+$models = Site::getModels();
 $tables = array();
 foreach ($models as $model)
 {
-	$tables = array_merge($tables, $this->site->model($model)->getStructure());
+	$tables = array_merge($tables, Site::model($model)->getStructure());
 }
-$current = $this->site->readDbStructure();
+$current = Site::readDbStructure();
 //var_dump($current);
 //die();
 $sqls = array();
@@ -78,7 +78,7 @@ foreach ($current as $name => $fields)
 /*
 if (!empty($run) && !empty($sqls[$run]))
 {
-	$this->site->getDb()->query($sqls[$run]);
+	Site::getDb()->query($sqls[$run]);
 	$sqls[$run] = '-- DONE';
 }
 */
@@ -89,6 +89,6 @@ foreach ($sqls as $key => $sql)
 	
 	if (CADO_DEV && !empty($args['force']))
 	{
-		$this->site->getDb()->query($sql);
+		Site::getDb()->query($sql);
 	}
 }
