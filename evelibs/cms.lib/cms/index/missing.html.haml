@@ -1,0 +1,4 @@
+%h1 404s
+- foreach($this->missing as $missing)
+	%h2 = $missing['url']
+	= $missing['count']

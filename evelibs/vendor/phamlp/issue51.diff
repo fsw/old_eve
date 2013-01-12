@@ -1,0 +1,39 @@
+Index: sass/tree/SassPropertyNode.php
+===================================================================
+--- sass/tree/SassPropertyNode.php	(revision 121)
++++ sass/tree/SassPropertyNode.php	(working copy)
+@@ -177,7 +177,7 @@
+ 	 * @param string the property syntax being used
+ 	 * @return boolean true if the token represents this type of node, false if not
+ 	 */
+-	public static function isa($token, $syntax) {
++	public static function iSaPropertyNode($token, $syntax) {
+ 		$matches = self::match($token, $syntax);
+ 
+ 		if (!empty($matches)) {	
+Index: sass/script/literals/SassLiteral.php
+===================================================================
+--- sass/script/literals/SassLiteral.php	(revision 121)
++++ sass/script/literals/SassLiteral.php	(working copy)
+@@ -355,5 +355,7 @@
+ 	 * @param string the subject string
+ 	 * @return mixed match at the start of the string or false if no match
+ 	 */
+-	abstract public static function isa($subject);
++	public static function isa($subject) {
++		return false;
++	}
+ }
+Index: sass/SassParser.php
+===================================================================
+--- sass/SassParser.php	(revision 121)
++++ sass/SassParser.php	(working copy)
+@@ -539,7 +539,7 @@
+ 			case SassVariableNode::isa($token):
+ 				return new SassVariableNode($token);
+ 				break;
+-			case SassPropertyNode::isa($token, $this->property_syntax):
++			case SassPropertyNode::iSaPropertyNode($token, $this->property_syntax):
+ 				return new SassPropertyNode($token, $this->property_syntax);
+ 				break;
+ 			case SassMixinDefinitionNode::isa($token):

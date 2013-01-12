@@ -1,0 +1,36 @@
+%ul.navigation
+	- foreach ($this->suites as $suite)
+		%li
+			%a(href="##{$suite['name']}") = $suite['name']
+- foreach ($this->suites as $suite)
+	.suite
+		%h1##{$suite['name']} = $suite['name']
+		%ul.tests.passed
+			- foreach($suite['result']['passed'] as $name => $passed)
+				%li 
+					%h2 = $name;
+		%ul.tests.skipped
+			- foreach($suite['result']['skipped'] as $res)
+				%li
+					%h2 = PHPUnit_Util_Test::describe($res->failedTest());
+					%pre.debug = $res->getExceptionAsString();
+		%ul.tests.notImplemented
+			- foreach($suite['result']['notImplemented'] as $res)
+				%li
+					%h2 = PHPUnit_Util_Test::describe($res->failedTest());
+					%pre.debug = $res->getExceptionAsString();
+		%ul.tests.deprecatedFeatures
+			- foreach($suite['result']['deprecatedFeatures'] as $res)
+				%li
+					%h2 = PHPUnit_Util_Test::describe($res->failedTest());
+					%pre.debug = $res->getExceptionAsString();
+		%ul.tests.failures
+			- foreach($suite['result']['failures'] as $res)
+				%li
+					%h2 = PHPUnit_Util_Test::describe($res->failedTest());
+					%pre.debug = $res->getExceptionAsString();
+		%ul.tests.errors
+			- foreach($suite['result']['errors'] as $res)
+				%li
+					%h2 = PHPUnit_Util_Test::describe($res->failedTest());
+					%pre.debug = $res->getExceptionAsString();

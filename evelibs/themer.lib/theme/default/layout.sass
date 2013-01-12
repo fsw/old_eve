@@ -1,0 +1,117 @@
+$backColor: #fea;
+$bgColor: #f6f6ee;
+$textColor: #111;
+$decColor: #e52;
+$width: 960px;
+
+body {
+	color: $textColor;
+	background: $backColor;
+}
+
+a {
+	color: $decColor;
+	text-decoration: underline;
+}
+
+header {
+	background-color: $bgColor;
+	width: $width;
+	margin: 0 auto;
+	box-shadow: 0 0 5px 1px #555;
+	margin-bottom: 20px;
+	hgroup {
+		text-align: center;
+		h2 {	
+			padding: 10px;
+			padding-bottom: 5px;
+			text-transform: uppercase;
+			font-size: 22px;
+		}
+		h3 {
+			text-align: center;
+			padding-bottom: 10px;
+		}
+	}
+}
+
+header nav a {
+	text-decoration: none;
+	display: block;
+	padding: 8px 15px;
+	height: 14px;
+	color: $decColor;
+	width: 130px;
+	overflow: hidden;
+}
+
+header nav a:hover {
+	background: $decColor;
+	color: white;
+}
+
+header nav ul {
+	background: white;
+}
+
+header nav > ul ul {
+	box-shadow: 0 0 5px 1px #555;
+}
+
+header nav > ul {
+	overflow: visible;
+	height: 30px;
+}
+
+header nav > ul li {
+	position: relative;
+}
+
+header nav > ul > li {
+	float: left;
+}
+
+header nav div.sub {
+	position: absolute;
+	top: 30px;
+	display: none;
+}
+
+header nav div.sub div.sub {
+	top: 0px;
+	left: 146px;
+}
+
+header nav li:hover > div.sub {
+	display: block;
+}
+
+#page {
+	width: $width;
+	margin: 0 auto;
+	padding: 5px;
+	overflow: visible;
+	margin-bottom: 20px;
+	#main {
+		background-color: $bgColor;
+		padding: 5px;
+		float: right;
+		width: 675px;
+		box-shadow: 0 0 5px 1px #555;
+	}
+	
+	aside#sidebar {
+		background-color: $bgColor;
+		float: left;
+		width: 250px;
+		box-shadow: 0 0 5px 1px #555;
+	}
+}
+
+footer {
+	width: $width;
+	margin: 0 auto;
+	text-align: right;
+	font-size: 10px;
+	color: mix($backColor, $textColor);
+}

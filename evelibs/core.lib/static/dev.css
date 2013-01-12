@@ -1,0 +1,89 @@
+#devfooter {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+    overflow: visible;
+}
+
+#devfooter > ul {
+	background-color: #353630;
+	background-image: url("/static/cado/favicon.png");
+    background-position: 4px 4px;
+    background-repeat: no-repeat;
+    border-radius: 5px 5px 0 0;
+    box-shadow:  0px 0px 15px black;
+	width: 800px;
+	margin: 0 auto;
+	overflow: visible;
+	height: 40px;
+	padding-left: 40px;
+}
+
+#devfooter > ul > li {
+	float:left;
+	border-left: 1px solid #544;
+	height: 40px;
+	position: relative;
+    overflow: visible;
+}
+
+#devfooter > ul > li > a {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 15px;
+    white-space: nowrap;
+	min-width: 70px;
+	text-align: left;
+    color: #f2f2f2;    
+    font-size: 11px;
+    font-weight: bold;
+}
+
+#devfooter > ul > li > a:hover {
+    background-color: #00adef;
+    color: #231f20;
+}
+
+#devfooter > ul > li > div {
+	display: none;
+	position: absolute;
+	bottom: 40px;
+	background-color: #353630;
+    z-index: 100;
+	height: auto;
+	width: 400px;
+}
+
+#devfooter > ul > li:hover > div {
+    display: block;
+}
+
+/* SECOND LEVEL */
+
+#devfooter > ul > li > div > ul > li > div {
+	display: none;
+	position: absolute;
+	left: 100px;
+	bottom: 0px;
+	background-color: #353630;
+    z-index: 200;
+}
+
+#devfooter > ul > li > div > ul > li:hover > div {
+    display: block;
+}
+
+div.stats {
+	width: 710px;
+}
+
+div.stats > div.fleft {
+	width: 350px;
+}
+
+div.stats > div.fright {
+	width: 350px;
+	height: 560px;
+	overflow: auto;
+}

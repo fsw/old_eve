@@ -1,0 +1,21 @@
+#searchBar
+	= $this->searchForm
+%h1 = $this->title
+.legend
+	.type
+		polecane wpisy
+%ul.items.promoted
+	- foreach($this->promoted as $item)
+		= $item
+.legend.second
+	.type
+		pozostałe wpisy
+	= $this->tabs
+- if ($this->page=='map')
+	- foreach($this->items as $item)
+		.test = var_dump($item);
+- else
+	%ul.items
+		- foreach($this->items as $item)
+			= $item
+	= $this->pager

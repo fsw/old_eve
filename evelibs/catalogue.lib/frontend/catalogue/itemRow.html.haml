@@ -1,0 +1,31 @@
+%li.item
+	%img.avatar(src="/static/default_avatar.png")
+	.name
+		%strong
+			%a(href = "#{Site::lt('catalogue/item', $this->item['slug'])}") = $this->item['title']
+		%ul.bread
+			- foreach ($this->item['categories_names'] as $category)
+				%li = $category . ','
+			- foreach ($this->item['regions_names'] as $region)
+				%li = $region . ','
+	.stars
+		.rating
+			.rate = $this->item['rating']
+		- if (empty($this->item['rates']))
+			brak ocen
+			%a(href = "#{Site::lt('catalogue/item', $this->item['slug'])}#rates") dodaj pierwszą
+		- else
+			= 'ocena: ' . $this->item['rating'] . ' ( średnia z '
+			%a(href = "#{Site::lt('catalogue/item', $this->item['slug'])}#rates") = $this->item['rates'] . ' ocen'
+			)
+	.icons
+		- if(!empty($this->item['phone']))
+			.icoPhone(title="wpis posiada telefon")
+		- if(!empty($this->item['home']))
+			.icoHome(title="lekarz odbywa wizyty domowe")
+		- if(!empty($this->item['www']))
+			.icoWWW(title="wpis posiada stronę WWW")
+		- if(!empty($this->item['email']))
+			.icoEmail(title="wpis posiada adres email")
+		- if(!empty($this->item['facebook']))
+			.icoFacebook(title="wpis posiada profil facebook")

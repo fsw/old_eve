@@ -1,0 +1,53 @@
+#devfooter
+	%ul
+		%li
+			%a#devStats(href="#") Stats
+			%div
+				%ul
+					- foreach ($this->stats as $req => $stats)
+						%li
+							%a = $req
+							%div.stats
+								%div.fleft
+									%h3 = 'Total time: ' . array_sum($stats[0]);
+									%canvas.pieChart(width="350",height="250") [No canvas support]
+									.chartData = json_encode($stats[0])
+									%h3 = 'Total memory: ' . array_sum($stats[1]);
+									%canvas.pieChart(width="350",height="250") [No canvas support]
+									.chartData = json_encode($stats[1])
+								%div.fright
+									- foreach ($stats[2] as $class=>$events)
+										%h3 = $class
+										- foreach($events as $event)
+											- foreach($event as $arg)
+												- if (is_scalar($arg))
+													= $arg
+												- elseif (is_null($arg))
+													NULL
+												- else
+													%a(title="#{htmlspecialchars(print_r($arg, true))}", href="#") vector
+												= ','
+											%br
+		%li
+			%a(href="#") Errors
+			%div
+				- foreach($this->errors as $error)
+					%h2 = $error['id'] . ') ' . $error['message'] . ' (' . $error['count']. ')'
+					= $error['file'] . ':' . $error['line']
+					%br
+					%a(href="#{$error['url']}") = $error['url']
+		%li
+			%label
+				%input.devUseCache(name="use_cache[core]", type="checkbox") 
+				= 'core'
+			%label
+				%input.devUseCache(name="use_cache[array]", type="checkbox") 
+				= 'array'
+			%label
+				%input.devUseCache(name="use_cache[apc]", type="checkbox") 
+				= 'apc'
+			%label
+				%input.devUseCache(name="use_cache[memcached]", type="checkbox") 
+				= 'memcached'
+		%li
+			%a(href="#", onClick="location.reload(); return false;") reload

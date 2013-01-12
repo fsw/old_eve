@@ -1,0 +1,60 @@
+#searchBar
+	= $this->searchForm
+.itemTools
+	niepoprawne dane?
+	%a.actionReport(href="/static/default_avatar.png") zgłoś profil
+	twój profil?
+	%a.actionEdit(href="/static/default_avatar.png") zarządzaj
+	%a.actionPromote(href="/static/default_avatar.png") promuj
+	%ul
+		- foreach($this->item['categories_plural_genitives'] as $category_slug => $category_name)
+			- foreach($this->item['regions_locatives'] as $region_slug => $region_name)
+				%li
+					%a(href = "#{Site::lt('catalogue/search', $category_slug, $region_slug)}")
+						= 'pokaż innych ' . $category_name . ' ' . $region_name
+.itemPage
+	.title
+		%img.avatar(src="/static/default_avatar.png")
+		%h1.name = $this->item['title']
+		.stars
+			.rating
+				.rate = $this->item['rating']
+			- if (empty($this->item['rates']))
+				brak ocen
+				%a(href = "#{Site::lt('catalogue/item', $this->item['slug'])}#rates") dodaj pierwszą
+			- else
+				= 'ocena: ' . $this->item['rating'] . ' ( średnia z '
+				%a(href = "#{Site::lt('catalogue/item', $this->item['slug'])}#rates") = $this->item['rates'] . ' ocen'
+				)
+	.section
+		%h2 Opis
+	= $this->item['info']
+	.section
+		%h2 Specjalizacje
+	- foreach ($this->categories as $category)
+		= $category['title'] . ', '
+	.section
+		%h2 Dane Kontaktowe
+	= $this->item['contact_info']
+	= $this->item['phone']
+	= $this->item['www']
+	= $this->item['email']
+	- foreach ($this->item['locations'] as $location)
+		.section
+			%h2 = $location['title']
+		%img(src = "#{google_Maps::staticMap($location['lat'], $location['lon'], 400, 200)}")
+	.section
+		%h2 Oceny i Komentarze
+	.ratingRows
+		- foreach ($this->ratings as $rating)
+			.ratingRow
+				.head
+					.stars
+						.rating
+							.rate = $rating['rating']
+					%h4
+						= field_Email::obfuscate($rating['email'])
+				.body
+					= $rating['body']
+		%a.actionAdd.fright(href="/static/default_avatar.png") dodaj opinię
+.clear

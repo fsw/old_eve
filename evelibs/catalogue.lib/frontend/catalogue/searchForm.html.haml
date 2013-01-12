@@ -1,0 +1,55 @@
+%form#advancedSearchForm(action = "#{Site::lt('catalogue/search', '__CATEGORY__', '__REGION__')}")
+	#polandMap
+		%ul.poland
+			%li.pl1
+				%a(rel="nofollow" href="#dolnoslaskie") Dolnośląskie
+			%li.pl2
+				%a(rel="nofollow" href="#kujawsko-pomorskie") Kujawsko-pomorskie
+			%li.pl3
+				%a(rel="nofollow" href="#lubelskie") Lubelskie
+			%li.pl4
+				%a(rel="nofollow" href="#lubuskie") Lubuskie
+			%li.pl5
+				%a(rel="nofollow" href="#lodzkie") Łódzkie
+			%li.pl6
+				%a(rel="nofollow" href="#malopolskie") Małopolskie
+			%li.pl7
+				%a(rel="nofollow" href="#mazowieckie") Mazowieckie
+			%li.pl8
+				%a(rel="nofollow" href="#opolskie") Opolskie
+			%li.pl9
+				%a(rel="nofollow" href="#podkarpackie") Podkarpackie
+			%li.pl10
+				%a(rel="nofollow" href="#podlaskie") Podlaskie
+			%li.pl11
+				%a(rel="nofollow" href="#pomorskie") Pomorskie
+			%li.pl12
+				%a(rel="nofollow" href="#slaskie") Śląskie
+			%li.pl13
+				%a(rel="nofollow" href="#swietokrzyskie") Świętokrzyskie
+			%li.pl14
+				%a(rel="nofollow" href="#warminsko-mazurskie") Warmińsko-mazurskie
+			%li.pl15
+				%a(rel="nofollow" href="#wielkopolskie") Wielkopolskie
+			%li.pl16
+				%a(rel="nofollow" href="#zachodniopomorskie") Zachodniopomorskie
+	Wybierz lokację :
+	%br
+	= Html::select(['name' => 'region'], $this->regions, $this->region['slug'])
+	%br
+	Wybierz kategorię :
+	%br
+	= Html::select(['name' => 'category'], $this->categories, $this->category['slug'])
+	%br
+	Wpisz frazę (nazwisko, schorzenie, itp.) :
+	%br
+	%input(name="search[query]")
+	%br
+	%button(type = "submit") Szukaj
+%form#searchForm(action = "#{Site::lt('catalogue/search', '__CATEGORY__', '__REGION__')}")
+	= Html::select(['name' => 'category'], $this->categories, $this->category['slug'])
+	= Html::select(['name' => 'region'], $this->regions, $this->region['slug'])
+	%button(type = "submit") Szukaj
+	%a.frontPage(href="#{Site::lt('catalogue')}") Strona głowna
+%a#showAdvanced(href = "#{Site::lt('catalogue')}", title = "Szukanie zaawansowane") Szukanie zaawansowane
+%a#showSimple(href = "#{Site::lt('catalogue')}", title = "Proste szukanie") Proste szukanie

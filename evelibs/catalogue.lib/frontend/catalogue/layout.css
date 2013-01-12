@@ -1,0 +1,365 @@
+body {
+	color: #333;
+}
+
+div#content {
+	width: 960px;
+	margin: 0 auto;
+}
+
+div#footer {
+	margin: 20px auto;
+	padding: 10px;
+	border-top: 1px dashed #ccc;
+	font-size: 11px;
+	width: 960px;
+	text-align: right;
+}
+
+form#advancedSearchForm {
+	overflow: auto;
+}
+
+form#advancedSearchForm select {
+	margin-bottom: 25px;
+}
+
+form#advancedSearchForm input {
+	margin-bottom: 25px;
+}
+
+#polandMap {
+	float: left;
+	margin-right: 50px !important;
+}
+
+div#searchBar {
+	border: 1px solid #199;
+	background-color: #9ee;
+	box-shadow: 0 0 5px #888888;
+	border-top: none;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	padding: 5px;
+	position: relative;
+}
+
+div#searchBar a {
+	text-decoration: underline;
+	font-size: 12px;
+	color: #077;
+}
+div#searchBar a.frontPage {
+	margin-left: 75px;
+}
+a#showAdvanced, a#showSimple {
+	background: url('/static/toggler.png');
+	background-repeat: no-repeat;
+	background-position: right top;
+	line-height: 32px;
+	padding-right: 32px;
+	height: 32px;
+	position: absolute;
+	right: 2px;
+	bottom: 2px;
+	display: none;
+}
+
+a#showSimple {
+	background-position: right -32px;
+}
+
+form#searchForm {
+	display: none;
+}
+
+div#searchBar a#showAdvanced {
+	display: block;
+}
+
+div#searchBar form#advancedSearchForm {
+	display: none;
+}
+
+div#searchBar form#searchForm {
+	display: block;
+}
+
+h1 {
+	margin: 15px 10px;
+	font-size: 22px;
+}
+
+/*
+	COMMON
+*/
+div.pager {
+	margin: 6px 15px;
+}
+
+div.pager ul {
+	float: right;
+}
+
+div.pager ul li {
+	float: left;
+	margin-left: 5px;
+}
+
+div.pager ul li strong, div.pager ul li a {
+	border: 1px solid #ddd;
+	display: block;
+	padding: 3px 7px;
+}
+
+div.pager ul li strong, div.pager ul li a:hover {
+	background-color: #7ff;
+}
+
+div.title {
+	overflow: auto;	
+}
+
+img.avatar {
+	float:left;
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
+div.name, h1.name {
+	float: left;
+	padding: 2px;
+}
+
+div.stars {
+	float:right;
+	font-size: 10px;
+	text-align: center;
+	width: 180px;
+}
+
+div.stars a {
+	text-decoration: underline;
+	color: #119999;
+}
+
+div.rating {
+	background: url(/static/stars.png);
+	width: 135px;
+	height: 25px;
+	margin: 0 auto;
+	margin-bottom: 3px;
+}
+
+div.rating div.rate {
+	background: url(/static/stars.png);
+	background-position: 0 -25px;
+	width: 70px;
+	height: 25px;
+	display: none;
+}
+
+a.actionReport, a.actionEdit, a.actionAdd, a.actionPromote {
+	display: block;
+	height: 32px;
+	line-height: 32px;
+	border: 1px solid #2ee;
+	background: #3f7;
+	padding-right: 14px;
+	border-radius: 10px;
+	box-shadow: 0 0 3px #888888;
+	margin: 4px;
+}
+
+a.actionReport:before, a.actionEdit:before, a.actionAdd:before, a.actionPromote:before {
+   content: "";
+   float: left;
+   width: 32px;
+   height: 32px;
+   margin: 0 14px 0 0;
+   background: url('/static/actions.png');
+}
+
+a.actionReport:before {
+	background-position:-32px 0;
+}
+
+a.actionEdit:before {
+	background-position:-64px 0;
+}
+
+a.actionPromote:before {
+	background-position:-96px 0;
+}
+
+/*
+	SEARCH PAGE
+*/
+
+div#searchBar form#searchForm select {
+	margin-right: 25px;
+}
+
+div.legend {
+	overflow: visible;
+	border-bottom: 1px solid #199;
+	position: relative;
+	height: 20px;
+}
+
+div.legend.second {
+	padding-top: 15px;
+	height: 33px;
+}
+
+div.legend div.type {
+	float: left;
+	color: white;
+	background: #199;
+	border-top-right-radius: 7px;
+	border-top-left-radius: 7px;
+	font-size: 10px;
+	padding: 1px 4px;
+	
+	position: absolute;
+	left: 5px;
+	bottom: 0px;
+}
+
+ul.items {
+	box-shadow: 0 0 5px #888888;
+	background-color: white;
+	padding: 0 7px;
+}
+
+ul.items li.item {
+	border-bottom: 1px dashed #199;
+	padding: 15px 10px;
+	overflow: auto;
+}
+
+ul.items.promoted {
+	background-color: #ee5;
+}
+
+ul.items div.name ul.bread {
+	margin-top: 2px;
+	overflow: auto;
+	font-size: 11px;
+	color: #555;
+}
+
+ul.items div.name ul.bread li {
+	float: left;
+	margin-right: 10px;
+}
+
+
+ul.items div.icons {
+	overflow: auto;
+	float:right;
+	margin-right: 20px;
+	margin-top: 4px;
+}
+
+ul.items div.icons div {
+	width: 32px;
+	height: 32px;
+	background: url(/static/icons.png);
+	float: left;
+}
+ul.items div.icons div.icoPhone {background-position: 0 0;}
+ul.items div.icons div.icoHome {background-position: -32px 0;}
+ul.items div.icons div.icoWWW {background-position: -64px 0;}
+ul.items div.icons div.icoEmail {background-position: -96px 0;}
+ul.items div.icons div.icoCellphone {background-position: -128px 0;}
+ul.items div.icons div.icoFacebook {background-position: -160px 0;}
+
+ul.tabber {
+	overflow: visible;
+	float: right;
+	height: 33px;
+}
+
+ul.tabber li { 
+	float: left;
+	margin-right: 10px;
+}
+
+ul.tabber li a, ul.tabber li strong {
+	display: block;
+	border: 1px solid #199;
+	line-height: 32px;
+	padding: 0 7px;
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+}
+
+ul.tabber li strong {
+	border-bottom: 1px solid white;
+	background: white;
+}
+
+ul.tabber li a:before, ul.tabber li strong:before {
+   content: "";
+   float: left;
+   width: 32px;
+   height: 32px;
+   margin: 0 5px 0 0;
+   background: url('/static/tabs.png');
+}
+
+ul.tabber .t1 a:before {background-position:0 -32px;}
+ul.tabber .t1 a:hover:before, ul.tabber .t1 strong:before {background-position:0 0;}
+
+ul.tabber .t2 a:before {background-position:-32px -32px;}
+ul.tabber .t2 a:hover:before, ul.tabber .t2 strong:before {background-position:-32px 0;}
+
+/*
+	ITEM VIEW
+*/
+
+div.itemTools {
+	box-shadow: 0 0 5px #888888;
+	background-color: white;
+	padding: 10px;
+	margin-top: 10px;
+	float: right;
+	width: 230px;
+}
+
+div.itemPage {
+	box-shadow: 0 0 5px #888888;
+	background-color: white;
+	padding: 10px;
+	margin-top: 10px;
+	float: left;
+	width: 680px;
+}
+
+div.itemPage .section {
+	overflow: auto;
+	border-bottom: 1px solid #199; 
+	margin-top: 15px;
+}
+
+div.itemPage .section h2 {
+	float: left;
+	color: white;
+	background: #199;
+	border-top-right-radius: 7px;
+	border-top-left-radius: 7px;
+	font-size: 11px;
+	padding: 1px 4px;
+}
+
+div.ratingRows {
+	width: 500px;
+	padding: 10px;
+}
+
+div.ratingRow .body {
+	border: 1px solid #ddd;
+	padding: 20px;
+}

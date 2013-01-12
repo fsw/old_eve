@@ -1,0 +1,15 @@
+%header
+	%hgroup
+		%h2 = Config::get('cms', 'siteTitle');
+		%h3 = Config::get('cms', 'siteDesc');
+	%nav#headNav(role="navigation")
+		= theme_Default::getMenu('topMenu')
+#page
+	#main = $this->widget
+	%aside#sidebar
+		%nav#sideNav(role="navigation")
+			= theme_Default::getMenu('sideMenu')
+	.clear
+%footer
+	= '&copy; 2013 ' . Config::get('cms', 'siteTitle');
+	%a(href="http://eve.cadosolutions.com/",title="Eve Framework",rel="generator") Powered by Eve

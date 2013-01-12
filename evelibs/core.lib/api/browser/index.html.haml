@@ -1,0 +1,14 @@
+%ul.navigation
+	- foreach ($this->models as $model)
+		%li
+			%a(href="##{$model['code']}") = $model['code']
+- foreach ($this->models as $model)
+	.model
+		%h1##{$model['code']} = $model['code']
+		- foreach ($model['methods'] as $method => $args)
+			.method
+				%form.apiForm(action="#{Site::lt('api', $model['code'], $method, 'json')}")
+					= Site::lt('api', $model['code'], $method, 'json')
+					%input(name="args",value="#{htmlspecialchars(json_encode($args))}")
+					%button(type="submit") Submit
+					.response

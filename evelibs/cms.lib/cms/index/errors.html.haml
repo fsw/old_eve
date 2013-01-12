@@ -1,0 +1,9 @@
+%h1 Errors
+- foreach($this->errors as $error)
+	%h2 = $error['id'] . ') ' . $error['message'] . ' (' . $error['count']. ')'
+	= $error['file'] . ':' . $error['line']
+	%br
+	%a(href="#{$error['url']}") = $error['url']
+	%br
+	= var_dump($error['trace'])
+	= var_dump($error['server'])
